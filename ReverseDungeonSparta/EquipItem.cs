@@ -81,7 +81,7 @@ namespace ReverseDungeonSparta
             new EquipItemInfo(5,5,5,5,5,5,Type.Helmet, Grade.Rare), // 아이템 15
             new EquipItemInfo(5,5,5,5,5,5,Type.Shoes, Grade.Rare), // 아이템 16
             new EquipItemInfo(5,5,5,5,5,5,Type.Ring, Grade.Rare), // 아이템 17
-            new EquipItemInfo(5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 6
+            new EquipItemInfo(5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 18
         };
 
         public static List<EquipItem> GetEquipItemList(int num)  // 만들어진 장착장비리스트에 아이템 객체 넣기 
@@ -107,6 +107,31 @@ namespace ReverseDungeonSparta
             {
                 return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
             }
+        }
+        public static void ItemCombination(int index)
+        {
+            Console.WriteLine("1. 아이템 조합");
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+            int number = Util.GetUserInput(0, 1);
+                switch (number)
+                {
+                    case 0:
+                        GameManager.Instance.GameMenu();
+                        break;
+                    case 1: //아이템 조합 씬으로 이동
+                        break;
+                }
+            Console.WriteLine("[아이템 조합]");
+            //
+            string[] input = Console.ReadLine().Split();
+            int number1 = int.Parse(input[0]);
+            int number2 = int.Parse(input[1]);
+            // if(number1 == allEquipItem.index)
+            // 입력한 값이 입력한 아이템의 인덱스랑 같은지 비교를 하고
+            // 같다면 2개의 아이템의 타입과 등급을 비교하고
+            // 같다면 조합로직
+            // 틀리다면 같은 Type과 같은 등급만 조합할 수 있습니다.
         }
     }
 }
