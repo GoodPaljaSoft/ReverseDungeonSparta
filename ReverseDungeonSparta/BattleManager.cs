@@ -89,8 +89,8 @@ public class BattleManager
         switch (input)
         {
             case 1:
-                PlayerSelectMonster();
                 AudioManager.PlayMoveMenuSE(0);
+                PlayerSelectMonster();
                 break;
         }
     }
@@ -128,6 +128,7 @@ public class BattleManager
         switch (input)
         {
             case 0:
+                AudioManager.PlayMoveMenuSE(0);
                 Console.WriteLine("플레이어가 턴을 넘겼습니다.");
                 Thread.Sleep(1000);
 
@@ -184,6 +185,7 @@ public class BattleManager
                 //죽었다면 전투 클리어
                 //살아있다면 몬스터의 턴 시작
                 bool isWin = true;
+
                 foreach(Monster mon in monsterList)
                 {
                     if(mon.IsDie == false)
@@ -197,6 +199,10 @@ public class BattleManager
                     //플레이어 승리
                     AudioManager.PlayDungeonClearSE(0);
                     PlayerWin();
+                }
+                else
+                {
+                    AudioManager.PlayMoveMenuSE(0);
                 }
                 break;
         }
