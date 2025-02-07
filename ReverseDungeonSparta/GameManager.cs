@@ -35,14 +35,18 @@ namespace ReverseDungeonSparta
                     Console.WriteLine("상태보기");
                     Console.WriteLine("캐릭터의 정보가 표시됩니다.");
                     Util.PrintPlayerView(player);
+                    AudioManager.PlayMoveMenuSE(0);
                     int outMenu = Util.GetUserInput(0, 0);
                     if(outMenu == 0)
                     {
+                        AudioManager.PlayMoveMenuSE(0);
                         GameMenu();
                     }
                     break;
                 case 2: //전투시작화면 
                     BattleManager battleManager = new BattleManager(player);
+                    AudioManager.PlayBattleBGM();
+                    AudioManager.PlayMoveMenuSE(0);
                     battleManager.StartBattle();
 
                     GameMenu();
