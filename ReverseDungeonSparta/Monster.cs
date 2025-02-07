@@ -1,7 +1,7 @@
 ﻿using ReverseDungeonSparta;
 using System;
 
-public class Monster
+public class Monster :Character
 {
     static Random random = new Random();
 

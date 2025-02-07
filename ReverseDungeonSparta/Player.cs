@@ -10,7 +10,7 @@ namespace ReverseDungeonSparta
     {
         Warrior
     }
-    public class Player
+    public class Player : Character
     {
         public JobType Job { get; set; } 
         public int Level { get; set; }

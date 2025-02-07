@@ -9,12 +9,13 @@ namespace ReverseDungeonSparta
 {
     class GameManager
     {
-        Player player = new Player();
         public static GameManager Instance { get; } = new GameManager();
-        public GameManager() 
+       
+        Player player = new Player();
+
+        public GameManager()
         {
             BattleManager battleManager = new BattleManager(player);
-
         }
         public void GameMenu() // 시작화면 구현
         {
