@@ -21,20 +21,26 @@
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환
-        public int Attacking(Character target)
+        public void Attacking(Character target, out int damage)
         {
             //데미지 계산식
             double margin = Attack * 0.1f;
             margin = Math.Ceiling(margin);
 
-            int damage = new Random().Next(Attack - (int)margin, Attack + (int)margin);
-            return damage;
+            damage = new Random().Next(Attack - (int)margin, Attack + (int)margin);
+
+            OnDamage(target, damage);
         }
 
         // 데미지를 입는 메소드
-        public void OnDamage(int damage)
+        public void OnDamage(Character target, int damage)
         {
-            HP -= damage;
+            target.HP -= damage;
+
+            if (target.HP < 0)
+            {
+                target.HP = 0;
+            }
         }
 
 
