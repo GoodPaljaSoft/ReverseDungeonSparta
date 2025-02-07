@@ -90,6 +90,7 @@ public class BattleManager
         {
             case 1:
                 PlayerSelectMonster();
+                AudioManager.PlayMoveMenuSE(0);
                 break;
         }
     }
@@ -136,6 +137,7 @@ public class BattleManager
                 if (monsterList[input - 1].IsDie)
                 {
                     //잘못된 입력임을 알려주고
+                    AudioManager.PlayMoveMenuSE(0);
                     Console.WriteLine("잘못된 입력입니다.");
                     Thread.Sleep(1000);
 
@@ -144,6 +146,7 @@ public class BattleManager
                 }
                 else //살아있는 몬스터를 선택했다면
                 {
+                    //플레이어가 선택한 공격 타입에 따라 효과음 소리 변환***
                     PlayerAttackMonster(monsterList[input - 1]);
                 }
 
@@ -192,6 +195,7 @@ public class BattleManager
                 if(isWin)//모든 몬스터가 죽었다면
                 {
                     //플레이어 승리
+                    AudioManager.PlayDungeonClearSE(0);
                     PlayerWin();
                 }
                 break;
@@ -216,7 +220,7 @@ public class BattleManager
         Console.WriteLine();
         Console.WriteLine("0. 다음");
 
-        //공격받기 전 체력 저장 (위치가 애매해서 모두와 상의를 해보고 싶음)***
+        //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
 
         int input = Util.GetUserInput(0, 0);
 
@@ -225,6 +229,7 @@ public class BattleManager
             case 0:
                 if(player.HP == 0)
                 {
+                    AudioManager.PlayPlayerDieSE(0);
                     PlayerDefeat();
                 }
                 break;
