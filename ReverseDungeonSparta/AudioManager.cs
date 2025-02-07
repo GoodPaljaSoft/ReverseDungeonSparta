@@ -119,7 +119,7 @@ namespace ReverseDungeonSparta
 
 
         //효과음을 세팅하고 실행하는 메서드
-        public static void SettingSE(string filePath)
+        static void SettingSE(string filePath)
         {
             StopPlayerAndReader(SE_Player, SE_Reader);
 
@@ -135,7 +135,7 @@ namespace ReverseDungeonSparta
 
 
         //배경음악을 집어넣는 메서드
-        public static void SettingBGM(string filePath)
+        static void SettingBGM(string filePath)
         {
             StopPlayerAndReader(bgmPlayer, bgmReader);
 
@@ -159,7 +159,7 @@ namespace ReverseDungeonSparta
 
 
         //연결된 플레이어와 리더를 해제하는 메서드
-        public static void StopPlayerAndReader(IWavePlayer wavePlayer, AudioFileReader audioFileReader)
+        static void StopPlayerAndReader(IWavePlayer wavePlayer, AudioFileReader audioFileReader)
         {
             wavePlayer?.Stop();
             wavePlayer?.Dispose();
@@ -168,7 +168,7 @@ namespace ReverseDungeonSparta
 
 
         //배경 음악 실행을 시작하는 메서드
-        public static async Task BGM_Start(string path)
+        static async Task BGM_Start(string path)
         {
             isBGM_Player = true;
             SettingBGM(path);
