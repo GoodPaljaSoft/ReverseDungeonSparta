@@ -41,7 +41,7 @@ public class BattleManager
         while (isDungeonEnd == false)
         {
             turnManager.CalculateTurnPreview(); // 5턴 프리뷰를 계산
-            var currentCharacter = turnManager.TurnPreview.First();
+            Character currentCharacter = turnManager.SeclectCharacter;
 
             bool isPlayer = currentCharacter is Player;
 
