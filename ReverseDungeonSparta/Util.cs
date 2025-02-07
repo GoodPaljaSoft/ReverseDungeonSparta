@@ -18,22 +18,17 @@ namespace ReverseDungeonSparta
         public static void PrintPlayerView(Player player) 
         {
             Console.WriteLine($"Lv. {player.Level}");
-<<<<<<< HEAD
-            Console.WriteLine($"{player.Name}( {player.JobType} )");
-            Console.WriteLine($"공격력 : {player.Attack}");
-            Console.WriteLine($"방어력 : {player.Defence}");
-=======
             Console.WriteLine($"{player.Name}( {player.Job} )");
             Console.WriteLine($"공격력 : {player.Attack}+({player.AdditionalAttack})");
             Console.WriteLine($"방어력 : {player.Defence}+({player.AdditionalDefence})");
->>>>>>> Dev1_YDY_YHH_2
-            Console.WriteLine($"체력 : {player.Health}");
-            Console.WriteLine($"체력 : {player.Health}");
+            Console.WriteLine($"체력 : {player.NowHealth}");
+            Console.WriteLine($"체력 : {player.NowHealth}");
             Console.WriteLine($"Gold : {player.Gold}");
             Console.WriteLine("");
         }
         public static int GetUserInput(int minCount, int maxCount)
         {
+            if (minCount == 0) Console.WriteLine("0. 나가기\n");
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>");
             //커서복귀를 위한 커서위치 저장

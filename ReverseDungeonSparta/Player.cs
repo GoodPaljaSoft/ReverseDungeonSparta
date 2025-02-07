@@ -10,14 +10,15 @@ namespace ReverseDungeonSparta
     {
         Warrior
     }
-    internal class Player
+    public class Player
     {
         public JobType Job { get; set; } 
         public int Level { get; set; }
         public string Name { get; set; }  
         public int Attack { get; set; }
         public int Defence { get; set; }
-        public int Health { get; set; }
+        public int MaxHealth { get; set; }
+        public int NowHealth { get; set; }
         public int Gold { get; set; }
         public int AdditionalAttack { get; set; }
         public int AdditionalDefence { get; set; }
@@ -27,7 +28,8 @@ namespace ReverseDungeonSparta
             string name = Name; 
             Attack = 10; //공격력, 방어력, 체력, 골드는 초기값으로 초기화
             Defence = 5;
-            Health = 100;
+            MaxHealth = 100;
+            NowHealth = MaxHealth;
             Gold = 1500;
             int additionalAttack = AdditionalAttack;
             int additionalDefence = AdditionalDefence;
