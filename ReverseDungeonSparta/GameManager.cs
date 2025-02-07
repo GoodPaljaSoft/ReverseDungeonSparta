@@ -15,7 +15,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
-            BattleManager battleManager = new BattleManager(player);
+
         }
         public void GameMenu() // 시작화면 구현
         {
