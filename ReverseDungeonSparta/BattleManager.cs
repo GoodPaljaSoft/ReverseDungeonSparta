@@ -24,13 +24,14 @@ public class BattleManager
     public void StartBattle() 
     {
         //몬스터의 기본 정보 출력***
+        Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         for (int i = 0; i < monsterList.Count; i++)
         {
 
             //번호/레벨/이름/HP(Dead)
-            Console.Write($"{monsterList[i].Level} {monsterList[i].Name} HP ");
+            Console.Write($"Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
 
             //죽은 몬스터가 있다면 사망 처리
             //죽은 몬스터의 텍스트는 어두운 색으로 표시***
@@ -61,13 +62,14 @@ public class BattleManager
     //플레이어가 공격할 몬스터를 선택할 수 있는 메소드 
     public void PlayerTurn()
     {
+        Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         for (int i = 0; i < monsterList.Count; i++)
         {
 
             //번호/레벨/이름/HP(Dead)
-            Console.Write($"Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
+            Console.Write($"{i + 1}) Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
 
             //죽은 몬스터가 있다면 사망 처리
             //죽은 몬스터의 텍스트는 어두운 색으로 표시***
@@ -125,6 +127,7 @@ public class BattleManager
             monster.Dead();
         }
 
+        Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 공격!");
@@ -186,6 +189,7 @@ public class BattleManager
             playerHP = 0;
         }
 
+        Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
@@ -216,6 +220,7 @@ public class BattleManager
     public void PlayerWin()
     {
         //승리
+        Console.Clear();
         Console.WriteLine("Battle!! - Result");
         Console.WriteLine();
         Console.WriteLine("Victory");
@@ -239,6 +244,7 @@ public class BattleManager
     public void PlayerDefeat()
     {
         //패배
+        Console.Clear();
         Console.WriteLine("Battle!! - Result");
         Console.WriteLine();
         Console.WriteLine("You Lose");
