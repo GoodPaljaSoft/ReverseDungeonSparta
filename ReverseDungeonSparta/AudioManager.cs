@@ -39,7 +39,7 @@ namespace ReverseDungeonSparta
         static string pathAttackArrowSE = pathMusicFolder + "AttackArrow.mp3";           //화살이 날라가는 효과음
         static string pathAttackClubSE = pathMusicFolder + "AttackClub.mp3";             //몽둥이로 때리는 효과음
         static string pathAttackFireSE = pathMusicFolder + "AttackFire.mp3";             //화염 마법을 쓰는 효과음
-        static string pathHealingSE = pathMusicFolder + "Healing.mp3";                      //힐링 효과음
+        static string pathHealingSE = pathMusicFolder + "Healing.mp3";                   //힐링 효과음
         #endregion
 
 
@@ -110,11 +110,11 @@ namespace ReverseDungeonSparta
         public static void PlayBattleBGM()
         {
             BGM_Start(pathBattleBGM);
-        }
+        }       //베틀 배경음악 실행
         public static void PlayPlayerDieBGM()
         {
             BGM_Start(pathPlayerDieBGM);
-        }
+        }       //플레이어가 사망 배경음악 실행
         #endregion
 
 
