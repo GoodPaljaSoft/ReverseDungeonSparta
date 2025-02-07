@@ -148,11 +148,12 @@ namespace ReverseDungeonSparta
 
             bgmPlayer.Play();
 
-            isBGM_Player = true;
-
             bgmPlayer.PlaybackStopped += (sender, arg) =>
             {
-                isBGM_Player = false;
+                if (isPlayerDie == false && isBGM_Player == false)
+                {
+                    SettingBGM(filePath);
+                }
             };
         }
 
@@ -169,14 +170,12 @@ namespace ReverseDungeonSparta
         //배경 음악 실행을 시작하는 메서드
         public static async Task BGM_Start(string path)
         {
+            isBGM_Player = true;
             SettingBGM(path);
+            isBGM_Player = false;
             while (true)
             {
-                if (isBGM_Player == false && isPlayerDie == false)  //플레이어가 끝나면 루프형태로 한번 더 플레이
-                {
-                    SettingBGM(path);
-                }
-                if (isPlayerDie == true)                //해당 메서드로 무한루프 멈춤.
+                if(isPlayerDie == true)
                 {
                     StopPlayerAndReader(bgmPlayer, bgmReader);
                     isPlayerDie = false;
