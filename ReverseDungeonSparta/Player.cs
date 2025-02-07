@@ -34,7 +34,7 @@ namespace ReverseDungeonSparta
 
             Luck = 5;
             Defence = 5;
-            Attack = 10;
+            Attack = 100;
             Intelligence = 5;
             
             MaxHP = 100;
