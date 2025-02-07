@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace ReverseDungeonSparta
 {
-    internal class GameManager
+    class GameManager
     {
         Player player = new Player();
         public static GameManager Instance { get; } = new GameManager();
         public GameManager() 
         {
-        
+            BattleManager battleManager = new BattleManager(player);
+
         }
         public void GameMenu() // 시작화면 구현
         {
@@ -40,8 +41,10 @@ namespace ReverseDungeonSparta
                     }
                     break;
                 case 2: //전투시작화면 
-                    Console.WriteLine("전투시작"); // 전투시작화면 구현중으로
-                                                   // 임시 출력값입력
+                    BattleManager battleManager = new BattleManager(player);
+                    battleManager.StartBattle();
+
+                    GameMenu();
                     break;
             }
         }
