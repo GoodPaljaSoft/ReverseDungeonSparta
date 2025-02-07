@@ -44,6 +44,7 @@ namespace ReverseDungeonSparta
 
 
         #region 효과음 실행 메서드 모음
+        //delayTime은 1000 기준 1초
         public static async void PlayMoveMenuSE(int delayTime)
         {
             await Task.Delay(delayTime);
