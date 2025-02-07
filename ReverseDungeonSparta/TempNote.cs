@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,6 +48,7 @@ namespace ReverseDungeonSparta
 
     }
 
+=======
 using ReverseDungeonSparta;
 
 public class TurnManager
@@ -111,4 +113,5 @@ public class BattleManager
             charater.Speed = 0;
         }
     }
+>>>>>>> Dev2_YHJ_SJW
 }
