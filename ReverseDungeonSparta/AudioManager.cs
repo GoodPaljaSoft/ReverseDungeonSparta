@@ -25,8 +25,8 @@ namespace ReverseDungeonSparta
         #region 음악 경로 지정 관련 필드 모음
         static string pathMusicFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "music\\");
 
-        static string pathMenuBGM = pathMusicFolder + "DefaultBGM.mp3";                 //메뉴 배경 음악
-        static string pathBattleBGM = pathMusicFolder + "BattleBGM.mp3";                //배틀 배경 음악
+        static string pathMenuBGM = pathMusicFolder + "MenuBGM.wav";                 //메뉴 배경 음악
+        static string pathBattleBGM = pathMusicFolder + "BattleBGM.wav";                //배틀 배경 음악
         static string pathPlayerDieBGM = pathMusicFolder + "PlayerDieBGM.mp3";          //플레이어 사망 시 배경 음악
 
         static string pathMoveMenuSE = pathMusicFolder + "MenuMove.mp3";                //메뉴가 나타날 때마다 나오는 기본 효과음
@@ -169,15 +169,18 @@ namespace ReverseDungeonSparta
         //배경 음악 실행을 시작하는 메서드
         public static async Task BGM_Start(string path)
         {
+            SettingBGM(path);
             while (true)
             {
-                if (isBGM_Player == false && isPlayerDie == false)
+                if (isBGM_Player == false && isPlayerDie == false)  //플레이어가 끝나면 루프형태로 한번 더 플레이
                 {
                     SettingBGM(path);
                 }
-                else if (isPlayerDie == true)
+                if (isPlayerDie == true)                //해당 메서드로 무한루프 멈춤.
                 {
                     StopPlayerAndReader(bgmPlayer, bgmReader);
+                    isPlayerDie = false;
+                    break;
                 }
 
                 await Task.Delay(100);
