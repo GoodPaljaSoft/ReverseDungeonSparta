@@ -265,6 +265,7 @@ public class BattleManager
             case 0:
                 isDungeonEnd = true;
                 //승리 처리
+                AudioManager.PlayMenuBGM();
                 break;
         }
     }
