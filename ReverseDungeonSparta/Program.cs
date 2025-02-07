@@ -5,7 +5,7 @@
         static void Main(string[] args)
         {
             // 게임 시작
-            AudioManager.PlayerMenuBGM();
+            AudioManager.PlayMenuBGM();
             GameManager.Instance.GameMenu();
         }
     }
