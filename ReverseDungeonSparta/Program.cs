@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            // 게임 시작
+            GameManager.Instance.GameMenu();
         }
     }
 }

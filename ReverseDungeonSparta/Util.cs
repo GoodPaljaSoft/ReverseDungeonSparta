@@ -15,10 +15,10 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
-        public static void PrintPlayerView(Player player) //플레이어 구현해야 함
+        public static void PrintPlayerView(Player player) 
         {
             Console.WriteLine($"Lv. {player.Level}");
-            Console.WriteLine($"{player.Name}( {player.JobType} )");
+            Console.WriteLine($"{player.Name}( {player.Job} )");
             Console.WriteLine($"공격력 : {player.Attack}+({player.AdditionalAttack})");
             Console.WriteLine($"방어력 : {player.Defence}+({player.AdditionalDefence})");
             Console.WriteLine($"체력 : {player.Health}");
@@ -49,6 +49,6 @@ namespace ReverseDungeonSparta
                 Console.SetCursorPosition(x, y);
             }
         }
-        public static Void PrintItemList(List<item> ItemList) { }
+        //public static Void PrintItemList(List<item> ItemList) { }
     }
 }
