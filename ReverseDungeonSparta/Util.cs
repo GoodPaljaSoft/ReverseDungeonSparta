@@ -43,7 +43,11 @@ namespace ReverseDungeonSparta
                     {
                         return result;
                     }
-                    else Console.WriteLine($"{minCount}에서{maxCount}사이의 숫자를 입력해주세요");
+                    else 
+                    { 
+                        Console.WriteLine($"{minCount}에서{maxCount}사이의 숫자를 입력해주세요");
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
                 }
                 Console.SetCursorPosition(x, y);
             }
