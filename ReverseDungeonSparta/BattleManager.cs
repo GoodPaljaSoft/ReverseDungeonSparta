@@ -120,23 +120,20 @@ public class BattleManager
     //플레이어가 턴을 넘기거나 공격한 이후에 실행할 메서드
     public void PlayerAttackMonster(Monster monster)
     {
-        int afterMonsterHP = monster.Hp - player.Attack;
-        if(afterMonsterHP < 0)
-        {
-            afterMonsterHP = 0;
-            monster.Dead();
-        }
+        int playerDamage = player.Attack;
+        monster.OnDamage(playerDamage);
 
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 공격!");
-        Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {player.Attack}]"); //***나중에 공격력 수치 처리 필요
+        Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]"); //***나중에 공격력 수치 처리 필요
         Console.WriteLine("");
         Console.WriteLine($"Lv.{monster.Level} {monster.Name}");
-        Console.WriteLine($"HP {monster.Hp} -> {(monster.IsDie ? "Dead" : (afterMonsterHP))}");
+        Console.WriteLine($"HP {monster.Hp - playerDamage} -> {(monster.IsDie ? "Dead" : (monster.Hp))}");
         Console.WriteLine("");
         Console.WriteLine("0. 다음");
+
 
         int input = Util.GetUserInput(0, 0);
 
