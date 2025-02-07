@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReverseDungeonSparta
+﻿namespace ReverseDungeonSparta
 {
     public class Character
     {
-        public int Luck { get; set; }
-        public int Defence { get; set; }
-        public int Attack { get; set; }
-        public int Intelligence { get; set; }
+        public virtual string Name { get; set; } = string.Empty;
+
+        public virtual int Luck { get; set; }
+        public virtual int Defence { get; set; }
+        public virtual int Attack { get; set; }
+        public virtual int Intelligence { get; set; }
 
         public virtual int HP { get; set; }
-        public int MaxHP { get; set; }
-        public int MP { get; set; }
-        public int MaxMP { get; set; }
+        public virtual int MaxHP { get; set; }
+        public virtual int MP { get; set; }
+        public virtual int MaxMP { get; set; }
 
-        public int speed { get; set; }
+        public virtual int Speed { get; set; }
 
-        public int Critical { get; set; }   // 치명타 확률
-        public int Evasion { get; set; }    // 회피율
+        public virtual int Critical { get; set; }   // 치명타 확률
+        public virtual int Evasion { get; set; }    // 회피율
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환

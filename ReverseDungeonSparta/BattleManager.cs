@@ -1,11 +1,11 @@
 ﻿using ReverseDungeonSparta;
+using System.Threading;
 
 
 public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
-    Player player;
-    int beforeHp;   //공격 받기 전 체력
+    Player player;                                  
     int statingHp;  //던전 입장시 체력
 
     Random random = new Random();
@@ -13,36 +13,63 @@ public class BattleManager
     public BattleManager(Player player)
     {
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
-        int rand = random.Next(1, 5);       //1~4 사이의 수 만큼 랜덤 값 출력
-        monsterList = Monster.GetMonsterList(rand);   //값으로 나온 만큼 몬스터 생성
+        int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
+        int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
+        monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
         this.player = player;
-        beforeHp = statingHp = player.NowHealth;
     }
+
+
+    //플레이어보다 빠른 몬스터를 찾음.
+    //해당 몬스터를 임시 리스트에 저장.
+    //해당 리스트에서 속도가 빠른 순서로 어택을 실행.
+    //StartBattle로 이동
+
+
+    public void ComputeFastSpeed()
+    {
+        List<Monster> speedArray = new List<Monster>();
+        int playerSpeed = 10; //***플레이어 스피드 대입
+        foreach (Monster monster in monsterList)
+        {
+            if(monster.Speed > playerSpeed)//***몬스터 속도 대입
+            {
+                speedArray.Add(monster);
+            }
+        }
+
+        speedArray.Sort((x, y) => x.Speed.CompareTo(y.Speed));
+
+        foreach(Monster monster in speedArray)
+        {
+            MonsterTurn(monster);
+        }
+
+        StartBattle();
+    }
+
 
 
     public void StartBattle() 
     {
-        //몬스터의 기본 정보 출력***
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         for (int i = 0; i < monsterList.Count; i++)
         {
-
             //번호/레벨/이름/HP(Dead)
             Console.Write($"Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
 
             //죽은 몬스터가 있다면 사망 처리
-            //죽은 몬스터의 텍스트는 어두운 색으로 표시***
             if (monsterList[i].IsDie)
                 Console.WriteLine("Dead");
             else
-                Console.WriteLine(monsterList[i].Hp);
+                Console.WriteLine(monsterList[i].HP);
         }
         Console.WriteLine();
         Console.WriteLine($"[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
-        Console.WriteLine($"HP {player.NowHealth}/{player.MaxHealth}");//플레이어 최대 체력 추가 필요***
+        Console.WriteLine($"HP {player.NowHealth}/{player.MaxHealth}");
         Console.WriteLine();
         Console.WriteLine("1. 공격");
 
@@ -75,7 +102,7 @@ public class BattleManager
             if (monsterList[i].IsDie)
                 Console.WriteLine("Dead");
             else
-                Console.WriteLine(monsterList[i].Hp);
+                Console.WriteLine(monsterList[i].HP);
         }
 
         Console.WriteLine();
@@ -119,6 +146,7 @@ public class BattleManager
     //플레이어가 턴을 넘기거나 공격한 이후에 실행할 메서드
     public void PlayerAttackMonster(Monster monster)
     {
+        int beforeMonsterHP = monster.HP;
         int playerDamage = player.Attack;
         monster.OnDamage(playerDamage);
 
@@ -129,7 +157,7 @@ public class BattleManager
         Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]"); //***나중에 공격력 수치 처리 필요
         Console.WriteLine("");
         Console.WriteLine($"Lv.{monster.Level} {monster.Name}");
-        Console.WriteLine($"HP {monster.Hp - playerDamage} -> {(monster.IsDie ? "Dead" : (monster.Hp))}");
+        Console.WriteLine($"HP {beforeMonsterHP} -> {(monster.IsDie ? "Dead" : (monster.HP))}");
         Console.WriteLine("");
         Console.WriteLine("0. 다음");
 
@@ -158,8 +186,15 @@ public class BattleManager
                 }
                 else//몬스터가 하나라도 살아있다면
                 {
+
+                    foreach (Monster mon in monsterList)
+                    {
+                        MonsterTurn(mon);
+                    }
+
+
                     //몬스터의 턴 시작
-                    foreach(Monster mon in monsterList)
+                    foreach (Monster mon in monsterList)
                     {
                         if(monster.IsDie == false || player.NowHealth > 0)     //몬스터가 살아있으며 플레이어의 체력이 남아있을 때 몬스터의 턴 시작
                         {
@@ -179,7 +214,7 @@ public class BattleManager
 
     public void MonsterTurn(Monster monster)
     {
-        int playerHP = player.NowHealth - monster.Atk;
+        int playerHP = player.NowHealth - monster.Attack;
         if(playerHP < 0)
         {
             playerHP = 0;
@@ -189,7 +224,7 @@ public class BattleManager
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
-        Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {monster.Atk}]");
+        Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {monster.Attacking}]");
         Console.WriteLine();
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
         Console.WriteLine($"HP {player.NowHealth} -> {playerHP}");
@@ -220,7 +255,7 @@ public class BattleManager
         Console.WriteLine("Battle!! - Result");
         Console.WriteLine();
         Console.WriteLine("Victory");
-        Console.WriteLine($"던전에서 몬스터 {monsterList.Count + 1}마리를 잡았습니다.");
+        Console.WriteLine($"던전에서 몬스터 {monsterList.Count}마리를 잡았습니다.");
         Console.WriteLine();
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
         Console.WriteLine($"HP {statingHp} -> {player.NowHealth}"); //던전 입장시 체력을 만들어서 출력해 주었습니다

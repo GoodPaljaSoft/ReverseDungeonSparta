@@ -14,14 +14,17 @@ namespace ReverseDungeonSparta
     {
         public JobType Job { get; set; } 
         public int Level { get; set; }
+
         public string Name { get; set; }  
         public int Attack { get; set; }
         public int Defence { get; set; }
         public int MaxHealth { get; set; }
         public int NowHealth { get; set; }
         public int Gold { get; set; }
-        public int AdditionalAttack { get; set; }
-        public int AdditionalDefence { get; set; }
+
+        public int AdditionalAttack { get; set; }   // 장비 공격력
+        public int AdditionalDefence { get; set; }  // 장비 방어력
+
         public Player () //Player 생성자 
         {
             int lv = Level;
