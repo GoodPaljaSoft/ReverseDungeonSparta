@@ -15,11 +15,13 @@ namespace ReverseDungeonSparta
         public JobType Job { get; set; } 
         public int Level { get; set; }
 
-        public string Name { get; set; }  
-        public int Attack { get; set; }
-        public int Defence { get; set; }
-        public int MaxHealth { get; set; }
-        public int NowHealth { get; set; }
+        public override string Name { get; set; } = string.Empty;
+        public override int Attack { get; set; }
+        public override int Defence { get; set; }
+        public override int MaxHP { get; set; }
+        public override int HP { get; set; }
+        public override int MaxMP { get; set; }
+        public override int MP { get; set; }
         public int Gold { get; set; }
 
         public int AdditionalAttack { get; set; }   // 장비 공격력
@@ -27,13 +29,24 @@ namespace ReverseDungeonSparta
 
         public Player () //Player 생성자 
         {
-            int lv = Level;
-            string name = Name; 
-            Attack = 10; //공격력, 방어력, 체력, 골드는 초기값으로 초기화
+            Name = "플레이어";
+            Level = 1;
+
+            Luck = 5;
             Defence = 5;
-            MaxHealth = 100;
-            NowHealth = MaxHealth;
-            Gold = 1500;
+            Attack = 10;
+            Intelligence = 5;
+            
+            MaxHP = 100;
+            HP = MaxHP;
+            MaxMP = 100;
+            MP = MaxMP;
+
+            Speed = 5;
+
+            Critical = 5;
+            Evasion = 5;
+
             int additionalAttack = AdditionalAttack;
             int additionalDefence = AdditionalDefence;
 
