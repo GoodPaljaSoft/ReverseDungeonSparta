@@ -62,7 +62,7 @@ public class BattleManager
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
-        Console.WriteLine();
+        Console.WriteLine("");
         for (int i = 0; i < monsterList.Count; i++)
         {
             //번호/레벨/이름/HP(Dead)
@@ -74,11 +74,11 @@ public class BattleManager
             else
                 Console.WriteLine(monsterList[i].HP);
         }
-        Console.WriteLine();
+        Console.WriteLine("");
         Console.WriteLine($"[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
-        Console.WriteLine();
+        Console.WriteLine("");
         Console.WriteLine("1. 공격");
 
         //플레이어가 공격을 선택할 수 있는 입력칸
