@@ -14,10 +14,9 @@ public class Monster :Character
         {
             hp = value;
 
-            if (hp < 0)
+            if (hp <= 0)
             {
-                hp = 0;
-                IsDie = true;
+                IsDead();
             }
             else if (hp > MaxHP)
             {
