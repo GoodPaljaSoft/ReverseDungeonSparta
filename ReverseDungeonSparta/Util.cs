@@ -15,17 +15,17 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
-        public static void PrintPlayerView(Player player) //플레이어 구현해야 함
-        {
-            Console.WriteLine($"Lv. {player.Level}");
-            Console.WriteLine($"{player.Name}( {player.JobType} )");
-            Console.WriteLine($"공격력 : {player.Attack}+({player.AdditionalAttack})");
-            Console.WriteLine($"방어력 : {player.Defence}+({player.AdditionalDefence})");
-            Console.WriteLine($"체력 : {player.Health}");
-            Console.WriteLine($"체력 : {player.Health}");
-            Console.WriteLine($"Gold : {player.Gold}");
-            Console.WriteLine("");
-        }
+        //public static void PrintPlayerView(Player player) //플레이어 구현해야 함
+        //{
+        //    Console.WriteLine($"Lv. {player.Level}");
+        //    Console.WriteLine($"{player.Name}( {player.JobType} )");
+        //    Console.WriteLine($"공격력 : {player.Attack}+({player.AdditionalAttack})");
+        //    Console.WriteLine($"방어력 : {player.Defence}+({player.AdditionalDefence})");
+        //    Console.WriteLine($"체력 : {player.Health}");
+        //    Console.WriteLine($"체력 : {player.Health}");
+        //    Console.WriteLine($"Gold : {player.Gold}");
+        //    Console.WriteLine("");
+        //}
         public static int GetUserInput(int minCount, int maxCount)
         {
             if (minCount == 0) Console.WriteLine("0. 나가기\n");
@@ -49,6 +49,6 @@ namespace ReverseDungeonSparta
                 Console.SetCursorPosition(x, y);
             }
         }
-        public static Void PrintItemList(List<item> ItemList) { }
+        //public static Void PrintItemList(List<item> ItemList) { }
     }
 }
