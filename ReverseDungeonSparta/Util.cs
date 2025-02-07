@@ -15,6 +15,7 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
+        public static void PrintPlayerView(Player player) 
         {
             Console.WriteLine($"Lv. {player.Level}");
 <<<<<<< HEAD
@@ -53,7 +54,6 @@ namespace ReverseDungeonSparta
                 Console.SetCursorPosition(x, y);
             }
         }
-        public static Void PrintItemList(List<item> ItemList) { }
         //public static Void PrintItemList(List<item> ItemList) { }
     }
 }
