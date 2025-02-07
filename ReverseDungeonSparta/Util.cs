@@ -15,7 +15,7 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
-        public static void PrintPlayerView(Player player) //플레이어 구현해야 함
+        public static void PrintPlayerView(Player player) 
         {
             Console.WriteLine($"Lv. {player.Level}");
             Console.WriteLine($"{player.Name}( {player.Job} )");

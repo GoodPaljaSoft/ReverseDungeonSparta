@@ -15,7 +15,7 @@ namespace ReverseDungeonSparta
         {
         
         }
-        public void GameMenu()
+        public void GameMenu() // 시작화면 구현
         {
             Console.Clear();
             Console.WriteLine("스파르타 마을에 오신 여러분 환영입니다.");
@@ -28,7 +28,7 @@ namespace ReverseDungeonSparta
 
             switch (result)
             {
-                case 1:
+                case 1: // 상태보기화면 구현
                     Console.Clear();
                     Console.WriteLine("상태보기");
                     Console.WriteLine("캐릭터의 정보가 표시됩니다.");
@@ -39,12 +39,11 @@ namespace ReverseDungeonSparta
                         GameMenu();
                     }
                     break;
-                case 2:
-                    Console.WriteLine("전투시작");
+                case 2: //전투시작화면 
+                    Console.WriteLine("전투시작"); // 전투시작화면 구현중으로
+                                                   // 임시 출력값입력
                     break;
             }
         }
-
-
     }
 }

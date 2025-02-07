@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ReverseDungeonSparta
 {
-    public enum JobType
+    public enum JobType // 캐릭터 enum을 통해 직업 선택
     {
         Warrior
     }
     internal class Player
     {
         public JobType Job { get; set; } 
-      public int Level { get; set; }
+        public int Level { get; set; }
         public string Name { get; set; }  
         public int Attack { get; set; }
         public int Defence { get; set; }
@@ -21,11 +21,11 @@ namespace ReverseDungeonSparta
         public int Gold { get; set; }
         public int AdditionalAttack { get; set; }
         public int AdditionalDefence { get; set; }
-        public Player ()
+        public Player () //Player 생성자 
         {
             int lv = Level;
-            string name = Name;
-            Attack = 10;
+            string name = Name; 
+            Attack = 10; //공격력, 방어력, 체력, 골드는 초기값으로 초기화
             Defence = 5;
             Health = 100;
             Gold = 1500;
@@ -37,7 +37,6 @@ namespace ReverseDungeonSparta
                 case JobType.Warrior:
                     break;
             }
-
         }
     }
 }
