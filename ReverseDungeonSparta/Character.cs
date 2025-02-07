@@ -37,7 +37,7 @@
         {
             target.HP -= damage;
 
-            if (target.HP < 0)
+            if (target.HP <= 0)
             {
                 target.HP = 0;
             }
