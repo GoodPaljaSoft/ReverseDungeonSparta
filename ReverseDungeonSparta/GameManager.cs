@@ -9,6 +9,7 @@ namespace ReverseDungeonSparta
 {
     internal class GameManager
     {
+        Player player = new Player();
         public static GameManager Instance { get; } = new GameManager();
         public GameManager() 
         {
@@ -28,13 +29,19 @@ namespace ReverseDungeonSparta
             switch (result)
             {
                 case 1:
-                    //Util.PrintPlayerView();
+                    Console.Clear();
                     Console.WriteLine("상태보기");
+                    Console.WriteLine("캐릭터의 정보가 표시됩니다.");
+                    Util.PrintPlayerView(player);
+                    int outMenu = Util.GetUserInput(0, 0);
+                    if(outMenu == 0)
+                    {
+                        GameMenu();
+                    }
                     break;
                 case 2:
                     Console.WriteLine("전투시작");
                     break;
-                
             }
         }
 
