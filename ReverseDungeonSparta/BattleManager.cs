@@ -6,25 +6,25 @@ public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
     Player player;                                  
-    int statingHp;  //던전 입장시 체력
+    int oldPlayerHP;   //던전 입장 전 플레이어의 HP를 저장할 변수
 
     bool isDungeonEnd = false;
 
     Random random = new Random();
     private TurnManager turnManager;
 
+
+    //배틀 매니저 생성자
     public BattleManager(Player player)
     {
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
         int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
         int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
         monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
-
-
         this.player = player;
+        oldPlayerHP = player.HP;
 
-        player.Speed = 3;//***임시 플레이어 스피드 지정
-
+        player.Speed = 50;//***임시 플레이어 스피드 지정
 
         List<Character> allCharacterList = new List<Character>();
 
@@ -32,10 +32,10 @@ public class BattleManager
         allCharacterList.Add(player);
 
         turnManager = new TurnManager(allCharacterList);
-
     }
 
 
+    //배틀매니저에서 배틀이 시작 될 때 실행할 메서드
     public void StartBattle()
     {
         while (isDungeonEnd == false)
@@ -53,11 +53,13 @@ public class BattleManager
             {
                 Monster monster = currentCharacter as Monster;
 
-                MonsterTurn(monster);
+                StartMonsterBattle(monster);
             }
         }
     }
 
+
+    //플레이어의 턴이 시작 되었을 때 시작할 메서드
     public void StartPlayerBattle() 
     {
         Console.Clear();
@@ -87,14 +89,14 @@ public class BattleManager
         switch (input)
         {
             case 1:
-                PlayerTurn();
+                PlayerSelectMonster();
                 break;
         }
     }
 
 
-    //플레이어가 공격할 몬스터를 선택할 수 있는 메소드 
-    public void PlayerTurn()
+    //플레이어가 공격할 몬스터를 선택하는 메소드 
+    public void PlayerSelectMonster()
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
@@ -138,7 +140,7 @@ public class BattleManager
                     Thread.Sleep(1000);
 
                     //처음으로 돌아감
-                    PlayerTurn();
+                    PlayerSelectMonster();
                 }
                 else //살아있는 몬스터를 선택했다면
                 {
@@ -151,7 +153,7 @@ public class BattleManager
     }
 
 
-    //플레이어가 턴을 넘기거나 공격한 이후에 실행할 메서드
+    //플레이어가 몬스터를 공격한 이후에 실행할 메서드
     public void PlayerAttackMonster(Monster monster)
     {
         int beforeMonsterHP = monster.HP;
@@ -196,7 +198,9 @@ public class BattleManager
         }
     }
 
-    public void MonsterTurn(Monster monster)
+
+    //몬스터의 턴이 되었을 때 실행할 메서드
+    public void StartMonsterBattle(Monster monster)
     {
         int beforeplayerHP = player.HP;
         monster.Attacking(player, out int damage);
@@ -227,6 +231,8 @@ public class BattleManager
         }
     }
 
+
+    //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
         //승리
@@ -237,7 +243,7 @@ public class BattleManager
         Console.WriteLine($"던전에서 몬스터 {monsterList.Count}마리를 잡았습니다.");
         Console.WriteLine();
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {statingHp} -> {player.HP}"); //던전 입장시 체력을 만들어서 출력해 주었습니다
+        Console.WriteLine($"HP {oldPlayerHP} -> {player.HP}"); //던전 입장시 체력을 만들어서 출력해 주었습니다
         Console.WriteLine();
         Console.WriteLine("0. 다음");
 
@@ -252,6 +258,8 @@ public class BattleManager
         }
     }
 
+
+    //플레이어가 패배했을 때 실행할 메서드
     public void PlayerDefeat()
     {
         //패배
@@ -260,7 +268,7 @@ public class BattleManager
         Console.WriteLine();
         Console.WriteLine("You Lose");
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {statingHp} -> {player.HP}");
+        Console.WriteLine($"HP {oldPlayerHP} -> {player.HP}");
         Console.WriteLine();
         Console.WriteLine("0. 다음");
 
