@@ -21,8 +21,8 @@ namespace ReverseDungeonSparta
             Console.WriteLine($"{player.Name}( {player.Job} )");
             Console.WriteLine($"공격력 : {player.Attack}+({player.AdditionalAttack})");
             Console.WriteLine($"방어력 : {player.Defence}+({player.AdditionalDefence})");
-            Console.WriteLine($"체력 : {player.NowHealth}");
-            Console.WriteLine($"체력 : {player.NowHealth}");
+            Console.WriteLine($"최대 체력 : {player.MaxHP}");
+            Console.WriteLine($"현재 체력 : {player.HP}");
             Console.WriteLine($"Gold : {player.Gold}");
             Console.WriteLine("");
         }
