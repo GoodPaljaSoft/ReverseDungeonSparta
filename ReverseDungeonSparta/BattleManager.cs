@@ -8,7 +8,10 @@ public class BattleManager
     Player player;                                  
     int statingHp;  //던전 입장시 체력
 
+    bool isDungeonEnd = false;
+
     Random random = new Random();
+    private TurnManager turnManager;
 
     public BattleManager(Player player)
     {
@@ -16,41 +19,46 @@ public class BattleManager
         int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
         int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
         monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
+
+
         this.player = player;
+
+        player.Speed = 3;//***임시 플레이어 스피드 지정
+
+
+        List<Character> allCharacterList = new List<Character>();
+
+        allCharacterList.AddRange(monsterList);
+        allCharacterList.Add(player);
+
+        turnManager = new TurnManager(allCharacterList);
+
     }
 
 
-    //플레이어보다 빠른 몬스터를 찾음.
-    //해당 몬스터를 임시 리스트에 저장.
-    //해당 리스트에서 속도가 빠른 순서로 어택을 실행.
-    //StartBattle로 이동
-
-
-    public void ComputeFastSpeed()
+    public void StartBattle()
     {
-        List<Monster> speedArray = new List<Monster>();
-        int playerSpeed = 10; //***플레이어 스피드 대입
-        foreach (Monster monster in monsterList)
+        while (isDungeonEnd == false)
         {
-            if(monster.Speed > playerSpeed)//***몬스터 속도 대입
+            turnManager.CalculateTurnPreview(); // 5턴 프리뷰를 계산
+            var currentCharacter = turnManager.TurnPreview.First();
+
+            bool isPlayer = currentCharacter is Player;
+
+            if (isPlayer)
             {
-                speedArray.Add(monster);
+                StartPlayerBattle();
+            }
+            else
+            {
+                Monster monster = currentCharacter as Monster;
+
+                MonsterTurn(monster);
             }
         }
-
-        speedArray.Sort((x, y) => x.Speed.CompareTo(y.Speed));
-
-        foreach(Monster monster in speedArray)
-        {
-            MonsterTurn(monster);
-        }
-
-        StartBattle();
     }
 
-
-
-    public void StartBattle() 
+    public void StartPlayerBattle() 
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
@@ -69,7 +77,7 @@ public class BattleManager
         Console.WriteLine();
         Console.WriteLine($"[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
-        Console.WriteLine($"HP {player.NowHealth}/{player.MaxHealth}");
+        Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
         Console.WriteLine();
         Console.WriteLine("1. 공격");
 
@@ -108,7 +116,7 @@ public class BattleManager
         Console.WriteLine();
         Console.WriteLine("[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
-        Console.WriteLine($"HP {player.NowHealth}/{player.MaxHealth}");//플레이어 최대 체력 추가 필요***
+        Console.WriteLine($"HP {player.HP}/{player.MaxHP}");//플레이어 최대 체력 추가 필요***
         Console.WriteLine();
         Console.WriteLine("0. 취소");
 
@@ -148,13 +156,13 @@ public class BattleManager
     {
         int beforeMonsterHP = monster.HP;
         int playerDamage = player.Attack;
-        monster.OnDamage(playerDamage);
+        player.Attacking(monster, out int damage);
 
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 공격!");
-        Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]"); //***나중에 공격력 수치 처리 필요
+        Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         Console.WriteLine("");
         Console.WriteLine($"Lv.{monster.Level} {monster.Name}");
         Console.WriteLine($"HP {beforeMonsterHP} -> {(monster.IsDie ? "Dead" : (monster.HP))}");
@@ -184,54 +192,25 @@ public class BattleManager
                     //플레이어 승리
                     PlayerWin();
                 }
-                else//몬스터가 하나라도 살아있다면
-                {
-
-                    foreach (Monster mon in monsterList)
-                    {
-                        MonsterTurn(mon);
-                    }
-
-
-                    //몬스터의 턴 시작
-                    foreach (Monster mon in monsterList)
-                    {
-                        if(monster.IsDie == false || player.NowHealth > 0)     //몬스터가 살아있으며 플레이어의 체력이 남아있을 때 몬스터의 턴 시작
-                        {
-                            MonsterTurn(mon);
-                        }
-                    }
-
-                    //몬스터의 모든 차례가 끝나고 플레이어의 체력이 남아있으면
-                    if(player.NowHealth > 0)
-                    {
-                        StartBattle();  //몬스터의 턴이 끝나면 처음부터 시작
-                    }
-                }
                 break;
         }
     }
 
     public void MonsterTurn(Monster monster)
     {
-        int playerHP = player.NowHealth - monster.Attack;
-        if(playerHP < 0)
-        {
-            playerHP = 0;
-        }
+        int beforeplayerHP = player.HP;
+        monster.Attacking(player, out int damage);
 
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
-        Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {monster.Attacking}]");
+        Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
         Console.WriteLine();
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {player.NowHealth} -> {playerHP}");
+        Console.WriteLine($"HP {beforeplayerHP} -> {player.HP}");
         Console.WriteLine();
         Console.WriteLine("0. 다음");
-
-        player.NowHealth = playerHP;
 
         //공격받기 전 체력 저장 (위치가 애매해서 모두와 상의를 해보고 싶음)***
 
@@ -240,7 +219,7 @@ public class BattleManager
         switch (input)
         {
             case 0:
-                if(player.NowHealth == 0)
+                if(player.HP == 0)
                 {
                     PlayerDefeat();
                 }
@@ -258,7 +237,7 @@ public class BattleManager
         Console.WriteLine($"던전에서 몬스터 {monsterList.Count}마리를 잡았습니다.");
         Console.WriteLine();
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {statingHp} -> {player.NowHealth}"); //던전 입장시 체력을 만들어서 출력해 주었습니다
+        Console.WriteLine($"HP {statingHp} -> {player.HP}"); //던전 입장시 체력을 만들어서 출력해 주었습니다
         Console.WriteLine();
         Console.WriteLine("0. 다음");
 
@@ -267,6 +246,7 @@ public class BattleManager
         switch (input)
         {
             case 0:
+                isDungeonEnd = true;
                 //승리 처리
                 break;
         }
@@ -280,7 +260,7 @@ public class BattleManager
         Console.WriteLine();
         Console.WriteLine("You Lose");
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {statingHp} -> {player.NowHealth}");
+        Console.WriteLine($"HP {statingHp} -> {player.HP}");
         Console.WriteLine();
         Console.WriteLine("0. 다음");
 
@@ -290,11 +270,10 @@ public class BattleManager
         switch (input)
         {
             case 0:
+                isDungeonEnd = true;
                 //패배 처리
                 break;
         }
     }
 }
-
-
 
