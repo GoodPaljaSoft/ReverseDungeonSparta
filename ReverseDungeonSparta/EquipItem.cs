@@ -61,6 +61,7 @@ namespace ReverseDungeonSparta
 
         }
 
+        // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
             new EquipItemInfo(5,5,5,5,5,5,Type.Armor,Grade.Normal), // 아이템 1
@@ -83,7 +84,7 @@ namespace ReverseDungeonSparta
             new EquipItemInfo(5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 6
         };
 
-        public static List<EquipItem> GetEquipItemList(int num)
+        public static List<EquipItem> GetEquipItemList(int num)  // 만들어진 장착장비리스트에 아이템 객체 넣기 
         {
             List<EquipItem> equipItemList = new List<EquipItem>();
             for (int i = 0; i < num; i++)
@@ -93,7 +94,8 @@ namespace ReverseDungeonSparta
             return equipItemList;
 
         }
-        public static EquipItem InstanceEquipItem(int index)
+        public static EquipItem InstanceEquipItem(int index) // 배열 index를 통해서 아이템 정보를
+                                                             // 매개변수로 가진 아이템 객체 만들고 반환 
         {
             if (index >= 0 && index <= allEquipItem.Length)
             {
@@ -103,7 +105,7 @@ namespace ReverseDungeonSparta
             }
             else
             {
-                return new EquipItem();
+                return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
             }
         }
     }
