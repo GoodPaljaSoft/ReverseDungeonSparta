@@ -47,18 +47,21 @@ public class Monster
     //몬스터가 데미지를 입는 메소드
     public void OnDamage(int damage)
     {
-        //몬스터가 데미지를 입음***
-
-        //데미지를 입고 체력이 0 이하가 되면 사망처리***
+        Hp -= damage;
+        if(Hp < 0)
+        {
+            Hp = 0;
+            Dead();
+        }
     }
 
 
     //몬스터 종류 3가지 정의
     public static MonsterInfo[] allMonster =
     {
-        new MonsterInfo("이름1", 20, 3),
-        new MonsterInfo("이름2", 30, 2),
-        new MonsterInfo("이름3", 10, 5),
+        new MonsterInfo("Monster1", 20, 3),
+        new MonsterInfo("Monster2", 30, 2),
+        new MonsterInfo("Monster3", 10, 5),
     };
 
 
