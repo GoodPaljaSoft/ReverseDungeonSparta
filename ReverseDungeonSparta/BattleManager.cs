@@ -1,18 +1,22 @@
 ﻿using ReverseDungeonSparta;
+using System.Text;
 using System.Threading;
 
 
 public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
-    Player player;                                  
+    Player player;
     int oldPlayerHP;   //던전 입장 전 플레이어의 HP를 저장할 변수
 
-    bool isDungeonEnd = false;
+    bool isDungeonEnd = false;      //플레이어가 죽거나 모든 몬스터를 잡았는지 확인
 
     Random random = new Random();
     private TurnManager turnManager;
 
+    int listCount = 0;                      //battleOrderList의 Lengh를 업데이트 할 때 사용
+
+    List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
 
     //배틀 매니저 생성자
     public BattleManager(Player player)
@@ -24,8 +28,6 @@ public class BattleManager
         this.player = player;
         oldPlayerHP = player.HP;
 
-        player.Speed = 50;//***임시 플레이어 스피드 지정
-
         List<Character> allCharacterList = new List<Character>();
 
         allCharacterList.AddRange(monsterList);
@@ -35,32 +37,66 @@ public class BattleManager
     }
 
 
+    //배틀 순서를 텍스트로 변환하여 반환하는 메서드
+    public string BattleOrderTxt()
+    {
+        StringBuilder battleOrderListText = new StringBuilder();
+        foreach (Character character in battleOrderList)
+        {
+            Monster monster = character as Monster;
+            if ((monster != null && monster.IsDie == false) ||
+                character is Player)
+            {
+                battleOrderListText.Append($"{character.Name} > ");
+            }
+        }
+        battleOrderListText.Append("플레이어 > ... ");
+        return battleOrderListText.ToString();
+    }
+
+
+    //순서 리스트에서 해당 캐릭터를 빼고, 뺀 수만큼 listCount를 줄여주는 메서드
+    public void RemoveOrderListCharacter(Character character)
+    {
+        battleOrderList.Remove(character);
+    }
+
+
     //배틀매니저에서 배틀이 시작 될 때 실행할 메서드
     public void StartBattle()
     {
         while (isDungeonEnd == false)
         {
             turnManager.CalculateTurnPreview(); // 5턴 프리뷰를 계산
-            Character currentCharacter = turnManager.SeclectCharacter;
+            battleOrderList = turnManager.SeclectCharacter;
 
-            bool isPlayer = currentCharacter is Player;
-
-            if (isPlayer)
+            listCount = battleOrderList.Count;
+            for(int i = 0; i < listCount; i++)
             {
-                StartPlayerBattle();
-            }
-            else
-            {
-                Monster monster = currentCharacter as Monster;
+                if(battleOrderList.Count > 0)
+                {
+                bool isPlayer = battleOrderList[0] is Player;
 
-                StartMonsterBattle(monster);
+                if (isPlayer)
+                {
+                    StartPlayerBattle();
+                }
+                else
+                {
+                    Monster monster = battleOrderList[0] as Monster;
+
+                    StartMonsterBattle(monster);
+                }
+
+                battleOrderList.RemoveAt(0);
+                }
             }
         }
     }
 
 
     //플레이어의 턴이 시작 되었을 때 시작할 메서드
-    public void StartPlayerBattle() 
+    public void StartPlayerBattle()
     {
         Console.Clear();
         Console.WriteLine("Battle!!");
@@ -76,6 +112,8 @@ public class BattleManager
             else
                 Console.WriteLine(monsterList[i].HP);
         }
+        Console.WriteLine("");
+        Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
         Console.WriteLine($"[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
@@ -115,12 +153,13 @@ public class BattleManager
             else
                 Console.WriteLine(monsterList[i].HP);
         }
-
-        Console.WriteLine();
+        Console.WriteLine("");
+        Console.WriteLine($"{BattleOrderTxt()}");
+        Console.WriteLine("");
         Console.WriteLine("[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");//플레이어 최대 체력 추가 필요***
-        Console.WriteLine();
+        Console.WriteLine("");
         Console.WriteLine("0. 취소");
 
         int input = Util.GetUserInput(0, monsterList.Count);
@@ -163,12 +202,14 @@ public class BattleManager
         int beforeMonsterHP = monster.HP;
         int playerDamage = player.Attack;
         player.Attacking(monster, out int damage);
-
+        RemoveOrderListCharacter(monster);
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 공격!");
         Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+        Console.WriteLine("");
+        Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
         Console.WriteLine($"Lv.{monster.Level} {monster.Name}");
         Console.WriteLine($"HP {beforeMonsterHP} -> {(monster.IsDie ? "Dead" : (monster.HP))}");
@@ -186,15 +227,15 @@ public class BattleManager
                 //살아있다면 몬스터의 턴 시작
                 bool isWin = true;
 
-                foreach(Monster mon in monsterList)
+                foreach (Monster mon in monsterList)
                 {
-                    if(mon.IsDie == false)
+                    if (mon.IsDie == false)
                     {
                         isWin = false;
                     }
                 }
 
-                if(isWin)//모든 몬스터가 죽었다면
+                if (isWin)//모든 몬스터가 죽었다면
                 {
                     //플레이어 승리
                     AudioManager.PlayDungeonClearSE(0);
@@ -220,10 +261,12 @@ public class BattleManager
         Console.WriteLine();
         Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
         Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
-        Console.WriteLine();
+        Console.WriteLine("");
+        Console.WriteLine($"{BattleOrderTxt()}");
+        Console.WriteLine("");
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
         Console.WriteLine($"HP {beforeplayerHP} -> {player.HP}");
-        Console.WriteLine();
+        Console.WriteLine("");
         Console.WriteLine("0. 다음");
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
@@ -233,7 +276,7 @@ public class BattleManager
         switch (input)
         {
             case 0:
-                if(player.HP == 0)
+                if (player.HP == 0)
                 {
                     AudioManager.PlayPlayerDieSE(0);
                     PlayerDefeat();
@@ -266,6 +309,9 @@ public class BattleManager
                 isDungeonEnd = true;
                 //승리 처리
                 AudioManager.PlayMenuBGM();
+                GameManager gameManager = new GameManager();
+                AudioManager.PlayMoveMenuSE(0);
+                gameManager.GameMenu();
                 break;
         }
     }
