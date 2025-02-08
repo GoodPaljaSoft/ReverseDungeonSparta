@@ -1,7 +1,7 @@
 ﻿using ReverseDungeonSparta;
 using System;
 
-public class Monster :Character
+public class Monster : Character
 {
     static Random random = new Random();
 
@@ -25,6 +25,7 @@ public class Monster :Character
         }
     }
     public override string Name { get; set; } = string.Empty;
+    public MonsterType Type { get; set; }
     public int Level { get; set; }
     public bool IsDie { get; set; }
 
@@ -32,7 +33,8 @@ public class Monster :Character
     public Monster(MonsterInfo monsterInfo)
     {
         Name = monsterInfo.name;
-        Level = random.Next(1, 5);
+        Level = random.Next(1, 5); //*** 레벨 추후에 난이도 조절에 조정 필요
+        SkillList = Skill.AddMonsterSkill(this, 3);//*** 스킬 갯수 추후에 난이도 조절에 조정 필요
 
         MaxHP = monsterInfo.hp + (2 * Level);
         HP = MaxHP;
@@ -55,42 +57,42 @@ public class Monster :Character
     public static MonsterInfo[] AllWarrior =
     {
         //이름, 체력, 공격력
-        new MonsterInfo("균형잡힌 전사", 40, 2, 5),
-        new MonsterInfo("다혈질 전사", 30, 4, 5),
-        new MonsterInfo("건장한 전사", 45, 1, 5)
+        new MonsterInfo("균형잡힌 전사",MonsterType.Warrior, 40, 2, 5),
+        new MonsterInfo("다혈질 전사",MonsterType.Warrior, 30, 4, 5),
+        new MonsterInfo("건장한 전사",MonsterType.Warrior, 45, 1, 5)
     };
 
     //마법사 3가지 정의
     public static MonsterInfo[] AllMagician =
     {
-        new MonsterInfo("균형잡힌 마법사", 20, 4, 5),
-        new MonsterInfo("한방이 있는 마법사", 15, 8, 5),
-        new MonsterInfo("근성있는 마법사", 40, 2, 5)
+        new MonsterInfo("균형잡힌 마법사",MonsterType.Magician, 20, 4, 5),
+        new MonsterInfo("한방이 있는 마법사",MonsterType.Magician, 15, 8, 5),
+        new MonsterInfo("근성있는 마법사",MonsterType.Magician, 40, 2, 5)
     };
 
     //힐러 3가지 정의
     public static MonsterInfo[] AllHealer =
     {
-        new MonsterInfo("소심한 힐러", 30, 3, 5),
-        new MonsterInfo("화가 많은 힐러", 25, 4, 5),
-        new MonsterInfo("근성있는 힐러", 45, 2, 5)
+        new MonsterInfo("소심한 힐러",MonsterType.Healer, 30, 3, 5),
+        new MonsterInfo("화가 많은 힐러",MonsterType.Healer, 25, 4, 5),
+        new MonsterInfo("근성있는 힐러",MonsterType.Healer, 45, 2, 5)
     };
 
     //도적 3가지 정의
     public static MonsterInfo[] AllRogue =
     {
-        new MonsterInfo("보물상자를 찾는 도적", 45, 2, 5),
-        new MonsterInfo("한방을 노리는 도적", 25, 4, 5),
-        new MonsterInfo("시체를 뒤지던 도적", 30, 1, 5)
+        new MonsterInfo("보물상자를 찾는 도적",MonsterType.Rouge, 45, 2, 5),
+        new MonsterInfo("한방을 노리는 도적",MonsterType.Rouge, 25, 4, 5),
+        new MonsterInfo("시체를 뒤지던 도적",MonsterType.Rouge, 30, 1, 5)
     };
 
 
     //궁수 3가지 정의
     public static MonsterInfo[] AllArcher =
     {
-        new MonsterInfo("인내심 있는 궁수", 30, 2, 5),
-        new MonsterInfo("현상금을 노리는 궁수", 20, 3, 5),
-        new MonsterInfo("날렵한 명사수", 10, 5, 5)
+        new MonsterInfo("인내심 있는 궁수",MonsterType.Acher, 30, 2, 5),
+        new MonsterInfo("현상금을 노리는 궁수",MonsterType.Acher, 20, 3, 5),
+        new MonsterInfo("날렵한 명사수",MonsterType.Acher, 10, 5, 5)
     };
 
 
@@ -128,7 +130,7 @@ public class Monster :Character
     {
         List<MonsterInfo> frontAllMonsterInfo = new List<MonsterInfo>();
 
-        foreach(MonsterInfo monsterinfo in AllWarrior)
+        foreach (MonsterInfo monsterinfo in AllWarrior)
         {
             frontAllMonsterInfo.Add(monsterinfo);
         }
@@ -141,7 +143,7 @@ public class Monster :Character
 
         MonsterInfo monsterInfo = frontAllMonsterInfo[rand];
 
-        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
+        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.type ,monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
     }
 
 
@@ -167,23 +169,33 @@ public class Monster :Character
 
         MonsterInfo monsterInfo = backAllMonsterInfo[rand];
 
-        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
+        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.type, monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
     }
 
     //몬스터의 정보를 저장할 구조체
     public struct MonsterInfo
     {
         public string name;
+        public MonsterType type;
         public int hp;
         public int atk;
         public int speed;
 
-        public MonsterInfo(string _name, int _hp, int _atk, int _speed)
+        public MonsterInfo(string _name, MonsterType _type, int _hp, int _atk, int _speed)
         {
-            name= _name;
-            hp= _hp;
-            atk= _atk;
+            name = _name;
+            hp = _hp;
+            atk = _atk;
             speed = _speed;
         }
     }
+
+    public enum MonsterType
+    {
+        Warrior,
+        Rouge,
+        Magician,
+        Healer,
+        Acher
+    };
 }
