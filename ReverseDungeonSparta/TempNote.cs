@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ReverseDungeonSparta;
@@ -9,7 +10,10 @@ using ReverseDungeonSparta;
 public class TurnManager
 {
     public List<Character> Characters { get; private set; }
-    public List<Character> SeclectCharacter { get; private set; }
+
+    //속도를 기준으로 객체의 턴을 저장해서 플레이어를 기준으로 플레나올 때까지의 캐릭터를 전부 보낼 때 사용
+    public List<Character> SeclectCharacter { get; private set; }   
+    
     public List<(Character, double)> turnQueue { get; private set; }
 
 
@@ -19,9 +23,11 @@ public class TurnManager
         Characters = characters;
         SeclectCharacter = new List<Character>();
         turnQueue = new List<(Character, double)>();
+
+
         turnQueue = Characters
-    .Select(c => (c, 100.0d / c.Speed))
-    .ToList();
+            .Select(c => (c, 100.0d / c.Speed))
+            .ToList();
     }
 
 
@@ -44,10 +50,12 @@ public class TurnManager
             while (true)
             {
                 var nextCharacter = turnQueue.OrderBy(t => t.Item2).First();
+
                 if (nextCharacter.Item1 is Player && SeclectCharacter.Count > 0)
                 {
                     break;
                 }
+
                 SeclectCharacter.Add(nextCharacter.Item1);
                 turnQueue = turnQueue
                     .Where(t => t.Item1 != nextCharacter.Item1)
