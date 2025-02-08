@@ -3,7 +3,6 @@
     public class Character
     {
         public virtual string Name { get; set; } = string.Empty;
-
         public virtual int Luck { get; set; }
         public virtual int Defence { get; set; }
         public virtual int Attack { get; set; }
@@ -18,6 +17,8 @@
 
         public virtual int Critical { get; set; }   // 치명타 확률
         public virtual int Evasion { get; set; }    // 회피율
+
+        public List<Skill> SkillList { get; set; }
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환
