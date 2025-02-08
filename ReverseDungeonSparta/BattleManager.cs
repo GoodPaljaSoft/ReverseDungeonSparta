@@ -61,34 +61,49 @@ public class BattleManager
         battleOrderList.Remove(character);
     }
 
+    public void MonsterListInfoTxt(bool isNum)
+    {
+        for (int i = 0; i < monsterList.Count; i++)
+        {
+            //번호/레벨/이름/HP(Dead)
+            Console.Write($"{(isNum ? (i + 1) : "")}Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
+
+            //죽은 몬스터가 있다면 사망 처리
+            if (monsterList[i].IsDie)
+                Console.WriteLine("Dead");
+            else
+                Console.WriteLine(monsterList[i].HP);
+        }
+    }
+
 
     //배틀매니저에서 배틀이 시작 될 때 실행할 메서드
     public void StartBattle()
     {
         while (isDungeonEnd == false)
         {
-            turnManager.CalculateTurnPreview(); // 5턴 프리뷰를 계산
+            turnManager.CalculateTurnPreview(); // 플레이어 나올 때까지 프리뷰를 계산
             battleOrderList = turnManager.SeclectCharacter;
 
             listCount = battleOrderList.Count;
-            for(int i = 0; i < listCount; i++)
+            for (int i = 0; i < listCount; i++)
             {
-                if(battleOrderList.Count > 0)
+                if (battleOrderList.Count > 0)
                 {
-                bool isPlayer = battleOrderList[0] is Player;
+                    bool isPlayer = battleOrderList[0] is Player;
 
-                if (isPlayer)
-                {
-                    StartPlayerBattle();
-                }
-                else
-                {
-                    Monster monster = battleOrderList[0] as Monster;
+                    if (isPlayer)
+                    {
+                        StartPlayerBattle();
+                    }
+                    else
+                    {
+                        Monster monster = battleOrderList[0] as Monster;
 
-                    StartMonsterBattle(monster);
-                }
+                        StartMonsterBattle(monster);
+                    }
 
-                battleOrderList.RemoveAt(0);
+                    battleOrderList.RemoveAt(0);
                 }
             }
         }
@@ -101,17 +116,7 @@ public class BattleManager
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
-        for (int i = 0; i < monsterList.Count; i++)
-        {
-            //번호/레벨/이름/HP(Dead)
-            Console.Write($"Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
-
-            //죽은 몬스터가 있다면 사망 처리
-            if (monsterList[i].IsDie)
-                Console.WriteLine("Dead");
-            else
-                Console.WriteLine(monsterList[i].HP);
-        }
+        MonsterListInfoTxt(false);
         Console.WriteLine("");
         Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
@@ -120,15 +125,64 @@ public class BattleManager
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
         Console.WriteLine("");
         Console.WriteLine("1. 공격");
+        Console.WriteLine("2. 스킬");
+
 
         //플레이어가 공격을 선택할 수 있는 입력칸
-        int input = Util.GetUserInput(1, 1);
+        int input = Util.GetUserInput(1, 2);
 
         switch (input)
         {
             case 1:
                 AudioManager.PlayMoveMenuSE(0);
                 PlayerSelectMonster();
+                break;
+
+            case 2:
+                AudioManager.PlayMoveMenuSE(0);
+                PlayerSelectSkill();
+                break;
+        }
+    }
+
+
+    //플레이어가 스킬을 사용할 때 들어오는 메소드
+    public void PlayerSelectSkill()
+    {
+        Console.Clear();
+        Console.WriteLine("Battle!!");
+        Console.WriteLine("");
+        MonsterListInfoTxt(false);
+        Console.WriteLine("");
+        Console.WriteLine($"{BattleOrderTxt()}");
+        Console.WriteLine("");
+        Console.WriteLine($"[내 정보]");
+        Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
+        Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
+        Console.WriteLine("");
+        for(int i = 0; i < player.SkillList.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {player.SkillList[i].Name}");
+        }
+
+
+        //플레이어가 스킬을 선택할 수 있는 입력칸
+        int input = Util.GetUserInput(0, player.SkillList.Count);
+
+
+        //*** 나중에 스위치문 지우고 플레이어 스킬의 수만큼 자동으로 받아서 실행하는 메서드 제작 필요
+        switch (input)
+        {
+            case 0: //취소
+                AudioManager.PlayMoveMenuSE(0);
+                break;
+
+            case 1:
+                AudioManager.PlayMoveMenuSE(0);
+                break;
+
+            case 2:
+                AudioManager.PlayMoveMenuSE(0);
                 break;
         }
     }
@@ -140,19 +194,7 @@ public class BattleManager
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
-        for (int i = 0; i < monsterList.Count; i++)
-        {
-
-            //번호/레벨/이름/HP(Dead)
-            Console.Write($"{i + 1}) Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
-
-            //죽은 몬스터가 있다면 사망 처리
-            //죽은 몬스터의 텍스트는 어두운 색으로 표시***
-            if (monsterList[i].IsDie)
-                Console.WriteLine("Dead");
-            else
-                Console.WriteLine(monsterList[i].HP);
-        }
+        MonsterListInfoTxt(true);
         Console.WriteLine("");
         Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
