@@ -32,6 +32,8 @@ namespace ReverseDungeonSparta
             Name = "플레이어";
             Level = 1;
 
+            SkillList = Skill.AddPlayerSkill(this, 3);
+
             Luck = 5;
             Defence = 5;
             Attack = 100;
@@ -42,7 +44,7 @@ namespace ReverseDungeonSparta
             MaxMP = 100;
             MP = MaxMP;
 
-            Speed = 5;
+            Speed = 8;
 
             Critical = 5;
             Evasion = 5;
