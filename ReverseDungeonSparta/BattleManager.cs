@@ -7,6 +7,7 @@ public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
+    List<(String, Action, Action)> menuItems;
     Skill playerSelectSkill;
     Player player;
     Random random = new Random();
@@ -96,6 +97,7 @@ public class BattleManager
                     if (isPlayer)
                     {
                         playerSelectSkill = null;//등록된 플레이어 스킬 초기화
+                        selectedMonsterIndex = null;
                         StartPlayerBattle();
                     }
                     else
@@ -126,14 +128,12 @@ public class BattleManager
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
         Console.WriteLine("");
-        Console.WriteLine("1. 공격");
-        Console.WriteLine("2. 스킬");
 
 
-        List<(String, Action)> menuItems = new List<(string, Action)>
+        menuItems = new List<(string, Action, Action)>
             {
-                ("1. 공격", PlayerSelectMonster),
-                ("2. 스킬", PlayerSelectSkillNum)
+                ("공격하기", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
+                ("스킬 사용하기", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
             };
 
         //플레이어가 공격을 선택할 수 있는 입력칸
@@ -141,9 +141,12 @@ public class BattleManager
     }
 
 
+
     //플레이어가 스킬 사용을 누른 후 스킬의 번호를 선택하는 메소드
     public void PlayerSelectSkillNum()
     {
+        menuItems = new List<(string, Action, Action)>();
+
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
@@ -155,23 +158,15 @@ public class BattleManager
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
         Console.WriteLine("");
-        for(int i = 0; i < player.SkillList.Count; i++)
-        {
-            Console.WriteLine($"{i + 1}. {player.SkillList[i].Name}");
-        }
-
-
-
-        List<(String, Action)> menuItems = new List<(string, Action)>();
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
-        menuItems = player.SkillList
+        List<(string, Action)> skillList = player.SkillList
                                 .Select(x => (x.Name, (Action)PlayerSelectMonster))
                                 .ToList();
-        menuItems.Add(new("돌아가기", StartPlayerBattle));
+        skillList.Add(new("돌아가기", StartPlayerBattle));
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
-        GetUserSkillInput(menuItems, PlayerSelectSkillNum, ref selectedIndex);
+        GetUserSkillInput(skillList, PlayerSelectSkillNum, ref selectedIndex);
     }
 
 
@@ -247,12 +242,6 @@ public class BattleManager
         //임시 코드 ***
         Monster monster = monsterList[0];
 
-
-        List<(String, Action)> menuItems = new List<(string, Action)>
-        {
-            ("0. 다음", CheckPlayerWinOrDeaf)
-        };
-
         int beforeMonsterHP = monster.HP;
         int playerDamage = player.Attack;
         player.Attacking(monster, out int damage);
@@ -269,10 +258,20 @@ public class BattleManager
         Console.WriteLine($"Lv.{monster.Level} {monster.Name}");
         Console.WriteLine($"HP {beforeMonsterHP} -> {(monster.IsDie ? "Dead" : (monster.HP))}");
         Console.WriteLine("");
+        Console.WriteLine("-> 다음");
 
-        Util.GetUserInput(menuItems, PlayerAttackMonster, ref selectedIndex);
+        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+        switch (keyInfo.Key)
+        {
+            case ConsoleKey.Enter:
+                isDungeonEnd = true;
+                //패배 처리
+                break;
+        }
     }
 
+
+    //플레이어가 승리했는지 패배했는지 확인하는 메서드
     public void CheckPlayerWinOrDeaf()
     {
         //몬스터가 전부 죽었는지 확인
@@ -323,7 +322,7 @@ public class BattleManager
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
         Console.WriteLine($"HP {beforeplayerHP} -> {player.HP}");
         Console.WriteLine("");
-        Console.WriteLine("-> 0. 다음");
+        Console.WriteLine("-> 다음");
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
 
@@ -359,7 +358,7 @@ public class BattleManager
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         switch (keyInfo.Key)
         {
-            case 0:
+            case ConsoleKey.Enter:
                 isDungeonEnd = true;
                 //승리 처리
                 AudioManager.PlayMenuBGM();
@@ -382,12 +381,12 @@ public class BattleManager
         Console.WriteLine($"Lv. {player.Level} {player.Name}");
         Console.WriteLine($"HP {oldPlayerHP} -> {player.HP}");
         Console.WriteLine();
-        Console.WriteLine("-> 0. 다음");
+        Console.WriteLine("-> 다음");
 
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         switch (keyInfo.Key)
         {
-            case 0:
+            case ConsoleKey.Enter:
                 isDungeonEnd = true;
                 //패배 처리
                 break;
@@ -420,7 +419,7 @@ public class BattleManager
                     while (true)
                     {
                         selectedIndex--;
-                        if (player.SkillList[selectedIndex - 1].ConsumptionMP <= player.MP) break;
+                        if (player.SkillList[selectedIndex].ConsumptionMP <= player.MP) break;
                     }
                 }
                 nowMenu();
@@ -440,15 +439,18 @@ public class BattleManager
                 break;
 
             case ConsoleKey.Enter:      //엔터를 눌렀을 때
-                if(selectedIndex != player.SkillList.Count)
+                int tempIndex = selectedIndex;
+                selectedIndex = 0;
+                if (tempIndex != player.SkillList.Count)
                 {
+                    AudioManager.PlayMoveMenuSE(0);
                     PlayerSelectSkillNum();
                     //취소 처리
                 }
                 else
                 {
-                    menuList[selectedIndex].Item2();
-                    playerSelectSkill = player.SkillList[selectedIndex];
+                    menuList[tempIndex].Item2();
+                    playerSelectSkill = player.SkillList[tempIndex];
                     //스킬 입력
                 }
                 break;
@@ -461,7 +463,20 @@ public class BattleManager
 
     public void GetMonsterIndex(List<(String, Action)> menuItems, Action nowMenu, Skill skill, ref int[] selectedMonsterIndex)
     {
-        ExtentEnum extentEnum = skill.Extent;
+        ExtentEnum extentEnum;
+        if (skill != null)
+        {
+            extentEnum = skill.Extent;//***null 입력 오류
+        }
+        else
+        {
+            extentEnum = ExtentEnum.First;
+        }
+
+        if (selectedMonsterIndex == null)
+        {
+            selectedMonsterIndex = Skill.GetExtent(extentEnum);
+        }
 
 
         for (int i = 0; i < monsterList.Count; i++)
@@ -481,20 +496,14 @@ public class BattleManager
         switch (keyInfo.Key)
         {
             case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
-                if (selectedIndex > 0)
-                {
-                    selectedIndex--;
-                    AudioManager.PlayMoveMenuSE(0);
-                }
+                AudioManager.PlayMoveMenuSE(0);
+                selectedMonsterIndex = Skill.DownExtent(selectedMonsterIndex);
                 nowMenu();
                 break;
 
             case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
-                if (selectedIndex < monsterList.Count - 1)
-                {
-                    selectedIndex++;
-                    AudioManager.PlayMoveMenuSE(0);
-                }
+                AudioManager.PlayMoveMenuSE(0);
+                selectedMonsterIndex = Skill.UpExtent(selectedMonsterIndex);
                 nowMenu();
                 break;
 
