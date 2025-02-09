@@ -91,7 +91,6 @@ public class BattleManager
     {
         while (isDungeonEnd == false)
         {
-            turnManager.Characters = allCharacterList;
             turnManager.CalculateTurnPreview(); // 플레이어 나올 때까지 프리뷰를 계산
             battleOrderList = turnManager.SeclectCharacter;
 
@@ -215,7 +214,7 @@ public class BattleManager
         Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 공격!");
-        foreach(Monster monster in  monsters)
+        foreach (Monster monster in monsters)
         {
             int beforeMonsterHP = monster.HP;
             player.Attacking(monster, out int damage);
@@ -223,7 +222,7 @@ public class BattleManager
             Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         }
         Console.WriteLine("");
-        for (int i = 0; i <  beforeMonstehpr.Count; i++)
+        for (int i = 0; i < beforeMonstehpr.Count; i++)
         {
             Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
             Console.WriteLine($"HP {beforeMonstehpr[i]} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
@@ -296,16 +295,20 @@ public class BattleManager
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
 
-        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-        switch (keyInfo.Key)
+        while (true)
         {
-            case ConsoleKey.Enter:      //엔터를 눌렀을 때
-                if (player.HP == 0)
-                {
-                    AudioManager.PlayPlayerDieSE(0);
-                    PlayerDefeat();
-                }
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+            if(keyInfo.Key == ConsoleKey.Enter)
+            {
                 break;
+            }
+        }
+
+        if (player.HP <= 0)
+        {
+            AudioManager.PlayPlayerDieSE(0);
+            PlayerDefeat();
         }
     }
 
@@ -415,7 +418,7 @@ public class BattleManager
                 break;
 
             case ConsoleKey.Enter:      //엔터를 눌렀을 때
-                if(player.SkillList.Count > selectedIndex)
+                if (player.SkillList.Count > selectedIndex)
                 {
                     AudioManager.PlayMoveMenuSE(0);
                     int tempIndex = selectedIndex;
@@ -446,8 +449,8 @@ public class BattleManager
 
         //스킬이 지정되어 있는지 확인하고 없다면 평타로 취급 되어 한칸짜리 공격으로 지정.
         ExtentEnum extentEnum;
-        if (playerSelectSkill != null)  extentEnum = playerSelectSkill.Extent;
-        else                            extentEnum = ExtentEnum.First;
+        if (playerSelectSkill != null) extentEnum = playerSelectSkill.Extent;
+        else extentEnum = ExtentEnum.First;
 
         //selectedMonsterIndex가 비어있을 경우 extentEnum에 해당하는 범위 값을 int[]로 가져옴
         if (selectedMonsterIndex == null) selectedMonsterIndex = Skill.GetExtent(extentEnum);
@@ -471,7 +474,7 @@ public class BattleManager
             if (monsterList.Count > i)
             {
                 txt = (isSelected ? "-> " : "   ") + menuItems[i];
-                if(isSelected) selectMonsterList.Add(monsterList[i]);
+                if (isSelected) selectMonsterList.Add(monsterList[i]);
             }
             else
             {
