@@ -140,5 +140,21 @@ namespace ReverseDungeonSparta
 
             return result;
         }
+
+
+        //리스트를 무작위로 섞는 메서드
+        public static List<T> ShuffleList<T>(List<T> list)
+        {
+            Random random = new Random();
+            int n = list.Count;
+
+            for(int i = n - 1; i > 0; i--) //리스트의 뒤쪽 요소부터 선택하여 실행
+            {
+                int j = random.Next(0, i + 1);//0 ~ i까지 무작위 인덱스 선택
+                (list[i], list[j]) = (list[j], list[i]);
+            }
+
+            return list;
+        }
     }
 }
