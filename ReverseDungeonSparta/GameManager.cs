@@ -16,7 +16,7 @@ namespace ReverseDungeonSparta
         Player player = new Player();
         BattleManager BattleManagerInstance { get; set; }
 
-        int selectedIndex = 0;
+        public int selectedIndex = 0;
 
         public GameManager()
         {
@@ -31,6 +31,21 @@ namespace ReverseDungeonSparta
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
             Util.PrintPlayerView(player);
         }
+        public void InventoryMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("인벤토리");
+            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+             menuItems = new List<(string, Action, Action)>
+            {
+                ("아이템 조합", EquipItem.ItemUpgrade, () => AudioManager.PlayMoveMenuSE(0)),
+                ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
+            };
+            Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
+        }
 
         public void EnterPlayerStatusMenu()
         {
@@ -44,6 +59,7 @@ namespace ReverseDungeonSparta
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.StartBattle();
         }
+        
 
         public void GameMenu() // 시작화면 구현
         {
@@ -58,8 +74,8 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("1. 상태 보기", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("2. 전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0))
-                //추가 할 경우
+                ("2. 전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("3. 인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
                 //("3. 아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름])
                 //...
             };
