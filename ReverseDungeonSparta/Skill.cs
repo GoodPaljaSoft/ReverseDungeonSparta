@@ -26,7 +26,7 @@ namespace ReverseDungeonSparta
 
 
         //스킬 범위 enum을 받은 후 범위를 int[]로 반환하는 메서드
-        public int[] GetExtent(ExtentEnum extentEnum)
+        public static int[] GetExtent(ExtentEnum extentEnum)
         {
             switch (extentEnum)
             {
@@ -49,7 +49,7 @@ namespace ReverseDungeonSparta
 
 
         //스킬 범위를 한 칸 밀어내는 메서드
-        public int[] UpExtent(int[] extentArray)
+        public static int[] UpExtent(int[] extentArray)
         {
             int[] result = extentArray;
             int lastNum = extentArray.Last();
@@ -64,7 +64,7 @@ namespace ReverseDungeonSparta
 
 
         //스킬 범위를 한 칸 당기는 메서드
-        public int[] DownExtent(int[] extentArray)
+        public static int[] DownExtent(int[] extentArray)
         {
             int[] result = extentArray;
             int firstNum = extentArray.First();
