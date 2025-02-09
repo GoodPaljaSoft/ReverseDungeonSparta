@@ -8,6 +8,8 @@ public class BattleManager
     //구현해야 할 것들.
     //3. 회복 스킬 로직 완성.
     //4. 몬스터 생성 로직 난이도 별로 다르게 조정할 필요 있음.
+    //5. 텍스트의 출력 위치를 커서 위치를 이용해 고정하여 바뀌는 텍스트만 초기화 되도록 변경.
+    //
 
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트

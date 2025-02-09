@@ -1,5 +1,6 @@
 ﻿using ReverseDungeonSparta;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 public class Monster : Character
 {
@@ -114,7 +115,6 @@ public class Monster : Character
                 }
             }
         }
-
         //데미지 계산식
         double margin = attackDamage * 0.1d;
         margin = Math.Ceiling(margin);
@@ -124,6 +124,12 @@ public class Monster : Character
         OnDamage(target, damage);
     }
 
+
+    //해당 스킬의 타입을 확인하고 물리, 마법, 힐에 따라 작용 방식을 달리 만드는 메서드
+    public void CheckSkillType()
+    {
+
+    }
 
     //몬스터가 사망할 때 처리할 메서드
     public void IsDead()
