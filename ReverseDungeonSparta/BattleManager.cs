@@ -90,6 +90,7 @@ public class BattleManager
             listCount = battleOrderList.Count;
             for (int i = 0; i < listCount; i++)
             {
+                AudioManager.PlayMoveMenuSE(0);
                 if (battleOrderList.Count > 0)
                 {
                     bool isPlayer = battleOrderList[0] is Player;
@@ -103,8 +104,7 @@ public class BattleManager
                     else
                     {
                         Monster monster = battleOrderList[0] as Monster;
-
-                        StartMonsterBattle(monster);
+                        StartMonsterBattle(monster); ;
                     }
 
                     battleOrderList.RemoveAt(0);
@@ -141,7 +141,6 @@ public class BattleManager
     }
 
 
-
     //플레이어가 스킬 사용을 누른 후 스킬의 번호를 선택하는 메소드
     public void PlayerSelectSkillNum()
     {
@@ -158,12 +157,12 @@ public class BattleManager
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
         Console.WriteLine("");
+        Console.WriteLine("[C] 돌아가기");
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
         List<(string, Action)> skillList = player.SkillList
                                 .Select(x => (x.Name, (Action)PlayerSelectMonster))
                                 .ToList();
-        skillList.Add(new("돌아가기", StartPlayerBattle));
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
         GetUserSkillInput(skillList, PlayerSelectSkillNum, ref selectedIndex);
@@ -173,12 +172,13 @@ public class BattleManager
     //플레이어가 공격할 몬스터를 선택하는 메소드 
     public void PlayerSelectMonster()
     {
-        List<(String, Action)> menuItems = new List<(string, Action)>();
+        List<string> monsterListTxt = new List<string>();
 
-        menuItems = monsterList
-            .Select(x => ($"Lv.{x.Level} {(x.IsDie ? "Dead" : (x.Name + "HP"))}", (Action)PlayerAttackMonster))
+        monsterListTxt = monsterList
+            .Select(x => ($"Lv.{x.Level} {(x.IsDie ? "Dead" : (x.Name + "HP"))}"))
             .ToList();
-            
+
+
 
         Console.Clear();
         Console.WriteLine("Battle!!");
@@ -191,45 +191,16 @@ public class BattleManager
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
         Console.WriteLine($"HP {player.HP}/{player.MaxHP}");//플레이어 최대 체력 추가 필요***
         Console.WriteLine("");
-        Console.WriteLine("0. 돌아가기");
+        Console.WriteLine("[C] 돌아가기");
 
-        GetMonsterIndex(menuItems, PlayerSelectMonster, playerSelectSkill, ref selectedMonsterIndex);
+
+        GetMonsterIndex(monsterListTxt, PlayerSelectMonster, ref selectedMonsterIndex);
 
 
         //switch (input)
         //{
-        //    case 0:
-        //        AudioManager.PlayMoveMenuSE(0);
-        //        if(skillNum == null)  StartPlayerBattle();                //공격 창으로 돌아감
-        //        else                  PlayerSelectSkillNum();             //스킬 번호 선택 창으로 돌아감
-        //        break;
         //    default:
-        //        //죽은 몬스터를 선택했다면
-
-        //        //스킬인 상태인지 확인함.
-        //        //스킬 상태일 경우 해당 경로에 몬스터가 있는지 따로 확인함.
-
-        //        if(skillNum != null)
-        //        {
-
-        //        }
-
-        //        if (monsterList[input - 1].IsDie)
-        //        {
-        //            //잘못된 입력임을 알려주고
-        //            AudioManager.PlayMoveMenuSE(0);
-        //            Console.WriteLine("잘못된 입력입니다.");
-        //            Thread.Sleep(1000);
-
-        //            //처음으로 돌아감
-        //            PlayerSelectMonster(skillNum);
-        //        }
-        //        else //살아있는 몬스터를 선택했다면
-        //        {
-        //            //플레이어가 선택한 공격 타입에 따라 효과음 소리 변환***
         //            PlayerAttackMonster(monsterList[input - 1]);
-        //        }
-
         //        break;
         //}
 
@@ -237,36 +208,37 @@ public class BattleManager
 
 
     //플레이어가 몬스터를 공격한 이후에 실행할 메서드
-    public void PlayerAttackMonster()
+    public void PlayerAttackMonster(List<Monster> monsters)
     {
         //임시 코드 ***
-        Monster monster = monsterList[0];
-
-        int beforeMonsterHP = monster.HP;
-        int playerDamage = player.Attack;
-        player.Attacking(monster, out int damage);
-        RemoveOrderListCharacter(monster);
+        List<int> beforeMonstehpr = monsters.Select(x => x.HP).ToList();
 
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
-        Console.WriteLine($"{player.Name} 의 공격!");
-        Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
-        Console.WriteLine("");
         Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
-        Console.WriteLine($"Lv.{monster.Level} {monster.Name}");
-        Console.WriteLine($"HP {beforeMonsterHP} -> {(monster.IsDie ? "Dead" : (monster.HP))}");
+        Console.WriteLine($"{player.Name} 의 공격!");
+        foreach(Monster monster in  monsters)
+        {
+            int beforeMonsterHP = monster.HP;
+            player.Attacking(monster, out int damage);
+            RemoveOrderListCharacter(monster);
+            Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+        }
+        Console.WriteLine("");
+        for (int i = 0; i <  beforeMonstehpr.Count; i++)
+        {
+            Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
+            Console.WriteLine($"HP {beforeMonstehpr[i]} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
+        }
         Console.WriteLine("");
         Console.WriteLine("-> 다음");
 
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         switch (keyInfo.Key)
         {
-            case ConsoleKey.Enter:
-                isDungeonEnd = true;
-                //패배 처리
-                break;
+            case ConsoleKey.Enter: break;
         }
     }
 
@@ -394,8 +366,7 @@ public class BattleManager
     }
 
 
-
-    //모르겠다...
+    //원하는 스킬을 선택하고 선택에 성공한다면 해당 스킬을 playerSelectSkill에 저장하는 메서드
     public void GetUserSkillInput(List<(String, Action)> menuList, Action nowMenu, ref int selectedIndex)
     {
         while (selectedIndex < player.SkillList.Count && player.SkillList[selectedIndex].ConsumptionMP > player.MP)
@@ -438,21 +409,28 @@ public class BattleManager
                 nowMenu();
                 break;
 
-            case ConsoleKey.Enter:      //엔터를 눌렀을 때
-                int tempIndex = selectedIndex;
+            case ConsoleKey.C:  //아래 화살표를 눌렀을 때
                 selectedIndex = 0;
-                if (tempIndex != player.SkillList.Count)
+                AudioManager.PlayMoveMenuSE(0);
+                StartPlayerBattle();
+                //취소 처리
+                break;
+
+            case ConsoleKey.Enter:      //엔터를 눌렀을 때
+                if(player.SkillList.Count > selectedIndex)
                 {
                     AudioManager.PlayMoveMenuSE(0);
-                    PlayerSelectSkillNum();
-                    //취소 처리
+                    int tempIndex = selectedIndex;
+                    selectedIndex = 0;
+                    playerSelectSkill = player.SkillList[tempIndex];
+                    menuList[tempIndex].Item2();
                 }
                 else
                 {
-                    menuList[tempIndex].Item2();
-                    playerSelectSkill = player.SkillList[tempIndex];
-                    //스킬 입력
+                    AudioManager.PlayMoveMenuSE(0);
+                    nowMenu();
                 }
+
                 break;
 
             default:                    //상관 없는 키가 눌렸을 때
@@ -461,35 +439,47 @@ public class BattleManager
         }
     }
 
-    public void GetMonsterIndex(List<(String, Action)> menuItems, Action nowMenu, Skill skill, ref int[] selectedMonsterIndex)
+
+    //플레이어가 선택한 공격 방식에 따라 몬스터의 이름 옆에 화살표를 출력하고 해당 위치 값을 selectedMonsterIndex에 저장하는 메소드
+    public void GetMonsterIndex(List<String> menuItems, Action nowMenu, ref int[] selectedMonsterIndex)
     {
+        //지정한 몬스터를 담을 리스트
+        List<Monster> selectMonsterList = new List<Monster>();
+
+        //스킬이 지정되어 있는지 확인하고 없다면 평타로 취급 되어 한칸짜리 공격으로 지정.
         ExtentEnum extentEnum;
-        if (skill != null)
-        {
-            extentEnum = skill.Extent;//***null 입력 오류
-        }
-        else
-        {
-            extentEnum = ExtentEnum.First;
-        }
+        if (playerSelectSkill != null)  extentEnum = playerSelectSkill.Extent;
+        else                            extentEnum = ExtentEnum.First;
 
-        if (selectedMonsterIndex == null)
-        {
-            selectedMonsterIndex = Skill.GetExtent(extentEnum);
-        }
+        //selectedMonsterIndex가 비어있을 경우 extentEnum에 해당하는 범위 값을 int[]로 가져옴
+        if (selectedMonsterIndex == null) selectedMonsterIndex = Skill.GetExtent(extentEnum);
 
-
-        for (int i = 0; i < monsterList.Count; i++)
+        //몬스터의 최대 생성 수인 4마리를 기준으로 반복문 시작.int[]값에 해당하는 부분에 화살표 표시를 처리함.
+        for (int i = 0; i < 4; i++)
         {
-            for (int j = 0; j < selectedMonsterIndex.Length; j++)
+            string txt = "";
+            string level = "";
+            string name = "";
+            bool isDie = false;
+            if (i < monsterList.Count && monsterList[i] != null)
             {
-                if (i == selectedMonsterIndex[j])
-                {
-                    Console.WriteLine($"-> Lv.{monsterList[i].Level} {(monsterList[i].IsDie ? ("Dead") : (monsterList[i].Name + "HP"))}");
-                    break;
-                }
-                else Console.WriteLine($"   Lv.{monsterList[i].Level} {(monsterList[i].IsDie ? ("Dead") : (monsterList[i].Name + "HP"))}");
+                level = monsterList[i].Level.ToString();
+                name = monsterList[i].Name;
+                isDie = monsterList[i].IsDie;
             }
+
+            bool isSelected = selectedMonsterIndex.Contains(i);
+
+            if (monsterList.Count > i)
+            {
+                txt = (isSelected ? "-> " : "   ") + menuItems[i];
+                if(isSelected) selectMonsterList.Add(monsterList[i]);
+            }
+            else
+            {
+                txt = (isSelected ? "-> " : "   ") + "[null]";
+            }
+            Console.WriteLine(txt);
         }
 
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -497,23 +487,26 @@ public class BattleManager
         {
             case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
                 AudioManager.PlayMoveMenuSE(0);
-                selectedMonsterIndex = Skill.DownExtent(selectedMonsterIndex);
+                selectedMonsterIndex = Util.DownExtent(selectedMonsterIndex);
                 nowMenu();
                 break;
 
             case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
                 AudioManager.PlayMoveMenuSE(0);
-                selectedMonsterIndex = Skill.UpExtent(selectedMonsterIndex);
+                selectedMonsterIndex = Util.UpExtent(selectedMonsterIndex);
                 nowMenu();
                 break;
 
             case ConsoleKey.C:
+                selectedMonsterIndex = null;
                 AudioManager.PlayMoveMenuSE(0);
+                playerSelectSkill = null;
                 StartPlayerBattle();
                 break;
 
             case ConsoleKey.Enter:      //엔터를 눌렀을 때
                 //***공격 실행
+                PlayerAttackMonster(selectMonsterList);
                 break;
 
             default:                    //상관 없는 키가 눌렸을 때
