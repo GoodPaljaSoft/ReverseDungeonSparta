@@ -6,14 +6,11 @@ using System.Threading;
 public class BattleManager
 {
     //구현해야 할 것들.
-    //1. 클리어 화면, 사망 화면으로 넘어감.
-    //2. 몬스터가 스킬을 사용 가능하도록 만듦.
     //3. 회복 스킬 로직 완성.
     //4. 몬스터 생성 로직 난이도 별로 다르게 조정할 필요 있음.
 
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
-    List<Character> allCharacterList = new List<Character>();
     List<(String, Action, Action)> menuItems;
     Skill playerSelectSkill;
     Player player;
@@ -35,7 +32,7 @@ public class BattleManager
         this.player = player;
         oldPlayerHP = player.HP;
 
-        allCharacterList = new List<Character>();
+        List<Character> allCharacterList = new List<Character>();
 
         allCharacterList.AddRange(monsterList);
         allCharacterList.Add(player);
@@ -182,7 +179,7 @@ public class BattleManager
         List<string> monsterListTxt = new List<string>();
 
         monsterListTxt = monsterList
-            .Select(x => ($"Lv.{x.Level} {(x.IsDie ? "Dead" : (x.Name + "HP"))}"))
+            .Select(x => ($"Lv.{x.Level} {x.Name} {(x.IsDie ? "Dead" : (" HP " + x.HP))}"))
             .ToList();
 
 
@@ -225,7 +222,7 @@ public class BattleManager
         for (int i = 0; i < beforeMonstehpr.Count; i++)
         {
             Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
-            Console.WriteLine($"HP {beforeMonstehpr[i]} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
+            Console.WriteLine($"HP {(beforeMonstehpr[i] == 0 ? "Dead" : beforeMonstehpr[i])} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
             Console.WriteLine("");
         }
         Console.WriteLine("");
@@ -278,12 +275,12 @@ public class BattleManager
         };
 
         int beforeplayerHP = player.HP;
-        monster.Attacking(player, out int damage);
 
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
+        monster.Attacking(player, out int damage);
         Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
         Console.WriteLine("");
         Console.WriteLine($"{BattleOrderTxt()}");
