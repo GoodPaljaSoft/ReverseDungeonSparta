@@ -29,7 +29,6 @@ namespace ReverseDungeonSparta
 
         public static int GetUserIntInput(int minCount, int maxCount)
         {
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>");
             //커서복귀를 위한 커서위치 저장
             int x = Console.CursorLeft;

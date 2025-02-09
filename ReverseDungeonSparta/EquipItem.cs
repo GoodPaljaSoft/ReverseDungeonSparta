@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static ReverseDungeonSparta.UsableItem;
@@ -9,6 +11,7 @@ namespace ReverseDungeonSparta
 {
     public class EquipItem : Item
     {
+        int selectedIndex = 0;
         public enum Grade
         {
             Normal,
@@ -48,9 +51,12 @@ namespace ReverseDungeonSparta
             public int addIntelligence;
             public int addMaxHp;
             public int addMaxMp;
-
-            public EquipItemInfo(int _addLuck, int _addDefence, int _addAttack, int _addIntelligence, int _addMaxHp, int _addMaxMp, Type type, Grade grade)
+            public Type type {  get; set; }
+            public Grade grade { get; set; }
+            public string itemName { get; set; }
+            public EquipItemInfo(string name,int _addLuck, int _addDefence, int _addAttack, int _addIntelligence, int _addMaxHp, int _addMaxMp, Type type, Grade grade)
             {
+                this.itemName = name;
                 addLuck = _addLuck;
                 addDefence = _addDefence;
                 addAttack = _addAttack;
@@ -60,28 +66,32 @@ namespace ReverseDungeonSparta
             }
 
         }
+        public  void TestItemUpgrade()
+        {
+            ItemUpgrade();
+        }
 
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
-            new EquipItemInfo(5,5,5,5,5,5,Type.Armor,Grade.Normal), // 아이템 1
-            new EquipItemInfo(5,5,5,5,5,5,Type.Weapon, Grade.Normal), // 아이템 2
-            new EquipItemInfo(5,5,5,5,5,5,Type.Helmet, Grade.Normal), // 아이템 3 
-            new EquipItemInfo(5,5,5,5,5,5,Type.Shoes, Grade.Normal), // 아이템 4
-            new EquipItemInfo(5,5,5,5,5,5,Type.Ring, Grade.Normal), // 아이템 5
-            new EquipItemInfo(5,5,5,5,5,5,Type.Necklace, Grade.Normal), // 아이템 6
-            new EquipItemInfo(5,5,5,5,5,5,Type.Armor,Grade.Uncommon), // 아이템 7
-            new EquipItemInfo(5,5,5,5,5,5,Type.Weapon, Grade.Uncommon), // 아이템 8
-            new EquipItemInfo(5,5,5,5,5,5,Type.Helmet, Grade.Uncommon), // 아이템 9
-            new EquipItemInfo(5,5,5,5,5,5,Type.Shoes, Grade.Uncommon), // 아이템 10
-            new EquipItemInfo(5,5,5,5,5,5,Type.Ring, Grade.Uncommon), // 아이템 11
-            new EquipItemInfo(5,5,5,5,5,5,Type.Necklace, Grade.Uncommon), // 아이템 12
-            new EquipItemInfo(5,5,5,5,5,5,Type.Armor,Grade.Rare), // 아이템 13
-            new EquipItemInfo(5,5,5,5,5,5,Type.Weapon, Grade.Rare), // 아이템 14
-            new EquipItemInfo(5,5,5,5,5,5,Type.Helmet, Grade.Rare), // 아이템 15
-            new EquipItemInfo(5,5,5,5,5,5,Type.Shoes, Grade.Rare), // 아이템 16
-            new EquipItemInfo(5,5,5,5,5,5,Type.Ring, Grade.Rare), // 아이템 17
-            new EquipItemInfo(5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 18
+            new EquipItemInfo("item이름1", 5,5,5,5,5,5,Type.Armor,Grade.Normal), // 아이템 1
+            new EquipItemInfo("item이름2",5,5,5,5,5,5,Type.Weapon, Grade.Normal), // 아이템 2
+            new EquipItemInfo("item이름3",5,5,5,5,5,5,Type.Helmet, Grade.Normal), // 아이템 3 
+            new EquipItemInfo("item이름4",5,5,5,5,5,5,Type.Shoes, Grade.Normal), // 아이템 4
+            new EquipItemInfo("item이름5",5,5,5,5,5,5,Type.Ring, Grade.Normal), // 아이템 5
+            new EquipItemInfo("item이름6",5,5,5,5,5,5,Type.Necklace, Grade.Normal), // 아이템 6
+            new EquipItemInfo("item이름7",5,5,5,5,5,5,Type.Armor,Grade.Uncommon), // 아이템 7
+            new EquipItemInfo("item이름8",5,5,5,5,5,5,Type.Weapon, Grade.Uncommon), // 아이템 8
+            new EquipItemInfo("item이름9",5,5,5,5,5,5,Type.Helmet, Grade.Uncommon), // 아이템 9
+            new EquipItemInfo("item이름10",5,5,5,5,5,5,Type.Shoes, Grade.Uncommon), // 아이템 10
+            new EquipItemInfo("item이름11",5,5,5,5,5,5,Type.Ring, Grade.Uncommon), // 아이템 11
+            new EquipItemInfo("item이름12",5,5,5,5,5,5,Type.Necklace, Grade.Uncommon), // 아이템 12
+            new EquipItemInfo("item이름13",5,5,5,5,5,5,Type.Armor,Grade.Rare), // 아이템 13
+            new EquipItemInfo("item이름14",5,5,5,5,5,5,Type.Weapon, Grade.Rare), // 아이템 14
+            new EquipItemInfo("item이름15",5,5,5,5,5,5,Type.Helmet, Grade.Rare), // 아이템 15
+            new EquipItemInfo("item이름16",5,5,5,5,5,5,Type.Shoes, Grade.Rare), // 아이템 16
+            new EquipItemInfo("item이름17",5,5,5,5,5,5,Type.Ring, Grade.Rare), // 아이템 17
+            new EquipItemInfo("item이름18",5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 18
         };
 
         public static List<EquipItem> GetEquipItemList(int num)  // 만들어진 장착장비리스트에 아이템 객체 넣기 
@@ -108,30 +118,102 @@ namespace ReverseDungeonSparta
                 return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
             }
         }
-        public static void ItemCombination(int index)
+        public  static void ItemUpgrade()
         {
-            Console.WriteLine("1. 아이템 조합");
             Console.WriteLine("");
-            Console.WriteLine("0. 나가기");
-            int number = Util.GetUserInput(0, 1);
-                switch (number)
-                {
-                    case 0:
-                        GameManager.Instance.GameMenu();
-                        break;
-                    case 1: //아이템 조합 씬으로 이동
-                        break;
-                }
             Console.WriteLine("[아이템 조합]");
-            //
-            string[] input = Console.ReadLine().Split();
-            int number1 = int.Parse(input[0]);
-            int number2 = int.Parse(input[1]);
-            // if(number1 == allEquipItem.index)
-            // 입력한 값이 입력한 아이템의 인덱스랑 같은지 비교를 하고
-            // 같다면 2개의 아이템의 타입과 등급을 비교하고
-            // 같다면 조합로직
-            // 틀리다면 같은 Type과 같은 등급만 조합할 수 있습니다.
+            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
+            int number1 = Util.GetUserIntInput(1, 18) - 1; //인덱스는 0부터 시작이므로
+            Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
+            int number2 = Util.GetUserIntInput(1, 18) - 1;
+
+
+            //입력한 숫자가 장비아이템의 index범위내에 있는지부터 파악
+            if (number1 >=0 && number1<allEquipItem.Length &&number2>=0 && number2<allEquipItem.Length)
+            {   
+                EquipItemInfo item1 = allEquipItem[number1]; // 입력한 아이템의 숫자와 index가 일치하도록 
+                EquipItemInfo item2 = allEquipItem[number2]; // 로직을 구성하여 입력한 아이템을 선택하도록
+
+                //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
+                if (item1.type == item2. type && item1.grade == item2.grade)
+                {
+                    float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
+                    switch (item1.grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
+                    {
+                        case Grade.Normal:
+                            upgradePercent = 0.5f;
+                            break;
+                        case Grade.Uncommon:
+                            upgradePercent = 0.3f;
+                            break;
+                        default:
+                            Console.Clear();
+                            Console.WriteLine("더 이상 강화할 등급이 없습니다.");
+                            return;
+                    }
+                    //업그레이드 확률을 랜덤으로 설정
+                    Random random = new Random();
+                    // 업그레이드퍼센트를 0 ~ 100퍼센트로 만들기 위한 NextDoulbe메서드 사용
+                    double randomValue = random.NextDouble();
+
+                    // 업그레이드 등급확률이 랜덤확률값보다 높을 떄 조합이 성공되도록
+                    if (randomValue <= upgradePercent)
+                    {
+                        //업그레이드 된 아이템은 선택된 아이템 1번이 되도록
+                        EquipItemInfo upgradeItem = item1;
+
+                        // 선택된 item의 등급에 따라서 더 높은 등급이 되도록 업그레이드
+                        if (item1.grade == Grade.Normal)
+                        {
+                            upgradeItem.grade = Grade.Uncommon;
+                        }
+                        else if (item1.grade == Grade.Uncommon)
+                        {
+                            upgradeItem.grade = Grade.Rare;
+                        }
+
+                        int targetIndex = number1 + 6; // index를 통해서 업그레이드 된 아이템에 index에 할당되도록
+                                                       // 아이템의 Type에 따라 갯수가 늘어난다면 index가 늘어나므로
+                                                       // index +를 6이 아닌 다른 숫자를 입력해야함.
+
+                        allEquipItem[targetIndex] = upgradeItem; // 할당시킨 새로운 index를 업그레이드 된 아이템으로 초기화
+
+                        Console.Clear();
+                        Console.WriteLine("[조합 결과]");
+                        Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.itemName}, {upgradeItem.type}, {upgradeItem.grade}");
+                        ReturnToInventory();
+
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("[조합 결과]");
+                        Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
+                        // 조합실패시 조합된 아이템은 소멸되도록 하기 위해서 기본 아이템으로 초기화
+                        allEquipItem[number1] = new EquipItemInfo();
+                        allEquipItem[number2] = new EquipItemInfo();
+                        ReturnToInventory();
+                    }
+                }
+                else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
+                {
+                    Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
+                }
+            }
+            else //내가 선택한 아이템의 index가 유효한 범위에 없을 때 나올 수 있는 출력
+            {
+                Console.WriteLine("잘못된 아이템 번호가 입력되었습니다. 번호 확인 후 다시 입력해주세요.");
+            }
+        }
+        public static void ReturnToInventory()
+        {
+            Console.WriteLine("인벤토리로 돌아갑니다...");
+            // 인벤토리 메뉴로 돌아가는 동작
+            List<(String, Action)> inventoryItems = new List<(string, Action)>
+            {
+                ("나가기", GameManager.Instance.InventoryMenu) // 나가기 버튼을 눌렀을 때 인벤토리 메뉴를 호출
+            };
+            Util.GetUserInput(inventoryItems, GameManager.Instance.InventoryMenu, ref GameManager.Instance.selectedIndex);
         }
     }
 }
