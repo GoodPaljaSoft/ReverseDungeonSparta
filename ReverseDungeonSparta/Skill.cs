@@ -18,13 +18,14 @@ namespace ReverseDungeonSparta
             ConsumptionMP = skillInfo.consumptionMP;
         }
 
-        public string Name { get; set; }
-        public double Value { get; set; }
-        public ExtentEnum Extent { get; set; }
-        public SkillType Type { get; set; }
-        public int ConsumptionMP { get; set; }
+        public string Name { get; set; }                //스킬 이름
+        public double Value { get; set; }               //스킬 효과 배수
+        public ExtentEnum Extent { get; set; }          //스킬 범위
+        public SkillType Type { get; set; }             //스킬 타입
+        public int ConsumptionMP { get; set; }          //소모 마나
 
 
+        //스킬 범위 enum을 받은 후 범위를 int[]로 반환하는 메서드
         public int[] GetExtent(ExtentEnum extentEnum)
         {
             switch (extentEnum)
@@ -46,6 +47,8 @@ namespace ReverseDungeonSparta
             }
         }
 
+
+        //스킬 범위를 한 칸 밀어내는 메서드
         public int[] UpExtent(int[] extentArray)
         {
             int[] result = extentArray;
@@ -59,6 +62,8 @@ namespace ReverseDungeonSparta
             return result;
         }
 
+
+        //스킬 범위를 한 칸 당기는 메서드
         public int[] DownExtent(int[] extentArray)
         {
             int[] result = extentArray;
@@ -72,6 +77,7 @@ namespace ReverseDungeonSparta
             return result;
         }
 
+
         //들어온 스킬 배열을 기반으로 스킬 리스트로 반환
         public static List<Skill> AddSkillListInstance(SkillInfo[] skillInfoArray)
         {
@@ -83,6 +89,8 @@ namespace ReverseDungeonSparta
             return backAllMonsterInfo;
         }
 
+
+        //몬스터의 스킬을 만들 때 사용할 메서드
         public static List<Skill> AddMonsterSkill(Monster monster, int num)
         {
 
@@ -110,12 +118,15 @@ namespace ReverseDungeonSparta
             return skillList;
         }
 
+
+        //플레이어의 스킬을 만들 때 사용할 메서드
         public static List<Skill> AddPlayerSkill(Player player, int num)
         {
             List<Skill> skillList = AddSkillListInstance(PlayerSkill);
 
             if (player.SkillList != null)
             {
+                //플레이어의 스킬에서 겹치는 이름을 제거 한 리스트를 반환함.
                 foreach (Skill skill in player.SkillList)
                 {
                     skillList = skillList.Where(x => x.Name != skill.Name).ToList();
@@ -128,6 +139,7 @@ namespace ReverseDungeonSparta
         }
 
 
+        //플레이어의 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] PlayerSkill = new SkillInfo[]
         {
         new SkillInfo("강타", 1.5d, ExtentEnum.First, SkillType.Physical, 5),
@@ -135,6 +147,8 @@ namespace ReverseDungeonSparta
         new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, SkillType.Physical, 10)
         };
 
+
+        //물리 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] PhysicalSkill = new SkillInfo[]
         {
         new SkillInfo("강타", 1.5d, ExtentEnum.First, SkillType.Physical, 5),
@@ -143,6 +157,7 @@ namespace ReverseDungeonSparta
         };
 
 
+        //마법 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] MagicSkill = new SkillInfo[]
         {
         new SkillInfo("파이어볼", 1.5d, ExtentEnum.First, SkillType.Magic, 5),
@@ -151,6 +166,7 @@ namespace ReverseDungeonSparta
         };
 
 
+        //힐 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] HealingSkill = new SkillInfo[]
         {
         new SkillInfo("힐링", 1.5d, ExtentEnum.First, SkillType.Buffer, 5),
@@ -159,6 +175,8 @@ namespace ReverseDungeonSparta
         };
     }
 
+
+    //스킬 범위를 enum으로 저장
     public enum ExtentEnum
     {
         First,
@@ -169,6 +187,8 @@ namespace ReverseDungeonSparta
         Fourth
     };
 
+
+    //스킬 타입을 enum으로 저장
     public enum SkillType
     {
         Physical,
@@ -176,6 +196,8 @@ namespace ReverseDungeonSparta
         Buffer
     };
 
+
+    //스킬의 정보를 담을 구조체
     public struct SkillInfo
     {
         public string name;
