@@ -11,10 +11,12 @@ namespace ReverseDungeonSparta
     {
         public static GameManager Instance { get; } = new GameManager();
 
+        List<(String, Action, Action)> menuItems;
+
         Player player = new Player();
         BattleManager BattleManagerInstance { get; set; }
 
-        int selectedIndex = 0;
+        public int selectedIndex = 0;
 
         public GameManager()
         {
@@ -29,11 +31,20 @@ namespace ReverseDungeonSparta
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
             Util.PrintPlayerView(player);
         }
-
-        public void EnterPlayerStatusMenu()
+        public void InventoryMenu()
         {
-            AudioManager.PlayMoveMenuSE(0);
-            PlayerStatusMenu();
+            Console.Clear();
+            Console.WriteLine("인벤토리");
+            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+             menuItems = new List<(string, Action, Action)>
+            {
+                ("아이템 조합", EquipItem.ItemUpgrade, () => AudioManager.PlayMoveMenuSE(0)),
+                ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
+            };
+            Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
         }
 
         public void EnterBattleMenu()
@@ -42,6 +53,7 @@ namespace ReverseDungeonSparta
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.StartBattle();
         }
+        
 
         public void GameMenu() // 시작화면 구현
         {
@@ -53,12 +65,16 @@ namespace ReverseDungeonSparta
 
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
-            List<(String, Action)> menuItems = new List<(string, Action)>
+            //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
+            //리스트 3번째에 입력 받는 오디오는 null로 선언해도 정상작동 됩니다.
+            //새로운 (string, Action, Action) 입력하기 전 반점(,) 필수
+            menuItems = new List<(string, Action, Action)>
             {
-                ("1. 상태 보기", PlayerStatusMenu),
-                ("2. 전투 시작", EnterBattleMenu)
-                //추가 할 경우
-                //("3. 아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름])
+                ("상태 보기", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                //("아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름], [출력할 오디오 메소드])
+                //("조합", sum, null)
                 //...
             };
 
