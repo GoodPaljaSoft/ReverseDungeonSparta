@@ -58,5 +58,28 @@ namespace ReverseDungeonSparta
                     break;
             }
         }
+
+
+        public void SelectSkill(List<Monster> monsters, int selectSkillNum)
+        {
+            selectSkillNum--;
+
+
+        }
+
+
+        public bool CheckPlayerCanSkill(int selectSkillNum)
+        {
+            bool result = false;
+            selectSkillNum--;
+
+            //플레이어 마나가 요구 마나보다 이상일 경우
+            if (SkillList[selectSkillNum].ConsumptionMP <= this.MP)
+            {
+                result = true;
+            }
+
+            return result;
+        }
     }
 }
