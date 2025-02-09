@@ -15,7 +15,7 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
-        public static void PrintPlayerView(Player player) 
+        public static void PrintPlayerView(Player player)
         {
             Console.WriteLine($"Lv. {player.Level}");
             Console.WriteLine($"{player.Name}( {player.Job} )");
@@ -69,27 +69,33 @@ namespace ReverseDungeonSparta
             for (int i = 0; i < menuList.Count; i++)
             {
                 if (i == selectedIndex) Console.WriteLine($"-> {menuList[i].Item1}");
-                else                    Console.WriteLine($"   {menuList[i].Item1}");
+                else Console.WriteLine($"   {menuList[i].Item1}");
             }
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            ConsoleKeyInfo keyInfo;
+            while (true)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.Enter ||
+                    (keyInfo.Key == ConsoleKey.UpArrow && selectedIndex > 0) ||
+                    keyInfo.Key == ConsoleKey.DownArrow && selectedIndex < menuList.Count - 1)
+                {
+                    break;
+                }
+            }
+
             switch (keyInfo.Key)
             {
                 case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
-                    if (selectedIndex > 0)
-                    {
-                        selectedIndex--;
-                        AudioManager.PlayMoveMenuSE(0);
-                    }
-                        nowMenu();
+                    selectedIndex--;
+                    AudioManager.PlayMoveMenuSE(0);
+                    nowMenu();
                     break;
 
                 case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
-                    if (selectedIndex < menuList.Count - 1) 
-                    {
-                        selectedIndex++;
-                        AudioManager.PlayMoveMenuSE(0);
-                    }
+                    selectedIndex++;
+                    AudioManager.PlayMoveMenuSE(0);
                     nowMenu();
                     break;
 
@@ -101,10 +107,6 @@ namespace ReverseDungeonSparta
                         menuList[tempIndex].Item3();
                     }
                     menuList[tempIndex].Item2();
-                    break;
-
-                default:                    //상관 없는 키가 눌렸을 때
-                    nowMenu();
                     break;
             }
         }
