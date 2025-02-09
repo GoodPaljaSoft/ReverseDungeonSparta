@@ -64,7 +64,7 @@ namespace ReverseDungeonSparta
         //selectedIndex는 해당 화살표의 위치 값을 저장합니다.
         //해당 값을 전달 받고 다시 바뀐 값을 보내줘야 하기에 ref를 꼭 넣어야합니다.
 
-        public static void GetUserInput(List<(String, Action)> menuList, Action nowMenu, ref int selectedIndex)
+        public static void GetUserInput(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex)
         {
             for (int i = 0; i < menuList.Count; i++)
             {
@@ -96,6 +96,10 @@ namespace ReverseDungeonSparta
                 case ConsoleKey.Enter:      //엔터를 눌렀을 때
                     int tempIndex = selectedIndex;
                     selectedIndex = 0;      //selectedIndex 초기화
+                    if (menuList[tempIndex].Item3 != null)
+                    {
+                        menuList[tempIndex].Item3();
+                    }
                     menuList[tempIndex].Item2();
                     break;
 
