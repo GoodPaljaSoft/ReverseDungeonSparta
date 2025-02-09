@@ -26,32 +26,33 @@ namespace ReverseDungeonSparta
             Console.WriteLine($"Gold : {player.Gold}");
             Console.WriteLine("");
         }
-        //public static int GetUserInput(int minCount, int maxCount)
-        //{
-        //    Console.WriteLine("원하시는 행동을 입력해주세요.");
-        //    Console.Write(">>");
-        //    //커서복귀를 위한 커서위치 저장
-        //    int x = Console.CursorLeft;
-        //    int y = Console.CursorTop;
 
-        //    int result;
-        //    while (true)
-        //    {
-        //        if (int.TryParse(Console.ReadLine(), out result))
-        //        {
-        //            if (result <= maxCount && result >= minCount)//유효한 입력
-        //            {
-        //                return result;
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine($"{minCount}에서{maxCount}사이의 숫자를 입력해주세요");
-        //                AudioManager.PlayMoveMenuSE(0);
-        //            }
-        //        }
-        //        Console.SetCursorPosition(x, y);
-        //    }
-        //}
+        public static int GetUserIntInput(int minCount, int maxCount)
+        {
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">>");
+            //커서복귀를 위한 커서위치 저장
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+
+            int result;
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out result))
+                {
+                    if (result <= maxCount && result >= minCount)//유효한 입력
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{minCount}에서{maxCount}사이의 숫자를 입력해주세요");
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
+                }
+                Console.SetCursorPosition(x, y);
+            }
+        }
 
 
         //public static Void PrintItemList(List<item> ItemList) { }
@@ -103,5 +104,7 @@ namespace ReverseDungeonSparta
                     break;
             }
         }
+
+
     }
 }
