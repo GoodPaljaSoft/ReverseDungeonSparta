@@ -11,6 +11,8 @@ namespace ReverseDungeonSparta
     {
         public static GameManager Instance { get; } = new GameManager();
 
+        List<(String, Action, Action)> menuItems;
+
         Player player = new Player();
         BattleManager BattleManagerInstance { get; set; }
 
@@ -53,10 +55,10 @@ namespace ReverseDungeonSparta
 
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
-            List<(String, Action)> menuItems = new List<(string, Action)>
+            menuItems = new List<(string, Action, Action)>
             {
-                ("1. 상태 보기", PlayerStatusMenu),
-                ("2. 전투 시작", EnterBattleMenu)
+                ("1. 상태 보기", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("2. 전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0))
                 //추가 할 경우
                 //("3. 아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름])
                 //...
