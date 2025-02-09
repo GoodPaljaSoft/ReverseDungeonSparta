@@ -5,8 +5,15 @@ using System.Threading;
 
 public class BattleManager
 {
+    //구현해야 할 것들.
+    //1. 클리어 화면, 사망 화면으로 넘어감.
+    //2. 몬스터가 스킬을 사용 가능하도록 만듦.
+    //3. 회복 스킬 로직 완성.
+    //4. 몬스터 생성 로직 난이도 별로 다르게 조정할 필요 있음.
+
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
+    List<Character> allCharacterList = new List<Character>();
     List<(String, Action, Action)> menuItems;
     Skill playerSelectSkill;
     Player player;
@@ -28,7 +35,7 @@ public class BattleManager
         this.player = player;
         oldPlayerHP = player.HP;
 
-        List<Character> allCharacterList = new List<Character>();
+        allCharacterList = new List<Character>();
 
         allCharacterList.AddRange(monsterList);
         allCharacterList.Add(player);
@@ -84,6 +91,7 @@ public class BattleManager
     {
         while (isDungeonEnd == false)
         {
+            turnManager.Characters = allCharacterList;
             turnManager.CalculateTurnPreview(); // 플레이어 나올 때까지 프리뷰를 계산
             battleOrderList = turnManager.SeclectCharacter;
 
@@ -179,11 +187,8 @@ public class BattleManager
             .ToList();
 
 
-
         Console.Clear();
         Console.WriteLine("Battle!!");
-        Console.WriteLine();
-        MonsterListInfoTxt(true);
         Console.WriteLine("");
         Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
@@ -195,15 +200,6 @@ public class BattleManager
 
 
         GetMonsterIndex(monsterListTxt, PlayerSelectMonster, ref selectedMonsterIndex);
-
-
-        //switch (input)
-        //{
-        //    default:
-        //            PlayerAttackMonster(monsterList[input - 1]);
-        //        break;
-        //}
-
     }
 
 
@@ -231,6 +227,7 @@ public class BattleManager
         {
             Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
             Console.WriteLine($"HP {beforeMonstehpr[i]} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
+            Console.WriteLine("");
         }
         Console.WriteLine("");
         Console.WriteLine("-> 다음");
@@ -238,13 +235,14 @@ public class BattleManager
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         switch (keyInfo.Key)
         {
-            case ConsoleKey.Enter: break;
+            case ConsoleKey.Enter: //플레이어가 승리했는지 확인
+                CheckPlayerWin(); break;
         }
     }
 
 
     //플레이어가 승리했는지 패배했는지 확인하는 메서드
-    public void CheckPlayerWinOrDeaf()
+    public void CheckPlayerWin()
     {
         //몬스터가 전부 죽었는지 확인
         //죽었다면 전투 클리어
