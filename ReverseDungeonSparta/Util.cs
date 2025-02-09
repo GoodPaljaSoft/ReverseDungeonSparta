@@ -110,5 +110,33 @@ namespace ReverseDungeonSparta
         }
 
 
+        //스킬 범위를 한 칸 밀어내는 메서드
+        public static int[] UpExtent(int[] extentArray)
+        {
+            int[] result = extentArray;
+            int lastNum = extentArray.Last();
+
+            if (lastNum < 3)
+            {
+                result = extentArray.Select(x => x + 1).ToArray();
+            }
+
+            return result;
+        }
+
+
+        //스킬 범위를 한 칸 당기는 메서드
+        public static int[] DownExtent(int[] extentArray)
+        {
+            int[] result = extentArray;
+            int firstNum = extentArray.First();
+
+            if (firstNum > 0)
+            {
+                result = extentArray.Select(x => x - 1).ToArray();
+            }
+
+            return result;
+        }
     }
 }
