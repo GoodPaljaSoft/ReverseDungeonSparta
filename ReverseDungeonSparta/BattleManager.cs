@@ -61,6 +61,8 @@ public class BattleManager
         battleOrderList.Remove(character);
     }
 
+
+    //몬스터의 정보의 출력할 메소드. isNum이 true면 번호를 추가해서 출력.
     public void MonsterListInfoTxt(bool isNum)
     {
         for (int i = 0; i < monsterList.Count; i++)
@@ -169,7 +171,6 @@ public class BattleManager
         //플레이어가 스킬을 선택할 수 있는 입력칸
         int input = Util.GetUserInput(0, player.SkillList.Count);
 
-
         //*** 나중에 스위치문 지우고 플레이어 스킬의 수만큼 자동으로 받아서 실행하는 메서드 제작 필요
         switch (input)
         {
@@ -177,12 +178,8 @@ public class BattleManager
                 AudioManager.PlayMoveMenuSE(0);
                 break;
 
-            case 1:
-                AudioManager.PlayMoveMenuSE(0);
-                break;
-
-            case 2:
-                AudioManager.PlayMoveMenuSE(0);
+            default:
+                //1~스킬 카운트의 값을 확인후 해당 스킬을 실행***
                 break;
         }
     }
