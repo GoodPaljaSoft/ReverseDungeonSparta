@@ -58,7 +58,8 @@ namespace ReverseDungeonSparta
 
 
         //menuList에 있는 String은 화살표를 붙일 선택지의 문자열
-        //menuList에 있는 Action은 해당 화살표에 있는 메소드를 실행시킵니다.
+        //menuList에 있는 1번 째 Action은 해당 화살표에 있는 메소드를 실행시킵니다.
+        //menuList에 있는 2번 째 Action은 해당 화살표에 있는 음성 파일을 실행시킵니다. null일 경우 소리 없이 출력
         //nowMenu는 화살표의 출력을 움직이기 위해 본인 메서드를 재귀적으로 다시 호출합니다.
         //selectedIndex는 해당 화살표의 위치 값을 저장합니다.
         //해당 값을 전달 받고 다시 바뀐 값을 보내줘야 하기에 ref를 꼭 넣어야합니다.
