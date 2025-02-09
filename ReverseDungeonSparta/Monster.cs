@@ -1,5 +1,6 @@
 ﻿using ReverseDungeonSparta;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 public class Monster : Character
 {
@@ -95,6 +96,40 @@ public class Monster : Character
         new MonsterInfo("날렵한 명사수",MonsterType.Acher, 10, 5, 5)
     };
 
+
+    public override void Attacking(Character target, out int damage)
+    {
+        Random random = new Random();
+        int rand = random.Next(0, 2);
+        double attackDamage = (double)Attack;
+        if(rand == 0)
+        {
+            //무작위로 섞은 스킬리스트 0번 스킬 사용
+            if (SkillList.Count > 0)
+            {
+                SkillList = Util.ShuffleList(SkillList);
+                if (SkillList[0].ConsumptionMP <= MP)
+                {
+                    attackDamage *= SkillList[0].Value;
+                    Console.WriteLine($"스킬 발동 : {SkillList[0].Name}");
+                }
+            }
+        }
+        //데미지 계산식
+        double margin = attackDamage * 0.1d;
+        margin = Math.Ceiling(margin);
+
+        damage = new Random().Next((int)(attackDamage - margin), (int)(attackDamage + margin));
+
+        OnDamage(target, damage);
+    }
+
+
+    //해당 스킬의 타입을 확인하고 물리, 마법, 힐에 따라 작용 방식을 달리 만드는 메서드
+    public void CheckSkillType()
+    {
+
+    }
 
     //몬스터가 사망할 때 처리할 메서드
     public void IsDead()

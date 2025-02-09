@@ -37,7 +37,5 @@ namespace ReverseDungeonSparta
             new ItemInfo("Item2", "30"),
             new ItemInfo("Item3", "10"),
         };
-
-        
     }
 }

@@ -47,6 +47,7 @@ public class TurnManager
         //존재할 경우 시작
         if (isIncludePlayer)
         {
+            turnQueue = turnQueue.Where(x => x.Item1.Speed != 0).ToList();
             while (true)
             {
                 var nextCharacter = turnQueue.OrderBy(t => t.Item2).First();
