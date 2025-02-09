@@ -26,32 +26,81 @@ namespace ReverseDungeonSparta
             Console.WriteLine($"Gold : {player.Gold}");
             Console.WriteLine("");
         }
-        public static int GetUserInput(int minCount, int maxCount)
-        {
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            Console.Write(">>");
-            //커서복귀를 위한 커서위치 저장
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
+        //public static int GetUserInput(int minCount, int maxCount)
+        //{
+        //    Console.WriteLine("원하시는 행동을 입력해주세요.");
+        //    Console.Write(">>");
+        //    //커서복귀를 위한 커서위치 저장
+        //    int x = Console.CursorLeft;
+        //    int y = Console.CursorTop;
 
-            int result;
-            while (true)
+        //    int result;
+        //    while (true)
+        //    {
+        //        if (int.TryParse(Console.ReadLine(), out result))
+        //        {
+        //            if (result <= maxCount && result >= minCount)//유효한 입력
+        //            {
+        //                return result;
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine($"{minCount}에서{maxCount}사이의 숫자를 입력해주세요");
+        //                AudioManager.PlayMoveMenuSE(0);
+        //            }
+        //        }
+        //        Console.SetCursorPosition(x, y);
+        //    }
+        //}
+
+
+        //public static Void PrintItemList(List<item> ItemList) { }
+
+
+        //menuList에 있는 String은 화살표를 붙일 선택지의 문자열
+        //menuList에 있는 Action은 해당 화살표에 있는 메소드를 실행시킵니다.
+        //nowMenu는 화살표의 출력을 움직이기 위해 본인 메서드를 재귀적으로 다시 호출합니다.
+        //selectedIndex는 해당 화살표의 위치 값을 저장합니다.
+        //해당 값을 전달 받고 다시 바뀐 값을 보내줘야 하기에 ref를 꼭 넣어야합니다.
+
+        public static void GetUserInput(List<(String, Action)> menuList, Action nowMenu, ref int selectedIndex)
+        {
+            for (int i = 0; i < menuList.Count; i++)
             {
-                if (int.TryParse(Console.ReadLine(), out result))
-                {
-                    if (result <= maxCount && result >= minCount)//유효한 입력
+                if (i == selectedIndex) Console.WriteLine($"-> {menuList[i].Item1}");
+                else                    Console.WriteLine($"   {menuList[i].Item1}");
+            }
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
+                    if (selectedIndex > 0)
                     {
-                        return result;
-                    }
-                    else 
-                    { 
-                        Console.WriteLine($"{minCount}에서{maxCount}사이의 숫자를 입력해주세요");
+                        selectedIndex--;
                         AudioManager.PlayMoveMenuSE(0);
                     }
-                }
-                Console.SetCursorPosition(x, y);
+                        nowMenu();
+                    break;
+
+                case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
+                    if (selectedIndex < menuList.Count - 1) 
+                    {
+                        selectedIndex++;
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
+                    nowMenu();
+                    break;
+
+                case ConsoleKey.Enter:      //엔터를 눌렀을 때
+                    menuList[selectedIndex].Item2();
+                    selectedIndex = 0;      //selectedIndex 초기화
+                    break;
+
+                default:                    //상관 없는 키가 눌렸을 때
+                    nowMenu();
+                    break;
             }
         }
-        //public static Void PrintItemList(List<item> ItemList) { }
     }
 }
