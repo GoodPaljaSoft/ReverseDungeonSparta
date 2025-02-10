@@ -45,8 +45,8 @@ namespace ReverseDungeonSparta
             Critical = 5;
             Evasion = 5;
 
-            int additionalAttack = AdditionalAttack;
-            int additionalDefence = AdditionalDefence;
+            //int additionalAttack = AdditionalAttack; //필요없다면 지우기
+            //int additionalDefence = AdditionalDefence;
 
             switch (Job)
             {
@@ -78,6 +78,8 @@ namespace ReverseDungeonSparta
                 MaxMP += equipItem.ItemInfo.addMaxMp;
             }
         }
+        #endregion
+
         public void LoadEquipItems()
         {
             // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
@@ -87,7 +89,7 @@ namespace ReverseDungeonSparta
                 equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
             }
         }
-        #endregion
+        
         public void IsEquipItem(EquipItem item) //아이템 장착 로직 구현
         {
             if(!equipItemList.Contains(item))

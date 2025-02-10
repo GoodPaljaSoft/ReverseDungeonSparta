@@ -39,7 +39,7 @@ namespace ReverseDungeonSparta
         }
         public EquipItem()
         {
-
+            EquipItem item = new EquipItem();
         }
         // 장착한 아이템 구조체
         public struct EquipItemInfo
@@ -70,7 +70,7 @@ namespace ReverseDungeonSparta
                 
             }
         }
-        public  void TestItemUpgrade()
+        public static void TestItemUpgrade()
         {
             ItemUpgrade();
         }

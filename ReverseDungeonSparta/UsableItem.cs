@@ -14,7 +14,7 @@ namespace ReverseDungeonSparta
         public UsableItemInfo ItemInfo { get; private set; }
         string Name { get; set; }
         string Description { get; set; }
-        int Hp {  get; set; }
+        int Hp { get; set; }
         int Mp { get; set; }
 
         public int Count { get; set; }
@@ -60,7 +60,7 @@ namespace ReverseDungeonSparta
 
             for (int i = 0; i < num; i++)
             {
-                usableItemList.Add(InstanceUsableItem(i)); 
+                usableItemList.Add(InstanceUsableItem(i));
             }
             return usableItemList;
         }
@@ -77,7 +77,7 @@ namespace ReverseDungeonSparta
                 return new UsableItem();
             }
         }
-        
+
         // 소비 아이템 목록
         public static void UseItemView()
         {
@@ -174,6 +174,7 @@ namespace ReverseDungeonSparta
             UseItemView(); // 다시 아이템 목록을 출력
         }
 
+
         //아이템 효과 적용
         public static bool ApplyItemEffect(UsableItemInfo item)
         {
@@ -214,11 +215,13 @@ namespace ReverseDungeonSparta
                     itemUsed = true; // 효과 적용됨
                 }
             }
+
             // HP와 MP 모두 최대일 경우
             if (item.hp > 0 && player.HP == player.MaxHP && item.mp > 0 && player.MP == player.MaxMP)
             {
                 recoveryMessage = "플레이어의 HP와 MP는 이미 최대입니다.";
             }
+
             // HP와 MP 모두 회복되었을 경우, 메시지 출력
             if (item.hp > 0 || item.mp > 0)
             {
@@ -227,9 +230,12 @@ namespace ReverseDungeonSparta
                     Console.WriteLine(recoveryMessage);
                 }
             }
+
             return itemUsed; // 아이템이 사용되었는지 여부 반환
         }
     }
+
+
 }
     
 
