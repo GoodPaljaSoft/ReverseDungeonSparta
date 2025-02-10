@@ -50,7 +50,7 @@
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환
-        public virtual void Attacking(Character target, out int damage)
+        public virtual void Attacking(Character target,List<Monster> monsters ,out int damage)
         {
             //데미지 계산식
             double margin = Attack * 0.1f;
