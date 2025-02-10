@@ -31,7 +31,18 @@ namespace ReverseDungeonSparta
 
 
         //테스트를 위해 임시로 수정함!!!!!!!!!!!!
-        public EquipItemInfo ItemInfo { get; /*private*/ set; }
+        private EquipItemInfo itemInfo;
+        public EquipItemInfo ItemInfo
+        {
+            get
+            {
+                return itemInfo;
+            }
+            /*private*/ set
+            {
+                itemInfo = value;
+            }
+        }
         public bool isOwned { get; set; }
         public bool isEquiped { get; set; }
         public EquipItem(EquipItemInfo equipItemInfo)

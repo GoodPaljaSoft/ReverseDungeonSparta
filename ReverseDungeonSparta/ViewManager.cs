@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,7 +64,8 @@ namespace ReverseDungeonSparta
             DrawLine();
 
             Console.ForegroundColor = ConsoleColor.White;
-
+            Console.GetCursorPosition();
+            //PrintText()
         }
 
 
@@ -76,6 +78,7 @@ namespace ReverseDungeonSparta
                 Console.Write("─");
             }
             Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
         }
 
         
@@ -103,6 +106,14 @@ namespace ReverseDungeonSparta
             Console.Write(text);
             CursorY++;
         }
+        public static void PrintTextLine(int x, int y, string text)
+        {
+            CursorX = x;
+            CursorY = y;
+            Console.SetCursorPosition(x, y);
+            Console.WriteLine(text);
+            CursorY++;
+        }
 
 
         //해당 메서드로 위치를 잡은 커서를 기준으로 텍스트를 출력한다.
@@ -115,15 +126,92 @@ namespace ReverseDungeonSparta
 
         public static void PrintList(List<EquipItem> items)
         {
-            int x = 0;
-            int y = 0;
+            int x = 3;
+            int y = 3;
 
+            //커서는 x==1 위치에 들어감
+
+            for(int i = 0; i < items.Count; i++)
+            {
+                if (items[i].isEquiped)
+                    PrintTextLine(x, y + i, "[E]");
+                else
+                    PrintTextLine(x, y + i, "[-]");
+
+            }
+
+            x = 7;
             for (int i = 0; i < items.Count; i++)
             {
-                PrintText(x, y + 1, $"{items[0].ItemInfo.itemName}");
+                PrintTextLine(x, y + i, $"{items[i].ItemInfo.itemName}");
+            }
+
+            x = 24;
+            for (int i = 0; i < items.Count; i++)
+            {
+                PrintTextLine(x, y + i, "|");
+            }
+
+            x = 26;
+            for (int i = 0; i < items.Count; i++)
+            {
+                PrintTextLine(x, y + i, $"{EnumToString(items[i].ItemInfo.type.ToString())}");
+            }
+
+            x = 33;
+            for (int i = 0; i < items.Count; i++)
+            {
+                PrintTextLine(x, y + i, "|");
+            }
+
+            x = 36;
+            for (int i = 0; i < items.Count; i++)
+            {
+                //int[] num = new int[6];
+
+                //PrintTextLine(x, y + i, "|");
+
+                //if (items[i].ItemInfo.addLuck > 0)
+                //{
+                //    PrintTextLine(x, y + i + count, $"{items[i].ItemInfo.itemName}");
+                //}
+                //if (items[i].ItemInfo.addAttack > 0) count++;
+                //if (items[i].ItemInfo.addDefence > 0) count++;
+                //if (items[i].ItemInfo.addIntelligence > 0) count++;
+                //if (items[i].ItemInfo.addMaxHp > 0) count++;
+                //if (items[i].ItemInfo.addMaxMp > 0) count++;
+
             }
 
         }
+
+        public static string EnumToString(string enumType)
+        {
+            switch(enumType)
+            {
+                case "Armor":
+                    return "방어구";
+                case "Weapon":
+                    return "무  기";
+                case "Helmet":
+                    return "모  자";
+                case "Shoes":
+                    return "신  발";
+                case "Ring":
+                    return "반  지";
+                case "Necklace":
+                    return "목걸이";
+            }
+
+            return "error";
+        }
+
+
+
+
+
+
+
 
     }
 }

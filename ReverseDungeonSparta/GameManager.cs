@@ -23,9 +23,7 @@ namespace ReverseDungeonSparta
         {
             BattleManagerInstance = new BattleManager(player);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
-            Console.SetWindowSize(120, 100);         //콘솔창 크기 지정
-
-            ViewManager.DrawLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.SetWindowSize(120, 30);         //콘솔창 크기 지정
         }
 
         public void PlayerStatusMenu()
@@ -38,12 +36,20 @@ namespace ReverseDungeonSparta
         public void InventoryMenu()
         {
             Console.Clear();
-            Console.WriteLine("인벤토리");
-            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
-            Console.WriteLine("");
-            Console.WriteLine("");
+            ViewManager.DrawLine("인벤토리");
+
+            //Console.WriteLine("인벤토리");
+            //Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            //Console.WriteLine("");
+            //Console.WriteLine("");
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
             player.LoadEquipItems();
+
+
+            //아이템 출력 임시 코드
+            ViewManager.PrintList(player.equipItemList);
+            
+            
             menuItems = new List<(string, Action, Action)>
             {
                 ("장비 아이템", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
