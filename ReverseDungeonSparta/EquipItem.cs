@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static ReverseDungeonSparta.UsableItem;
 
 namespace ReverseDungeonSparta
@@ -33,15 +34,22 @@ namespace ReverseDungeonSparta
         int AddIntelligence {  get; set; }
         int AddMaxHp {  get; set; }
         int AddMaxMp {  get; set; }
+        public EquipItemInfo ItemInfo { get; private set; }
+
         public EquipItem(EquipItemInfo equipItemInfo)
         {
-
+            this.ItemInfo = equipItemInfo;
         }
         public EquipItem()
         {
+<<<<<<< Updated upstream
 
         }
+=======
+>>>>>>> Stashed changes
 
+        }
+      
         // 장착한 아이템 구조체
         public struct EquipItemInfo
         {
@@ -54,6 +62,7 @@ namespace ReverseDungeonSparta
             public Type type {  get; set; }
             public Grade grade { get; set; }
             public string itemName { get; set; }
+
             public EquipItemInfo(string name,int _addLuck, int _addDefence, int _addAttack, int _addIntelligence, int _addMaxHp, int _addMaxMp, Type type, Grade grade)
             {
                 this.itemName = name;
@@ -63,14 +72,26 @@ namespace ReverseDungeonSparta
                 addIntelligence = _addIntelligence;
                 addMaxHp = _addMaxHp;
                 addMaxMp = _addMaxMp;
+                this.type = type;
+                this.grade = grade;
             }
-
         }
+<<<<<<< Updated upstream
         public  void TestItemUpgrade()
         {
             ItemUpgrade();
         }
 
+=======
+        public static void PrintItemList()
+        {
+            for (int i = 0; i < allEquipItem.Length; i++)
+            {
+                var item = allEquipItem[i];
+                Console.WriteLine($"{i + 1}. {item.itemName} - {item.type} - {item.grade}");
+            }
+        }
+>>>>>>> Stashed changes
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
@@ -93,7 +114,7 @@ namespace ReverseDungeonSparta
             new EquipItemInfo("item이름17",5,5,5,5,5,5,Type.Ring, Grade.Rare), // 아이템 17
             new EquipItemInfo("item이름18",5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 18
         };
-
+        
         public static List<EquipItem> GetEquipItemList(int num)  // 만들어진 장착장비리스트에 아이템 객체 넣기 
         {
             List<EquipItem> equipItemList = new List<EquipItem>();
@@ -135,7 +156,7 @@ namespace ReverseDungeonSparta
                 EquipItemInfo item2 = allEquipItem[number2]; // 로직을 구성하여 입력한 아이템을 선택하도록
 
                 //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
-                if (item1.type == item2. type && item1.grade == item2.grade)
+                if (item1.type == item2.type && item1.grade == item2.grade)
                 {
                     float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
                     switch (item1.grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
@@ -181,8 +202,9 @@ namespace ReverseDungeonSparta
                         Console.Clear();
                         Console.WriteLine("[조합 결과]");
                         Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.itemName}, {upgradeItem.type}, {upgradeItem.grade}");
+                        Thread.Sleep(1000);
                         ReturnToInventory();
-
+                        
                     }
                     else
                     {
@@ -192,6 +214,7 @@ namespace ReverseDungeonSparta
                         // 조합실패시 조합된 아이템은 소멸되도록 하기 위해서 기본 아이템으로 초기화
                         allEquipItem[number1] = new EquipItemInfo();
                         allEquipItem[number2] = new EquipItemInfo();
+                        Thread.Sleep(1000);
                         ReturnToInventory();
                     }
                 }

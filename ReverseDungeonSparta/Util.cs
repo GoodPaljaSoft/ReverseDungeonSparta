@@ -54,7 +54,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        //public static Void PrintItemList(List<item> ItemList) { }
+        // public static Void PrintItemList(List<item> ItemList) { }
 
 
         //menuList에 있는 String은 화살표를 붙일 선택지의 문자열
