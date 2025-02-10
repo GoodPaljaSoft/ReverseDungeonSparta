@@ -57,33 +57,75 @@ namespace ReverseDungeonSparta
 
         public static void GetUserInput(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex)
         {
-            for (int i = 0; i < menuList.Count; i++)
+            ConsoleKeyInfo keyInfo;
+            while (true)
             {
-                if (i == selectedIndex) Console.WriteLine($"-> {menuList[i].Item1}");
-                else Console.WriteLine($"   {menuList[i].Item1}");
+                for (int i = 0; i < menuList.Count; i++)
+                {
+                    if (i == selectedIndex) Console.WriteLine($"-> {menuList[i].Item1}");
+                    else Console.WriteLine($"   {menuList[i].Item1}");
+                }
+                keyInfo = CheckKeyInput(selectedIndex, menuList.Count - 1);
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
+                        selectedIndex--;
+                        AudioManager.PlayMoveMenuSE(0);
+                        break;
+
+                    case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
+                        selectedIndex++;
+                        AudioManager.PlayMoveMenuSE(0);
+                        break;
+
+                    case ConsoleKey.Enter:      //엔터를 눌렀을 때
+                        int tempIndex = selectedIndex;
+                        selectedIndex = 0;      //selectedIndex 초기화
+                        if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
+                        menuList[tempIndex].Item2();
+                        break;
+                }
+                if (keyInfo.Key == ConsoleKey.Enter) break;
             }
 
-            ConsoleKeyInfo keyInfo = CheckKeyInput(selectedIndex, menuList.Count - 1);
-            switch (keyInfo.Key)
+        }
+
+
+        //화살표 위치 입력가능한 인풋 stirng 필요 없음***
+        public static void GetUserInput(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex, (int, int) cursor)
+        {
+            ConsoleKeyInfo keyInfo;
+            while (true)
             {
-                case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
-                    selectedIndex--;
-                    AudioManager.PlayMoveMenuSE(0);
-                    nowMenu();
-                    break;
+                ViewManager.PrintText(cursor.Item1, cursor.Item2, "");
+                for (int i = 0; i < menuList.Count; i++)
+                {
+                    string str = "";
+                    if (i == selectedIndex) str = ($"-> ");
+                    else str = ($"   ");
+                    ViewManager.PrintText(str);
+                }
+                keyInfo = CheckKeyInput(selectedIndex, menuList.Count - 1);
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
+                        selectedIndex--;
+                        AudioManager.PlayMoveMenuSE(0);
+                        break;
 
-                case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
-                    selectedIndex++;
-                    AudioManager.PlayMoveMenuSE(0);
-                    nowMenu();
-                    break;
+                    case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
+                        selectedIndex++;
+                        AudioManager.PlayMoveMenuSE(0);
+                        break;
 
-                case ConsoleKey.Enter:      //엔터를 눌렀을 때
-                    int tempIndex = selectedIndex;
-                    selectedIndex = 0;      //selectedIndex 초기화
-                    if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
-                    menuList[tempIndex].Item2();
-                    break;
+                    case ConsoleKey.Enter:      //엔터를 눌렀을 때
+                        int tempIndex = selectedIndex;
+                        selectedIndex = 0;      //selectedIndex 초기화
+                        if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
+                        menuList[tempIndex].Item2();
+                        break;
+                }
+                if (keyInfo.Key == ConsoleKey.Enter) break;
             }
         }
 
@@ -151,6 +193,20 @@ namespace ReverseDungeonSparta
                 }
             }
             return keyInfo;
+        }
+
+        public static void CheckKeyInputEnter()
+        {
+            ConsoleKeyInfo keyInfo;
+            while (true)
+            {
+                keyInfo = Console.ReadKey(true);
+                if (keyInfo.Key == ConsoleKey.Enter) 
+                {
+                    AudioManager.PlayMoveMenuSE(0);
+                    break; 
+                }
+            }
         }
     }
 }

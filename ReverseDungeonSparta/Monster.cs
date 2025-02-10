@@ -90,7 +90,8 @@ public class Monster : Character
                 {
                     skill = SkillList[0];
                     attackDamage *= skill.Value;
-                    Console.WriteLine($"스킬 발동 : {skill.Name}");
+                    ViewManager.PrintText("");
+                    ViewManager.PrintText($"스킬 발동 : {skill.Name}");
                 }
             }
         }
