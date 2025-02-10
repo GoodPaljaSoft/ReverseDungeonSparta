@@ -23,7 +23,9 @@ namespace ReverseDungeonSparta
         {
             BattleManagerInstance = new BattleManager(player);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
-            Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
+            Console.SetWindowSize(120, 100);         //콘솔창 크기 지정
+
+            ViewManager.DrawLine("스파르타 마을에 오신 여러분 환영합니다.");
         }
 
         public void PlayerStatusMenu()

@@ -29,7 +29,9 @@ namespace ReverseDungeonSparta
     {
         int selectedIndex = 0;
 
-        public EquipItemInfo ItemInfo { get; private set; }
+
+        //테스트를 위해 임시로 수정함!!!!!!!!!!!!
+        public EquipItemInfo ItemInfo { get; /*private*/ set; }
         public bool isOwned { get; set; }
         public bool isEquiped { get; set; }
         public EquipItem(EquipItemInfo equipItemInfo)
@@ -54,6 +56,7 @@ namespace ReverseDungeonSparta
             public Grade grade { get; set; }
             public string itemName { get; set; }
             public string description;
+
 
             public EquipItemInfo(string name, int _addLuck, int _addDefence, int _addAttack, int _addIntelligence, int _addMaxHp, int _addMaxMp, Type type, Grade grade, string description)
             {

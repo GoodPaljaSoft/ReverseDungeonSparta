@@ -13,6 +13,8 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
+
+
         public static void PrintPlayerView(Player player)
         {
             Console.WriteLine($"Lv. {player.Level}");
@@ -24,6 +26,8 @@ namespace ReverseDungeonSparta
             Console.WriteLine($"Gold : {player.Gold}");
             Console.WriteLine("");
         }
+
+
         public static int GetUserIntInput(int minCount, int maxCount)
         {
             Console.Write(">>");
@@ -77,10 +81,10 @@ namespace ReverseDungeonSparta
                 case ConsoleKey.Enter:      //엔터를 눌렀을 때
                     int tempIndex = selectedIndex;
                     selectedIndex = 0;      //selectedIndex 초기화
-                    if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
                     menuList[tempIndex].Item2();
                     nowMenu();
-
+                    if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
+                    menuList[tempIndex].Item2();
                     break;
             }
         }
