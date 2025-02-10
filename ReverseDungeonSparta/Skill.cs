@@ -19,10 +19,14 @@ namespace ReverseDungeonSparta
         }
 
         public string Name { get; set; }                //스킬 이름
-        public double Value { get; set; }               //스킬 효과 배수
-        public ExtentEnum Extent { get; set; }          //스킬 범위
-        public SkillType Type { get; set; }             //스킬 타입
+        public double Value { get; set; }               //스킬 효과 배수 또는 값
         public int ConsumptionMP { get; set; }          //소모 마나
+        public int BufferTurn { get; set; }             //버프의 지속 턴 시간
+        public string Info { get; set; }                //스킬 설명
+        public BuffType BufferType { get; set; }        //버프의 지속 턴 시간
+        public ExtentEnum Extent { get; set; }          //스킬 범위
+        public ApplyType ApplyType { get; set; }        //스킬 적용 타입(팀, 적)
+        public SkillType Type { get; set; }             //스킬 타입
 
 
         //스킬 범위 enum을 받은 후 범위를 int[]로 반환하는 메서드
@@ -54,7 +58,7 @@ namespace ReverseDungeonSparta
             List<Skill> backAllMonsterInfo = new List<Skill>();
 
             backAllMonsterInfo = skillInfoArray
-                .Select(x => new Skill(new SkillInfo(x.name, x.value, x.extent, x.type, x.consumptionMP))).ToList();
+                .Select(x => new Skill(new SkillInfo(x.name, x.value, x.extent, x.applyType, x.type, x.consumptionMP, x.buffType, x.bufferTurn, x.info))).ToList();
 
             return backAllMonsterInfo;
         }
@@ -112,42 +116,50 @@ namespace ReverseDungeonSparta
         //플레이어의 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] PlayerSkill = new SkillInfo[]
         {
-        new SkillInfo("강타", 1.5d, ExtentEnum.First, SkillType.Physical, 5),
-        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, SkillType.Physical, 8),
-        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, SkillType.Physical, 10)
+        new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명")
         };
 
 
         //물리 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] PhysicalSkill = new SkillInfo[]
         {
-        new SkillInfo("강타", 1.5d, ExtentEnum.First, SkillType.Physical, 5),
-        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, SkillType.Physical, 8),
-        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, SkillType.Physical, 10)
+        new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명")
         };
 
 
         //마법 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] MagicSkill = new SkillInfo[]
         {
-        new SkillInfo("파이어볼", 1.5d, ExtentEnum.First, SkillType.Magic, 5),
-        new SkillInfo("버스트샷", 1.0d, ExtentEnum.FirstAndThird, SkillType.Magic, 8),
-        new SkillInfo("지진", 0.7d, ExtentEnum.Third, SkillType.Magic, 10)
+        new SkillInfo("파이어볼", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Magic, 5, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("버스트샷", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Magic, 8, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("지진", 0.7d, ExtentEnum.Third, ApplyType.Enemy, SkillType.Magic, 10, BuffType.None, 0, "스킬 설명")
+        };
+
+
+        //버프 스킬을 저장해두는 스킬 정보 배열
+        public static SkillInfo[] BufferSkill = new SkillInfo[]
+        {
+        new SkillInfo("공격력 강화", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5,BuffType.AttackBuff, 1, "스킬 설명"),
+        new SkillInfo("방어력 강화", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "스킬 설명"),
+        new SkillInfo("회피력 강화", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 10, BuffType.EvasionBuff, 3, "스킬 설명")
         };
 
 
         //힐 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] HealingSkill = new SkillInfo[]
         {
-        new SkillInfo("힐링", 1.5d, ExtentEnum.First, SkillType.Buffer, 5),
-        new SkillInfo("퓨어힐", 1.0d, ExtentEnum.First, SkillType.Buffer, 8),
-        new SkillInfo("올힐", 0.7d, ExtentEnum.First, SkillType.Buffer, 10)
+        new SkillInfo("힐링", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 1, "스킬 설명"),
+        new SkillInfo("퓨어 힐", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.HealingBuff, 1, "스킬 설명"),
+        new SkillInfo("지속 힐", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 3, BuffType.HealingBuff, 3, "스킬 설명")
         };
     }
 
-
     //스킬 범위를 enum으로 저장
-    public enum ExtentEnum
+    public enum ExtentEnum : byte
     {
         First,
         FirstAndThird,
@@ -159,12 +171,20 @@ namespace ReverseDungeonSparta
 
 
     //스킬 타입을 enum으로 저장
-    public enum SkillType
+    public enum SkillType : byte
     {
         Physical,
         Magic,
         Buffer
     };
+
+    
+    //스킬의 적용 상대를 저장
+    public enum ApplyType : byte
+    {
+        Enemy,
+        Team
+    }
 
 
     //스킬의 정보를 담을 구조체
@@ -172,17 +192,26 @@ namespace ReverseDungeonSparta
     {
         public string name;
         public double value;
-        public ExtentEnum extent;
-        public SkillType type;
         public int consumptionMP;
+        public int bufferTurn;
+        public string info;
+        public ExtentEnum extent;
+        public ApplyType applyType;
+        public SkillType type;
+        public BuffType buffType;
 
-        public SkillInfo(string _name, double _value, ExtentEnum _extent, SkillType _type, int _consumptionMP)
+        public SkillInfo(string _name, double _value, ExtentEnum _extent, ApplyType _applyType,SkillType _type, 
+                        int _consumptionMP, BuffType _buffType,int _bufferTurn, string _info)
         {
             this.name = _name;
             this.value = _value;
             this.extent = _extent;
+            this.applyType = _applyType;
             this.type = _type;
             this.consumptionMP = _consumptionMP;
+            this.buffType = _buffType;
+            this.bufferTurn = _bufferTurn;
+            this.info = _info;
         }
     }
 
