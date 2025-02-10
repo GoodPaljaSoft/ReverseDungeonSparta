@@ -14,18 +14,11 @@ namespace ReverseDungeonSparta
     {
         public JobType Job { get; set; } 
         public int Level { get; set; }
-
-        public override string Name { get; set; } = string.Empty;
-        public override int Attack { get; set; }
-        public override int Defence { get; set; }
-        public override int MaxHP { get; set; }
-        public override int HP { get; set; }
-        public override int MaxMP { get; set; }
-        public override int MP { get; set; }
         public int Gold { get; set; }
-
         public int AdditionalAttack { get; set; }   // 장비 공격력
         public int AdditionalDefence { get; set; }  // 장비 방어력
+        public int MaxEXP { get; set; }
+        public int NowEXP { get; set; }
 
         public Player () //Player 생성자 
         {
@@ -57,14 +50,6 @@ namespace ReverseDungeonSparta
                 case JobType.Warrior:
                     break;
             }
-        }
-
-
-        public void SelectSkill(List<Monster> monsters, int selectSkillNum)
-        {
-            selectSkillNum--;
-
-
         }
 
 

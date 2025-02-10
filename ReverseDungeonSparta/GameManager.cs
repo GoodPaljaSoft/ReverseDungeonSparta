@@ -38,6 +38,7 @@ namespace ReverseDungeonSparta
             Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
             Console.WriteLine("");
             Console.WriteLine("");
+            EquipItem.PrintItemList();
 
              menuItems = new List<(string, Action, Action)>
             {
