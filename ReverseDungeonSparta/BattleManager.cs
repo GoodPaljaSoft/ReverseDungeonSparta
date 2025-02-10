@@ -42,24 +42,6 @@ public class BattleManager
     }
 
 
-    //배틀 순서를 텍스트로 변환하여 반환하는 메서드
-    public string BattleOrderTxt()
-    {
-        StringBuilder battleOrderListText = new StringBuilder();
-        foreach (Character character in battleOrderList)
-        {
-            Monster monster = character as Monster;
-            if ((monster != null && monster.IsDie == false) ||
-                character is Player)
-            {
-                battleOrderListText.Append($"{character.Name} > ");
-            }
-        }
-        battleOrderListText.Append("플레이어 > ... ");
-        return battleOrderListText.ToString();
-    }
-
-
     //순서 리스트에서 해당 캐릭터를 빼고, 뺀 수만큼 listCount를 줄여주는 메서드
     public void RemoveOrderListCharacter(Character character)
     {
@@ -67,26 +49,17 @@ public class BattleManager
     }
 
 
-    //몬스터의 정보의 출력할 메소드. isNum이 true면 번호를 추가해서 출력.
-    public void MonsterListInfoTxt(bool isNum)
+    //배틀매니저에서 배틀이 시작 될 때 실행할 메서드
+    public void EnterTheBattle()
     {
-        for (int i = 0; i < monsterList.Count; i++)
-        {
-            //번호/레벨/이름/HP(Dead)
-            Console.Write($"{(isNum ? (i + 1) : "")}Lv.{monsterList[i].Level} {monsterList[i].Name}");
-
-            //죽은 몬스터가 있다면 사망 처리
-            if (monsterList[i].IsDie)
-                Console.WriteLine("Dead");
-            else
-                Console.WriteLine($" HP: {monsterList[i].HP} " +
-                    $"ATK: {monsterList[i].Attack} " +
-                    $"DEF: {monsterList[i].Defence}");
-        }
+        Console.Clear();
+        ViewManager3.PrintEnterDungeonText(player);
+        Util.CheckKeyInputEnter();
+        StartBattle();
     }
 
 
-    //배틀매니저에서 배틀이 시작 될 때 실행할 메서드
+    //입력된 턴 순서로 캐릭터들에게 턴을 배정하는 메서드
     public void StartBattle()
     {
         while (isDungeonEnd == false)
@@ -133,27 +106,16 @@ public class BattleManager
     //플레이어의 턴이 시작 되었을 때 시작할 메서드
     public void StartPlayerBattle()
     {
-        Console.Clear();
-        Console.WriteLine("Battle!!");
-        Console.WriteLine("");
-        MonsterListInfoTxt(false);
-        Console.WriteLine("");
-        Console.WriteLine($"{BattleOrderTxt()}");
-        Console.WriteLine("");
-        Console.WriteLine($"[내 정보]");
-        Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
-        Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
-        Console.WriteLine("");
-
+        ViewManager3.PrintPlayerTurnText(player, monsterList, battleOrderList);
 
         menuItems = new List<(string, Action, Action)>
             {
-                ("공격하기", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
-                ("스킬 사용하기", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
+                ("", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
             };
 
         //플레이어가 공격을 선택할 수 있는 입력칸
-        Util.GetUserInput(menuItems, StartPlayerBattle, ref selectedIndex);
+        Util.GetUserInput(menuItems, StartPlayerBattle, ref selectedIndex, (0, 24));
     }
 
 
@@ -162,18 +124,7 @@ public class BattleManager
     {
         menuItems = new List<(string, Action, Action)>();
 
-        Console.Clear();
-        Console.WriteLine("Battle!!");
-        Console.WriteLine("");
-        MonsterListInfoTxt(false);
-        Console.WriteLine("");
-        Console.WriteLine($"{BattleOrderTxt()}");
-        Console.WriteLine("");
-        Console.WriteLine($"[내 정보]");
-        Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
-        Console.WriteLine($"HP {player.HP}/{player.MaxHP}");
-        Console.WriteLine("");
-        Console.WriteLine("[C] 돌아가기");
+        ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
         List<(string, Action)> skillList = player.SkillList
@@ -198,7 +149,7 @@ public class BattleManager
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
-        Console.WriteLine($"{BattleOrderTxt()}");
+        Console.WriteLine($"{ViewManager3.BattleOrderTxt(battleOrderList)}");
         Console.WriteLine("");
         Console.WriteLine("[내 정보]");
         Console.WriteLine($"Lv. {player.Level} {player.Name} ({player.Job.ToString()})");
@@ -222,7 +173,7 @@ public class BattleManager
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
-        Console.WriteLine($"{BattleOrderTxt()}");
+        Console.WriteLine($"{ViewManager3.BattleOrderTxt(battleOrderList)}");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 공격!");
         foreach (Monster monster in monsters)
@@ -262,7 +213,7 @@ public class BattleManager
         Console.Clear();
         Console.WriteLine("Battle!!");
         Console.WriteLine("");
-        Console.WriteLine($"{BattleOrderTxt()}");
+        Console.WriteLine($"{ViewManager3.BattleOrderTxt(battleOrderList)}");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 스킬 사용!");
         Console.WriteLine($"플레이어 공격력 : {beforeAttack} -> {player.Attack}");
@@ -319,26 +270,22 @@ public class BattleManager
 
         int beforeplayerHP = player.HP;
 
-        Console.Clear();
-        Console.WriteLine("Battle!!");
-        Console.WriteLine();
-        Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
+        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList);
+        ViewManager.PrintText(0, 11, $"{monster.Name}의 차례입니다!");
+        Util.CheckKeyInputEnter();
+        ViewManager.PrintText("");
+        ViewManager.PrintText($"Lv. {monster.Level} {monster.Name}의 공격!");
+        Util.CheckKeyInputEnter();
         monster.Attacking(player,monsterList, out int damage);
-        Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
-        Console.WriteLine("");
-        Console.WriteLine($"{BattleOrderTxt()}");
-        Console.WriteLine("");
-        Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {beforeplayerHP} -> {player.HP}");
-        Console.WriteLine("");
-        Console.WriteLine("-> 다음");
+        ViewManager.PrintText($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
+        ViewManager.PrintText("");
+        ViewManager.PrintText($"{player.Name}에게 총 {damage} 데미지를 입혔습니다! ({beforeplayerHP} -> {player.HP})");
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
 
         while (true)
         {
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
             if (keyInfo.Key == ConsoleKey.Enter)
             {
                 break;

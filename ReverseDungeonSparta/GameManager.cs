@@ -86,26 +86,25 @@ namespace ReverseDungeonSparta
         {
             AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
-            BattleManagerInstance.StartBattle();
+            BattleManagerInstance.EnterTheBattle();
         }
 
 
         public void GameMenu() // 시작화면 구현
         {
-            //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
-            Console.Clear();
-            ViewManager.PrintTitle();
+            //Console.SetCursorPosition(100, 25);
 
-            Console.SetCursorPosition(100, 25);
+            ViewManager3.MainMenuTxt();
+
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
             //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
             //리스트 3번째에 입력 받는 오디오는 null로 선언해도 정상작동 됩니다.
             //새로운 (string, Action, Action) 입력하기 전 반점(,) 필수
             menuItems = new List<(string, Action, Action)>
             {
-                ("상태 보기", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
                 //("아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름], [출력할 오디오 메소드])
                 //("조합", sum, null)
                 //...
@@ -116,7 +115,7 @@ namespace ReverseDungeonSparta
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex);
+            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
         }
     }
 }
