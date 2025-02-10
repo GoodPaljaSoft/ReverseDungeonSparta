@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ReverseDungeonSparta.EquipItem;
 
 namespace ReverseDungeonSparta
 {
@@ -54,8 +55,17 @@ namespace ReverseDungeonSparta
             }
         }
         #region 아이템 능력치 저장
-        public void PlusItemStat() 
+        public void ApplyItemStat() 
         {
+            Attack = 100;  // 일단 기본값으로 초기화
+            Defence = 5;
+            Luck = 5;
+            Intelligence = 5;
+            MaxHP = 100;   
+            HP = MaxHP;
+            MP = 100;
+            MP = MaxMP;
+
             foreach (var equipItem in equipItemList)
             {
                 var itemInfo = equipItem.ItemInfo;
@@ -68,15 +78,36 @@ namespace ReverseDungeonSparta
                 MaxMP += equipItem.ItemInfo.addMaxMp;
             }
         }
+        public void LoadEquipItems()
+        {
+            // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
+            foreach (var itemInfo in EquipItem.allEquipItem)
+            {
+                EquipItem equipItem = new EquipItem(itemInfo); // EquipItem 객체 생성
+                equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
+            }
+        }
         #endregion
         public void IsEquipItem(EquipItem item) //아이템 장착 로직 구현
         {
             if(!equipItemList.Contains(item))
             {
-                equipItemList.Add(item); // item이 장착된 장착아이템리스트에 없다면
+                equipItemList.Add(item); // item이 장착된 장비아이템리스트에 없다면
                 item.isEquiped = true;
-                PlusItemStat();
-
+                ApplyItemStat();
+            }
+            else
+            {
+                Console.WriteLine("장착된 아이템이 아닙니다.");
+            }
+        }
+        public void UnEquippedItem(EquipItem item) //아이템 해제 로직 구현
+        {
+            if (equipItemList.Contains(item))
+            {
+                equipItemList.Remove(item); // 장비리스트에 장착된 아이템을 제거하고
+                item.isEquiped = false;
+                ApplyItemStat() ; //다시 스텟을 초기화
             }
         }
         public bool CheckPlayerCanSkill(int selectSkillNum)
