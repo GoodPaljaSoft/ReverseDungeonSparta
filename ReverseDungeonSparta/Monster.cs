@@ -126,9 +126,25 @@ public class Monster : Character
 
 
     //해당 스킬의 타입을 확인하고 물리, 마법, 힐에 따라 작용 방식을 달리 만드는 메서드
-    public void CheckSkillType()
+    public void CheckSkillType(Skill skill)
     {
+        if(skill.Type == SkillType.Physical)
+        {
+            //해당 캐릭터의 데미지에서 물리 공격력에 기반하여 타격
+            //상대방의 방어력을 기준으로 데미지가 감소
+        }
+        else if(skill.Type == SkillType.Magic)
+        {
+            //해당 캐릭터의 데미지에서 지능에 기반하여 타격
+            //상대방의 방어력을 무시하고 타격
+        }
+        else if(skill.Type == SkillType.Buffer)
+        {
+            //해당 캐릭터의 지능에 영향을 받아 계산함.
+            //적용 대상을 상대방에서 아군으로 바꾸는 로직 필요
 
+            //해당 스킬을 사용하는 객체가 몬스터일 경우와 플레이어일 경우
+        }
     }
 
     //몬스터가 사망할 때 처리할 메서드
