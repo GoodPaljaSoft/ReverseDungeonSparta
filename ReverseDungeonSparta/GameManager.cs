@@ -33,44 +33,70 @@ namespace ReverseDungeonSparta
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
             Util.PrintPlayerView(player);
         }
+        #region 소지품 확인 
         public void InventoryMenu()
         {
             Console.Clear();
-            Console.WriteLine("인벤토리");
-            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            Console.WriteLine("소지품 확인");
             Console.WriteLine("");
             Console.WriteLine("");
-            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
-            player.LoadEquipItems();
+           
             menuItems = new List<(string, Action, Action)>
             {
-                ("장비 아이템", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 아이템", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("소비 아이템", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
                 ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
         }
-        public void EquipItemMenu()
+        #endregion 
+        #region 소지품 확인 - 장비
+        public void EquipmentMenu()
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비");
-            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
             Console.WriteLine("");
             Console.WriteLine("");
+            player.LoadEquipItems();
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
 
             menuItems = new List<(string, Action, Action)>
             {
-                ("장비 장착", player.LoadEquipItems, () => AudioManager.PlayMoveMenuSE(0)),
-                ("장비 합성", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 장착", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 합성", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("나가기", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+            };
+            Util.GetUserInput(menuItems, EquipmentMenu, ref selectedIndex);
+        }
+        #endregion 
+        #region 소지품 확인 - 장비 장착
+        public void EquipItemMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("소지품 확인  - 장비 장착");
+            // player.IsEquipItem(EquipItem item);  내일 다시 구현해야함. ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+            menuItems = new List<(string, Action, Action)>
+            {
+                ("나가기", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
         }
-        public void ItemUpgrade()
+        #endregion
+        #region 소지품 확인 - 장비 합성 씬
+        public void ItemUpgradeMenu()
         {
+            Console.Clear();
+            Console.WriteLine("소지품 확인  - 장비합성");
 
+            EquipItem.ItemUpgrade();
+            menuItems = new List<(string, Action, Action)>
+            {
+                ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
+
+            };
+            Util.GetUserInput(menuItems, ItemUpgradeMenu, ref selectedIndex);
         }
+        #endregion
         public void EnterBattleMenu()
         {
             AudioManager.PlayBattleBGM();

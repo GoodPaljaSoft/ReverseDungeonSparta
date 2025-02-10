@@ -15,8 +15,8 @@ namespace ReverseDungeonSparta
         static public int width = 120;      //콘솔 가로 크기
         static public int height = 30;      //콘솔 세로 크기
 
-        static int x = 0;   //마우스 커서 x위치
-        static int y = 0;   //마우스 커서 y위치
+        static int CursorX = 0;   //마우스 커서 x위치
+        static int CursorY = 0;   //마우스 커서 y위치
 
         //커서 위치 받아오기
         static int top = Console.WindowTop;
@@ -83,18 +83,20 @@ namespace ReverseDungeonSparta
         //이 다음으로 PrintText로 출력하면 된다.
         public static void PrintText(int x, int y, string text)
         {
+            CursorX = x;
+            CursorY = y;
             Console.SetCursorPosition(x, y);
             Console.Write(text);
-            y++;
+            CursorY++;
         }
 
 
         //해당 메서드로 위치를 잡은 커서를 기준으로 텍스트를 출력한다.
         public static void PrintText(string text)
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(CursorX, CursorY);
             Console.Write(text);
-            y++;
+            CursorY++;
         }
 
         //public void PrintList(int x = 1, int y = 4, List<ItemInfo> items)
