@@ -54,7 +54,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        //public static Void PrintItemList(List<item> ItemList) { }
+        // public static Void PrintItemList(List<item> ItemList) { }
 
 
         //menuList에 있는 String은 화살표를 붙일 선택지의 문자열
@@ -102,11 +102,19 @@ namespace ReverseDungeonSparta
                 case ConsoleKey.Enter:      //엔터를 눌렀을 때
                     int tempIndex = selectedIndex;
                     selectedIndex = 0;      //selectedIndex 초기화
+<<<<<<< HEAD
+                    menuList[tempIndex].Item2();
+                    break;
+
+                default:                    //상관 없는 키가 눌렸을 때
+                    nowMenu();
+=======
                     if (menuList[tempIndex].Item3 != null)
                     {
                         menuList[tempIndex].Item3();
                     }
                     menuList[tempIndex].Item2();
+>>>>>>> Dev2_YHJ_SJW
                     break;
             }
         }
