@@ -98,6 +98,44 @@ namespace ReverseDungeonSparta
             }
         }
 
+        public static void GetUserInputPosition(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex)
+        {
+            for (int i = 0; i < menuList.Count; i++)
+            {
+                if (i == selectedIndex)
+                {
+                    Console.WriteLine($"-> {menuList[i].Item1}");
+                }
+                else
+                {
+                    Console.WriteLine($"   {menuList[i].Item1}");
+                }
+            }
+
+            ConsoleKeyInfo keyInfo = CheckKeyInput(selectedIndex, menuList.Count - 1);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
+                    selectedIndex--;
+                    AudioManager.PlayMoveMenuSE(0);
+                    nowMenu();
+                    break;
+
+                case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
+                    selectedIndex++;
+                    AudioManager.PlayMoveMenuSE(0);
+                    nowMenu();
+                    break;
+
+                case ConsoleKey.Enter:      //엔터를 눌렀을 때
+                    int tempIndex = selectedIndex;
+                    selectedIndex = 0;      //selectedIndex 초기화
+                    if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
+                    menuList[tempIndex].Item2();
+                    break;
+            }
+        }
+
 
         //스킬 범위를 한 칸 밀어내는 메서드
         public static int[] UpExtent(int[] extentArray)

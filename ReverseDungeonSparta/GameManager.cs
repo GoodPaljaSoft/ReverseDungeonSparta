@@ -48,7 +48,7 @@ namespace ReverseDungeonSparta
 
             //아이템 출력 임시 코드
             ViewManager.PrintList(player.equipItemList);
-            
+
             
             menuItems = new List<(string, Action, Action)>
             {
@@ -66,6 +66,8 @@ namespace ReverseDungeonSparta
             Console.WriteLine("");
             Console.WriteLine("");
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
+
+
 
             menuItems = new List<(string, Action, Action)>
             {
@@ -91,11 +93,9 @@ namespace ReverseDungeonSparta
         {
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             Console.Clear();
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영입니다.");
-            Console.WriteLine("이제 전투를 시작할 수 있습니다.");
-            Console.WriteLine("");
+            ViewManager4.PrintTitle();
 
-
+            Console.SetCursorPosition(100, 25);
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
             //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
             //리스트 3번째에 입력 받는 오디오는 null로 선언해도 정상작동 됩니다.
