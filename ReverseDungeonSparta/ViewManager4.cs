@@ -160,7 +160,7 @@ namespace ReverseDungeonSparta
 
             for(int i = 0; i < items.Count; i++)
             {
-                if (items[i].isEquiped)
+                if (items[i].IsEquiped)
                     PrintTextLine(x, y + i, "[E]");
                 else
                     PrintTextLine(x, y + i, "[-]");
@@ -170,7 +170,7 @@ namespace ReverseDungeonSparta
             x = 7;
             for (int i = 0; i < items.Count; i++)
             {
-                PrintTextLine(x, y + i, $"{items[i].ItemInfo.itemName}");
+                PrintTextLine(x, y + i, $"{items[i].Name}");
             }
 
             x = 24;
@@ -182,7 +182,7 @@ namespace ReverseDungeonSparta
             x = 26;
             for (int i = 0; i < items.Count; i++)
             {
-                PrintTextLine(x, y + i, $"{EnumToString(items[i].ItemInfo.type.ToString())}");
+                PrintTextLine(x, y + i, $"{EnumToString(items[i].Type.ToString())}");
             }
 
             x = 33;
