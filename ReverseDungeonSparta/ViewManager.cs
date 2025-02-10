@@ -126,66 +126,35 @@ namespace ReverseDungeonSparta
 
         public static void PrintList(List<EquipItem> items)
         {
-            int x = 3;
+            int[] x = { 3, 7, 24, 26, 33, 36, 45};
             int y = 3;
-
             //커서는 x==1 위치에 들어감
-
-            for(int i = 0; i < items.Count; i++)
-            {
-                if (items[i].isEquiped)
-                    PrintTextLine(x, y + i, "[E]");
-                else
-                    PrintTextLine(x, y + i, "[-]");
-
-            }
-
-            x = 7;
             for (int i = 0; i < items.Count; i++)
             {
-                PrintTextLine(x, y + i, $"{items[i].ItemInfo.itemName}");
+                int[] optionArray = { items[i].AddLuck, items[i].AddDefence, items[i].AddAttack, items[i].AddIntelligence, items[i].AddMaxHp, items[i].AddMaxMp };
+                string[] nameArray = { "AddLuck", "AddDefence", "AddAttack", "AddIntelligence", "AddMaxHp", "AddMaxMp" };
+                if (items[i].IsEquiped) PrintTextLine(x[0], y + i, "[E]");
+                else PrintTextLine(x[0], y + i, "[-]");
+                PrintTextLine(x[1], y + i, $"{items[i].Name}");
+                PrintTextLine(x[2], y + i, "|");
+                PrintTextLine(x[3], y + i, $"{TranslateString(items[i].Type.ToString())}");
+
+                int count = 0;
+                for (int j = 0; j < optionArray.Length; j++)
+                {
+                    if (optionArray[j] != 0)
+                    {
+                        PrintTextLine(x[4], y + i + count, "|");
+                        PrintTextLine(x[5], y + i + count, $"{TranslateString(nameArray[j])}:{optionArray[j]}");
+                        PrintTextLine(x[6], y + i + count, "|");
+                        count++;
+                    }
+                }
+                y += count;
             }
-
-            x = 24;
-            for (int i = 0; i < items.Count; i++)
-            {
-                PrintTextLine(x, y + i, "|");
-            }
-
-            x = 26;
-            for (int i = 0; i < items.Count; i++)
-            {
-                PrintTextLine(x, y + i, $"{EnumToString(items[i].ItemInfo.type.ToString())}");
-            }
-
-            x = 33;
-            for (int i = 0; i < items.Count; i++)
-            {
-                PrintTextLine(x, y + i, "|");
-            }
-
-            x = 36;
-            for (int i = 0; i < items.Count; i++)
-            {
-                //int[] num = new int[6];
-
-                //PrintTextLine(x, y + i, "|");
-
-                //if (items[i].ItemInfo.addLuck > 0)
-                //{
-                //    PrintTextLine(x, y + i + count, $"{items[i].ItemInfo.itemName}");
-                //}
-                //if (items[i].ItemInfo.addAttack > 0) count++;
-                //if (items[i].ItemInfo.addDefence > 0) count++;
-                //if (items[i].ItemInfo.addIntelligence > 0) count++;
-                //if (items[i].ItemInfo.addMaxHp > 0) count++;
-                //if (items[i].ItemInfo.addMaxMp > 0) count++;
-
-            }
-
         }
 
-        public static string EnumToString(string enumType)
+        public static string TranslateString(string enumType)
         {
             switch(enumType)
             {
@@ -201,17 +170,21 @@ namespace ReverseDungeonSparta
                     return "반  지";
                 case "Necklace":
                     return "목걸이";
+                case "AddLuck":
+                    return "행  운";
+                case "AddDefence":
+                    return "방어력";
+                case "AddAttack":
+                    return "공격력";
+                case "AddIntelligence":
+                    return "지  력";
+                case "AddMaxHp":
+                    return "체  력";
+                case "AddMaxMp":
+                    return "마  나";
+                default:
+                    return "TranslateError";
             }
-
-            return "error";
         }
-
-
-
-
-
-
-
-
     }
 }
