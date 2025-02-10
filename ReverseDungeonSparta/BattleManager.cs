@@ -122,17 +122,15 @@ public class BattleManager
     //플레이어가 스킬 사용을 누른 후 스킬의 번호를 선택하는 메소드
     public void PlayerSelectSkillNum()
     {
-        menuItems = new List<(string, Action, Action)>();
-
         ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
-        List<(string, Action)> skillList = player.SkillList
-                                .Select(x => (x.Name, (Action)PlayerSelectMonster))
+        List<(string, Action, Action)> skillList = player.SkillList
+                                .Select(x => (x.Name + $"\n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
                                 .ToList();
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
-        GetUserSkillInput(skillList, PlayerSelectSkillNum, ref selectedIndex);
+        ViewTech.GetUserInput3(skillList, PlayerSelectSkillNum, ref selectedIndex, StartPlayerBattle);
     }
 
 
