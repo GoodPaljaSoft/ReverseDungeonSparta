@@ -5,27 +5,6 @@ using System.Security.Cryptography.X509Certificates;
 public class Monster : Character
 {
     static Random random = new Random();
-
-    private int hp;
-    public override int MaxHP { get; set; }
-    public override int HP
-    {
-        get { return hp; }
-        set
-        {
-            hp = value;
-
-            if (hp <= 0)
-            {
-                IsDead();
-            }
-            else if (hp > MaxHP)
-            {
-                hp = MaxHP;
-            }
-        }
-    }
-    public override string Name { get; set; } = string.Empty;
     public MonsterType Type { get; set; }
     public int Level { get; set; }
     public bool IsDie { get; set; }
@@ -97,9 +76,10 @@ public class Monster : Character
     };
 
 
-    public override void Attacking(Character target, out int damage)
+    public override void Attacking(Character target,List<Monster> monsters ,out int damage)
     {
         Random random = new Random();
+        Skill skill = null;
         int rand = random.Next(0, 2);
         double attackDamage = (double)Attack;
         if(rand == 0)
@@ -110,18 +90,38 @@ public class Monster : Character
                 SkillList = Util.ShuffleList(SkillList);
                 if (SkillList[0].ConsumptionMP <= MP)
                 {
-                    attackDamage *= SkillList[0].Value;
-                    Console.WriteLine($"스킬 발동 : {SkillList[0].Name}");
+                    skill = SkillList[0];
+                    attackDamage *= skill.Value;
+                    Console.WriteLine($"스킬 발동 : {skill.Name}");
                 }
             }
         }
+
         //데미지 계산식
         double margin = attackDamage * 0.1d;
         margin = Math.Ceiling(margin);
 
         damage = new Random().Next((int)(attackDamage - margin), (int)(attackDamage + margin));
 
-        OnDamage(target, damage);
+        if (skill != null)
+        {
+            if(skill.ApplyType == ApplyType.Enemy)
+            {
+                //플레이어 공격
+                OnDamage(target, damage);
+            }
+            else if (skill.ApplyType == ApplyType.Team)
+            {
+                //팀에게 사용
+                rand = random.Next(0, monsters.Count);
+                monsters[rand].AddBuff((Character)this, skill);
+            }
+        }
+        else
+        {
+            //플레이어 공격
+            OnDamage(target, damage);
+        }
     }
 
 
@@ -150,7 +150,6 @@ public class Monster : Character
     //몬스터가 사망할 때 처리할 메서드
     public void IsDead()
     {
-        hp = 0;
         IsDie = true;
         Speed = 0;
     }
@@ -220,7 +219,7 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = backAllMonsterInfo[rand];
 
-        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.type, monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
+        return new Monster(monsterInfo);
     }
 
     //몬스터의 정보를 저장할 구조체
