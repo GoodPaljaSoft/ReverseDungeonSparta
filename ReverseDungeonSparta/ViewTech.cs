@@ -2,9 +2,43 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 
 namespace ReverseDungeonSparta
 {
+    public static class ViewManager2
+    {
+        private static StringBuilder previousScreen = new StringBuilder();
+        private static int lastPrintedLines = 0;
+
+        /// 콘솔 화면을 갱신하는 메서드 (깜빡임 없는 UI 업데이트) 사용법
+        /// 모든 뷰에 StringBuilder sb = new StringBuilder; 추가
+        /// 모든 ConSole.Write()를 sb.AppendLine()으로 변경
+        /// 모든 ConSole.Clear()를 Refresh(sb)로 변경
+      
+        public static void Refresh(StringBuilder sb)
+        {
+            // 콘솔 커서를 최상단으로 이동 (Console.Clear() 대신 사용)
+            Console.SetCursorPosition(0, 0);
+
+            // 변경된 부분만 출력 (이전 화면과 비교)
+            if (!sb.ToString().Equals(previousScreen.ToString()))
+            {
+                Console.Write(sb.ToString());
+                previousScreen = sb;
+            }
+
+            // 이전보다 줄이 적을 경우, 남은 공간을 덮어쓰기 위해 공백 추가
+            int blankLines = lastPrintedLines - sb.ToString().Split('\n').Length;
+            for (int i = 0; i < blankLines; i++)
+            {
+                Console.WriteLine(new string(' ', Console.BufferWidth));
+            }
+
+            // 마지막으로 출력된 줄 수 업데이트
+            lastPrintedLines = sb.ToString().Split('\n').Length;
+        }
+    }
     public class ViewTech
     {
         int selectedIndex = 1;
