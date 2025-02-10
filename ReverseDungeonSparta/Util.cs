@@ -15,7 +15,6 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
-        public static void PrintPlayerView(Player player) 
         public static void PrintPlayerView(Player player)
         {
             Console.WriteLine($"Lv. {player.Level}");
