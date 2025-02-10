@@ -77,36 +77,36 @@ namespace ReverseDungeonSparta
         {
             ItemUpgrade();
         }
-        public static void PrintItemList() //장착 가능한 아이템 출력 //추후에 유틸부분으로 넘기는게 깔끔할 수 있음.
-        {
-            for (int i = 0; i < allEquipItem.Length; i++)
-            {
+        //public static void PrintItemList() //장착 가능한 아이템 출력 //추후에 유틸부분으로 넘기는게 깔끔할 수 있음.
+        //{
+        //    for (int i = 0; i < allEquipItem.Length; i++)
+        //    {
                 
-                var item = allEquipItem[i];
-                string statInfo = "";
-                if (item.type == Type.Helmet)  // 작성된 스텟은 예시로 저장 회의를 통한 수정 필요
-                {
-                    statInfo = $"체력 +{item.addMaxHp}";
-                }
-                else if (item.type == Type.Armor | item.type == Type.Shoes)
-                {
-                    statInfo = $"방어력 +{item.addDefence}";
-                }
-                else if (item.type == Type.Weapon)
-                {
-                    statInfo = $"공격력 +{item.addAttack}";
-                }
-                else if (item.type == Type.Ring)
-                {
-                    statInfo = $"행운 +{item.addLuck}";
-                }
-                else if (item.type != Type.Necklace)
-                {
-                    statInfo = $"지력 +{item.addIntelligence}";
-                }
-                Console.WriteLine($" [-]  {item.itemName}        | {item.type}         | {statInfo}         |{item.description}");
-            }
-        }
+        //        var item = allEquipItem[i];
+        //        string statInfo = "";
+        //        if (item.type == Type.Helmet)  // 작성된 스텟은 예시로 저장 회의를 통한 수정 필요
+        //        {
+        //            statInfo = $"체력 +{item.addMaxHp}";
+        //        }
+        //        else if (item.type == Type.Armor | item.type == Type.Shoes)
+        //        {
+        //            statInfo = $"방어력 +{item.addDefence}";
+        //        }
+        //        else if (item.type == Type.Weapon)
+        //        {
+        //            statInfo = $"공격력 +{item.addAttack}";
+        //        }
+        //        else if (item.type == Type.Ring)
+        //        {
+        //            statInfo = $"행운 +{item.addLuck}";
+        //        }
+        //        else if (item.type != Type.Necklace)
+        //        {
+        //            statInfo = $"지력 +{item.addIntelligence}";
+        //        }
+        //        Console.WriteLine($" [-]  {item.itemName}        | {item.type}         | {statInfo}         |{item.description}");
+        //    }
+        //}
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
