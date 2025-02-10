@@ -191,7 +191,7 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = frontAllMonsterInfo[rand];
 
-        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.type ,monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
+        return new Monster(monsterInfo);
     }
 
 
