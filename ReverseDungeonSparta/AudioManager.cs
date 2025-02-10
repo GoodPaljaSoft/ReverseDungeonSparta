@@ -15,8 +15,8 @@ namespace ReverseDungeonSparta
         static IWavePlayer SE_Player;
         static AudioFileReader SE_Reader;
 
-        static float bgmVolume = 0.2f;
-        static float seVolme = 0.2f;
+        static float bgmVolume = 0.05f;
+        static float seVolme = 0.05f;
 
         static bool isBGM_Player = false;
         static bool isPlayerDie = false;

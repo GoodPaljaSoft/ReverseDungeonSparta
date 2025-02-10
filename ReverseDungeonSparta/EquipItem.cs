@@ -69,6 +69,10 @@ namespace ReverseDungeonSparta
                 
             }
         }
+        public  void TestItemUpgrade()
+        {
+            ItemUpgrade();
+        }
         public static void PrintItemList() //장착 가능한 아이템 출력 //추후에 유틸부분으로 넘기는게 깔끔할 수 있음.
         {
             for (int i = 0; i < allEquipItem.Length; i++)
