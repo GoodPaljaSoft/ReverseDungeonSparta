@@ -126,31 +126,20 @@ namespace ReverseDungeonSparta
             new EquipItemInfo("item이름17",5,5,5,5,5,5,Type.Ring, Grade.Rare,"아이템17"), // 아이템 17
             new EquipItemInfo("item이름18",5,5,5,5,5,5,Type.Necklace, Grade.Rare,"아이템18"), // 아이템 18
         };
+        //public static EquipItem InstanceEquipItem(int index) // 배열 index를 통해서 아이템 정보를
+        //                                                     // 매개변수로 가진 아이템 객체 만들고 반환 
+        //{
+        //    if (index >= 0 && index <= allEquipItem.Length)
+        //    {
+        //        EquipItemInfo equipItemInfo = allEquipItem[index];
 
-        public static List<EquipItem> GetEquipItemList(int num)  // 만들어진 장착장비리스트에 아이템 객체 넣기 
-        {
-            List<EquipItem> equipItemList = new List<EquipItem>();
-            for (int i = 0; i < num; i++)
-            {
-                equipItemList.Add(InstanceEquipItem(i));
-            }
-            return equipItemList;
-
-        }
-        public static EquipItem InstanceEquipItem(int index) // 배열 index를 통해서 아이템 정보를
-                                                             // 매개변수로 가진 아이템 객체 만들고 반환 
-        {
-            if (index >= 0 && index <= allEquipItem.Length)
-            {
-                EquipItemInfo equipItemInfo = allEquipItem[index];
-
-                return new EquipItem(equipItemInfo);
-            }
-            else
-            {
-                return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
-            }
-        }
+        //        return new EquipItem(equipItemInfo);
+        //    }
+        //    else
+        //    {
+        //        return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
+        //    }
+        //}
         #region 아이템 조합 로직
         public static void ItemUpgrade()
         {
@@ -259,4 +248,5 @@ namespace ReverseDungeonSparta
         }
         #endregion
     }
+
 }
