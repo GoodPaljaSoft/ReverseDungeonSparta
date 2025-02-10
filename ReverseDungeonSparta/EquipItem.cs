@@ -10,24 +10,26 @@ using static ReverseDungeonSparta.UsableItem;
 
 namespace ReverseDungeonSparta
 {
+    public enum Grade
+    {
+        Normal,
+        Uncommon,
+        Rare,
+    }
+    public enum Type
+    {
+        Armor,
+        Weapon,
+        Helmet,
+        Shoes,
+        Ring,
+        Necklace
+    }
     public class EquipItem : Item
     {
         int selectedIndex = 0;
-        public enum Grade
-        {
-            Normal,
-            Uncommon,
-            Rare,
-        }
-        public enum Type
-        {
-            Armor,
-            Weapon,
-            Helmet,
-            Shoes,
-            Ring,
-            Necklace
-        }
+        
+        
         int AddLuck {  get; set; }
         int AddDefence {  get; set; }
         int AddAttack { get; set; }
@@ -42,14 +44,8 @@ namespace ReverseDungeonSparta
         }
         public EquipItem()
         {
-<<<<<<< Updated upstream
 
         }
-=======
->>>>>>> Stashed changes
-
-        }
-      
         // 장착한 아이템 구조체
         public struct EquipItemInfo
         {
@@ -76,13 +72,11 @@ namespace ReverseDungeonSparta
                 this.grade = grade;
             }
         }
-<<<<<<< Updated upstream
         public  void TestItemUpgrade()
         {
             ItemUpgrade();
         }
 
-=======
         public static void PrintItemList()
         {
             for (int i = 0; i < allEquipItem.Length; i++)
@@ -91,7 +85,6 @@ namespace ReverseDungeonSparta
                 Console.WriteLine($"{i + 1}. {item.itemName} - {item.type} - {item.grade}");
             }
         }
->>>>>>> Stashed changes
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
@@ -148,7 +141,6 @@ namespace ReverseDungeonSparta
             Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
             int number2 = Util.GetUserIntInput(1, 18) - 1;
 
-
             //입력한 숫자가 장비아이템의 index범위내에 있는지부터 파악
             if (number1 >=0 && number1<allEquipItem.Length &&number2>=0 && number2<allEquipItem.Length)
             {   
@@ -204,7 +196,6 @@ namespace ReverseDungeonSparta
                         Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.itemName}, {upgradeItem.type}, {upgradeItem.grade}");
                         Thread.Sleep(1000);
                         ReturnToInventory();
-                        
                     }
                     else
                     {
@@ -221,11 +212,16 @@ namespace ReverseDungeonSparta
                 else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
                 {
                     Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
+                    Thread.Sleep(1000);
+                    return;
+
                 }
             }
             else //내가 선택한 아이템의 index가 유효한 범위에 없을 때 나올 수 있는 출력
             {
                 Console.WriteLine("잘못된 아이템 번호가 입력되었습니다. 번호 확인 후 다시 입력해주세요.");
+                Thread.Sleep(1000);
+                return;
             }
         }
         public static void ReturnToInventory()
