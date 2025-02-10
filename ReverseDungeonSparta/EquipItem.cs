@@ -10,41 +10,37 @@ using static ReverseDungeonSparta.UsableItem;
 
 namespace ReverseDungeonSparta
 {
+    public enum Grade
+    {
+        Normal,
+        Uncommon,
+        Rare,
+    }
+    public enum Type
+    {
+        Armor,
+        Weapon,
+        Helmet,
+        Shoes,
+        Ring,
+        Necklace
+    }
     public class EquipItem : Item
     {
         int selectedIndex = 0;
-        public enum Grade
-        {
-            Normal,
-            Uncommon,
-            Rare,
-        }
-        public enum Type
-        {
-            Armor,
-            Weapon,
-            Helmet,
-            Shoes,
-            Ring,
-            Necklace
-        }
-        int AddLuck {  get; set; }
-        int AddDefence {  get; set; }
-        int AddAttack { get; set; }
-        int AddIntelligence {  get; set; }
-        int AddMaxHp {  get; set; }
-        int AddMaxMp {  get; set; }
-        public EquipItemInfo ItemInfo { get; private set; }
 
+        public EquipItemInfo ItemInfo { get; private set; }
+        public bool isOwned { get; set; }
+        public bool isEquiped { get; set; }
         public EquipItem(EquipItemInfo equipItemInfo)
         {
             this.ItemInfo = equipItemInfo;
+            isEquiped = false;
         }
         public EquipItem()
         {
 
         }
-      
         // 장착한 아이템 구조체
         public struct EquipItemInfo
         {
@@ -54,11 +50,12 @@ namespace ReverseDungeonSparta
             public int addIntelligence;
             public int addMaxHp;
             public int addMaxMp;
-            public Type type {  get; set; }
+            public Type type { get; set; }
             public Grade grade { get; set; }
             public string itemName { get; set; }
+            public string description;
 
-            public EquipItemInfo(string name,int _addLuck, int _addDefence, int _addAttack, int _addIntelligence, int _addMaxHp, int _addMaxMp, Type type, Grade grade)
+            public EquipItemInfo(string name, int _addLuck, int _addDefence, int _addAttack, int _addIntelligence, int _addMaxHp, int _addMaxMp, Type type, Grade grade, string description)
             {
                 this.itemName = name;
                 addLuck = _addLuck;
@@ -69,45 +66,67 @@ namespace ReverseDungeonSparta
                 addMaxMp = _addMaxMp;
                 this.type = type;
                 this.grade = grade;
+                this.description = description;
+                
             }
         }
-
         public  void TestItemUpgrade()
         {
             ItemUpgrade();
         }
-        public static void PrintItemList()
+        public static void PrintItemList() //장착 가능한 아이템 출력 //추후에 유틸부분으로 넘기는게 깔끔할 수 있음.
         {
             for (int i = 0; i < allEquipItem.Length; i++)
             {
+                
                 var item = allEquipItem[i];
-                Console.WriteLine($"{i + 1}. {item.itemName} - {item.type} - {item.grade}");
+                string statInfo = "";
+                if (item.type == Type.Helmet)  // 작성된 스텟은 예시로 저장 회의를 통한 수정 필요
+                {
+                    statInfo = $"체력 +{item.addMaxHp}";
+                }
+                else if (item.type == Type.Armor | item.type == Type.Shoes)
+                {
+                    statInfo = $"방어력 +{item.addDefence}";
+                }
+                else if (item.type == Type.Weapon)
+                {
+                    statInfo = $"공격력 +{item.addAttack}";
+                }
+                else if (item.type == Type.Ring)
+                {
+                    statInfo = $"행운 +{item.addLuck}";
+                }
+                else if (item.type != Type.Necklace)
+                {
+                    statInfo = $"지력 +{item.addIntelligence}";
+                }
+                Console.WriteLine($" [-]  {item.itemName}        | {item.type}         | {statInfo}         |{item.description}");
             }
         }
-
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
-            new EquipItemInfo("item이름1", 5,5,5,5,5,5,Type.Armor,Grade.Normal), // 아이템 1
-            new EquipItemInfo("item이름2",5,5,5,5,5,5,Type.Weapon, Grade.Normal), // 아이템 2
-            new EquipItemInfo("item이름3",5,5,5,5,5,5,Type.Helmet, Grade.Normal), // 아이템 3 
-            new EquipItemInfo("item이름4",5,5,5,5,5,5,Type.Shoes, Grade.Normal), // 아이템 4
-            new EquipItemInfo("item이름5",5,5,5,5,5,5,Type.Ring, Grade.Normal), // 아이템 5
-            new EquipItemInfo("item이름6",5,5,5,5,5,5,Type.Necklace, Grade.Normal), // 아이템 6
-            new EquipItemInfo("item이름7",5,5,5,5,5,5,Type.Armor,Grade.Uncommon), // 아이템 7
-            new EquipItemInfo("item이름8",5,5,5,5,5,5,Type.Weapon, Grade.Uncommon), // 아이템 8
-            new EquipItemInfo("item이름9",5,5,5,5,5,5,Type.Helmet, Grade.Uncommon), // 아이템 9
-            new EquipItemInfo("item이름10",5,5,5,5,5,5,Type.Shoes, Grade.Uncommon), // 아이템 10
-            new EquipItemInfo("item이름11",5,5,5,5,5,5,Type.Ring, Grade.Uncommon), // 아이템 11
-            new EquipItemInfo("item이름12",5,5,5,5,5,5,Type.Necklace, Grade.Uncommon), // 아이템 12
-            new EquipItemInfo("item이름13",5,5,5,5,5,5,Type.Armor,Grade.Rare), // 아이템 13
-            new EquipItemInfo("item이름14",5,5,5,5,5,5,Type.Weapon, Grade.Rare), // 아이템 14
-            new EquipItemInfo("item이름15",5,5,5,5,5,5,Type.Helmet, Grade.Rare), // 아이템 15
-            new EquipItemInfo("item이름16",5,5,5,5,5,5,Type.Shoes, Grade.Rare), // 아이템 16
-            new EquipItemInfo("item이름17",5,5,5,5,5,5,Type.Ring, Grade.Rare), // 아이템 17
-            new EquipItemInfo("item이름18",5,5,5,5,5,5,Type.Necklace, Grade.Rare), // 아이템 18
+            new EquipItemInfo("item이름1",5,5,5,5,5,5,Type.Armor,Grade.Normal,"아이템1"), // 아이템 1 설명작성필요
+            new EquipItemInfo("item이름2",5,5,5,5,5,5,Type.Weapon, Grade.Normal,"아이템2"), // 아이템 2 노말 무기
+            new EquipItemInfo("item이름3",5,5,5,5,5,5,Type.Helmet, Grade.Normal,"아이템3"), // 아이템 3 
+            new EquipItemInfo("item이름4",5,5,5,5,5,5,Type.Shoes, Grade.Normal,"아이템4"), // 아이템 4
+            new EquipItemInfo("item이름5",5,5,5,5,5,5,Type.Ring, Grade.Normal,"아이템5"), // 아이템 5
+            new EquipItemInfo("item이름6",5,5,5,5,5,5,Type.Necklace, Grade.Normal,"아이템6"), // 아이템 6
+            new EquipItemInfo("item이름7",5,5,5,5,5,5,Type.Armor,Grade.Uncommon,"아이템7"), // 아이템 7
+            new EquipItemInfo("item이름8",5,5,5,5,5,5,Type.Weapon, Grade.Uncommon,"아이템8"), // 아이템 8
+            new EquipItemInfo("item이름9",5,5,5,5,5,5,Type.Helmet, Grade.Uncommon,"아이템9"), // 아이템 9
+            new EquipItemInfo("item이름10",5,5,5,5,5,5,Type.Shoes, Grade.Uncommon,"아이템10"), // 아이템 10
+            new EquipItemInfo("item이름11",5,5,5,5,5,5,Type.Ring, Grade.Uncommon,"아이템11"), // 아이템 11
+            new EquipItemInfo("item이름12",5,5,5,5,5,5,Type.Necklace, Grade.Uncommon,"아이템12"), // 아이템 12
+            new EquipItemInfo("item이름13",5,5,5,5,5,5,Type.Armor,Grade.Rare,"아이템13"), // 아이템 13
+            new EquipItemInfo("item이름14",5,5,5,5,5,5,Type.Weapon, Grade.Rare,"아이템14"), // 아이템 14
+            new EquipItemInfo("item이름15",5,5,5,5,5,5,Type.Helmet, Grade.Rare,"아이템15"), // 아이템 15
+            new EquipItemInfo("item이름16",5,5,5,5,5,5,Type.Shoes, Grade.Rare,"아이템16"), // 아이템 16
+            new EquipItemInfo("item이름17",5,5,5,5,5,5,Type.Ring, Grade.Rare,"아이템17"), // 아이템 17
+            new EquipItemInfo("item이름18",5,5,5,5,5,5,Type.Necklace, Grade.Rare,"아이템18"), // 아이템 18
         };
-        
+
         public static List<EquipItem> GetEquipItemList(int num)  // 만들어진 장착장비리스트에 아이템 객체 넣기 
         {
             List<EquipItem> equipItemList = new List<EquipItem>();
@@ -132,7 +151,8 @@ namespace ReverseDungeonSparta
                 return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
             }
         }
-        public  static void ItemUpgrade()
+        #region 아이템 조합 로직
+        public static void ItemUpgrade()
         {
             Console.WriteLine("");
             Console.WriteLine("[아이템 조합]");
@@ -141,10 +161,9 @@ namespace ReverseDungeonSparta
             Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
             int number2 = Util.GetUserIntInput(1, 18) - 1;
 
-
             //입력한 숫자가 장비아이템의 index범위내에 있는지부터 파악
-            if (number1 >=0 && number1<allEquipItem.Length &&number2>=0 && number2<allEquipItem.Length)
-            {   
+            if (number1 >= 0 && number1 < allEquipItem.Length && number2 >= 0 && number2 < allEquipItem.Length)
+            {
                 EquipItemInfo item1 = allEquipItem[number1]; // 입력한 아이템의 숫자와 index가 일치하도록 
                 EquipItemInfo item2 = allEquipItem[number2]; // 로직을 구성하여 입력한 아이템을 선택하도록
 
@@ -197,7 +216,6 @@ namespace ReverseDungeonSparta
                         Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.itemName}, {upgradeItem.type}, {upgradeItem.grade}");
                         Thread.Sleep(1000);
                         ReturnToInventory();
-                        
                     }
                     else
                     {
@@ -214,14 +232,22 @@ namespace ReverseDungeonSparta
                 else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
                 {
                     Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
+                    Thread.Sleep(1000);
+                    return;
+
                 }
             }
             else //내가 선택한 아이템의 index가 유효한 범위에 없을 때 나올 수 있는 출력
             {
                 Console.WriteLine("잘못된 아이템 번호가 입력되었습니다. 번호 확인 후 다시 입력해주세요.");
+                Thread.Sleep(1000);
+                return;
             }
         }
-        public static void ReturnToInventory()
+        #endregion
+
+        #region 다시 인벤토리 돌아가는 메서드
+        public static void ReturnToInventory() //다시 인벤토리로 돌아가는 메서드
         {
             Console.WriteLine("인벤토리로 돌아갑니다...");
             // 인벤토리 메뉴로 돌아가는 동작
@@ -231,5 +257,6 @@ namespace ReverseDungeonSparta
             };
             Util.GetUserInput(inventoryItems, GameManager.Instance.InventoryMenu, ref GameManager.Instance.selectedIndex);
         }
+        #endregion
     }
 }
