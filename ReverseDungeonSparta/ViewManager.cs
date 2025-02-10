@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static ReverseDungeonSparta.EquipItem;
+﻿using System.Text;
+
 
 namespace ReverseDungeonSparta
 {
@@ -108,6 +101,24 @@ namespace ReverseDungeonSparta
             Console.Write(text);
             CursorY++;
         }
+        public static void PrintText(int cursorX, int cursorY, string text, bool isColor, ConsoleColor color)
+        {
+            if (isColor)
+                Console.ForegroundColor = color;
+
+
+            CursorX = cursorX;
+            CursorY = cursorY;
+            Console.SetCursorPosition(CursorX, CursorY);
+            Console.Write(text);
+            
+            if (isColor)
+                Console.ForegroundColor = ConsoleColor.White;
+
+            CursorY++;
+
+        }
+
         public static void PrintTextLine(int x, int y, string text)
         {
             CursorX = x;
@@ -125,6 +136,20 @@ namespace ReverseDungeonSparta
             Console.Write(text);
             CursorY++;
         }
+        public static void PrintText(string text, bool isColor, ConsoleColor color)
+        {
+            if (isColor)
+                Console.ForegroundColor = color;
+
+            Console.SetCursorPosition(CursorX, CursorY);
+            Console.Write(text);
+
+            if (isColor)
+                Console.ForegroundColor = ConsoleColor.White;
+
+            CursorY++;
+        }
+
 
         public static void PrintList(List<EquipItem> items)
         {
@@ -226,36 +251,36 @@ namespace ReverseDungeonSparta
         public static void PrintTower()
         {
             Console.OutputEncoding = Encoding.UTF8;
-            Console.ForegroundColor = ConsoleColor.Red;
-            PrintText(width / 2 - 8, height / 2 - 7, "⠀⠀⠀⠀⠀⢀⡀");
-            PrintText("⠀⠀⠀⠀⠀⣸⣧");
-            PrintText("⠀⠀⢢⣶⣾⣥⣿⣷⣶⡖");
-            PrintText("⠀⠀⢹⣻⠿⣿⣿⠿⣟⡏");
-            PrintText("⠀⣤⢼⣿⡆⣻⣿⣶⣿⡧⣤");
-            PrintText("⠀⣸⣸⢿⣧⣽⣿⣿⣿⣇⣿");
-            PrintText("⠀⠿⢿⠿⡿⠿⠿⢿⣿⡯⠿");
-            PrintText("⠀⠀⣾⠀⠁⠀⠀⢘⣿⣷");
-            PrintText("⠀⠀⡟⠀⠀⢸⡞⢈⣿⣿");
-            PrintText("⠀⢀⣥⣤⣤⣾⣷⣤⣿⣯⡀");
-            PrintText("⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇");
-            PrintText("⠀⠸⠿⠟⠛⠛⠛⠛⣿⣿⠇");
-            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇");
-            PrintText("⠀⢸⠃⠀⠀⠘⠃⠘⣿⣿⡇");
-            PrintText("⠀⣼⣶⣾⣿⣿⣿⣿⣿⣿⣧");
-            PrintText("⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿");
-            PrintText("⠀⣿⡽⠹⠿⠿⠿⠿⣿⣿⣿");
-            PrintText("⠀⡇⠀⠀⠀⠀⠀⠀⣿⣿⢿");
-            PrintText("⠀⡏⠀⠀⠀⡶⢶⡄⣿⣿⣿");
-            PrintText("⢰⠀⠀⠀⠀⣿⣿⡇⠉⣛⡋⡆");
-            PrintText("⢸⣶⣶⣾⣿⣿⣿⣿⣶⣿⣿⡇");
-            PrintText("⠈⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠁");
+            //Console.ForegroundColor = ConsoleColor.Red;
+
+
+            PrintText(width / 2 - 8, height / 2 - 7, "⠀⠀⠀⠀⠀⢀⡀", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
+            PrintText("⠀⠀⠀⠀⠀⣸⣧", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
+            PrintText("⠀⠀⢢⣶⣾⣥⣿⣷⣶⡖", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
+            PrintText("⠀⠀⢹⣻⠿⣿⣿⠿⣟⡏", GameManager.Instance.clearCheck[1], ConsoleColor.Red);
+            PrintText("⠀⣤⢼⣿⡆⣻⣿⣶⣿⡧⣤", GameManager.Instance.clearCheck[2], ConsoleColor.Red);
+            PrintText("⠀⣸⣸⢿⣧⣽⣿⣿⣿⣇⣿", GameManager.Instance.clearCheck[3], ConsoleColor.Red);
+            PrintText("⠀⠿⢿⠿⡿⠿⠿⢿⣿⡯⠿", GameManager.Instance.clearCheck[4], ConsoleColor.Red);
+            PrintText("⠀⠀⣾⠀⠁⠀⠀⢘⣿⣷", GameManager.Instance.clearCheck[5], ConsoleColor.Red);
+            PrintText("⠀⠀⡟⠀⠀⢸⡞⢈⣿⣿", GameManager.Instance.clearCheck[6], ConsoleColor.Red);
+            PrintText("⠀⢀⣥⣤⣤⣾⣷⣤⣿⣯⡀", GameManager.Instance.clearCheck[7], ConsoleColor.Red);
+            PrintText("⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇", GameManager.Instance.clearCheck[8], ConsoleColor.Red);
+            PrintText("⠀⠸⠿⠟⠛⠛⠛⠛⣿⣿⠇", GameManager.Instance.clearCheck[9], ConsoleColor.Red);
+            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇", GameManager.Instance.clearCheck[10], ConsoleColor.Red);
+            PrintText("⠀⢸⠃⠀⠀⠘⠃⠘⣿⣿⡇", GameManager.Instance.clearCheck[11], ConsoleColor.Red);
+            PrintText("⠀⣼⣶⣾⣿⣿⣿⣿⣿⣿⣧", GameManager.Instance.clearCheck[12], ConsoleColor.Red);
+            PrintText("⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿", GameManager.Instance.clearCheck[13], ConsoleColor.Red);
+            PrintText("⠀⣿⡽⠹⠿⠿⠿⠿⣿⣿⣿", GameManager.Instance.clearCheck[14], ConsoleColor.Red);
+            PrintText("⠀⡇⠀⠀⠀⠀⠀⠀⣿⣿⢿", GameManager.Instance.clearCheck[15], ConsoleColor.Red);
+            PrintText("⠀⡏⠀⠀⠀⡶⢶⡄⣿⣿⣿", GameManager.Instance.clearCheck[16], ConsoleColor.Red);
+            PrintText("⢰⠀⠀⠀⠀⣿⣿⡇⠉⣛⡋⡆", GameManager.Instance.clearCheck[17], ConsoleColor.Red);
+            PrintText("⢸⣶⣶⣾⣿⣿⣿⣿⣶⣿⣿⡇", GameManager.Instance.clearCheck[18], ConsoleColor.Red);
+            PrintText("⠈⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠁", GameManager.Instance.clearCheck[18], ConsoleColor.Red);
 
             for(int i=0; i<19; i++)
             {
-                PrintText(width / 2 + 6, height / 2 - 5 + i, "▼");
+                PrintText(width / 2 + 6, height / 2 - 5 + i, "▼", GameManager.Instance.clearCheck[i], ConsoleColor.Red);
             }
-
-            
 
             Console.ReadLine();
         }

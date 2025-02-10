@@ -19,10 +19,33 @@ namespace ReverseDungeonSparta
 
         public int selectedIndex = 0;
 
+        //플레이어의 공략 진척도
+        private int dungeonClearLevel = 0;
+        public int DungeonClearLevel
+        {
+            get
+            {
+                return dungeonClearLevel;
+            }
+            set
+            {
+                //플레이어의 공략 진척도에 변화가 생기면
+                //StageClearCheck() 메서드를 통해 각 스테이지 클리어 여부를 확인한다.(후진했을 수도 있으므로...)
+                dungeonClearLevel = value;
+                StageClearCheck();
+            }
+        }
+        public bool[] clearCheck = new bool[19];
+
         public GameManager()
         {
             BattleManagerInstance = new BattleManager(player);
+            Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
 
+
+            //공략 진척도에 따라 탑 출력 색 변함
+            //level 5 == 현재 15층까지 클리어한 상태
+            DungeonClearLevel = 5;
         }
 
         public void PlayerStatusMenu()
@@ -115,5 +138,15 @@ namespace ReverseDungeonSparta
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
         }
+
+        
+        public void StageClearCheck()
+        {
+            for(int i=0; i < dungeonClearLevel; i++)
+            {
+                clearCheck[i] = true; 
+            }
+        }
+
     }
 }
