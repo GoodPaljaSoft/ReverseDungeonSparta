@@ -14,6 +14,7 @@ namespace ReverseDungeonSparta
         List<(String, Action, Action)> menuItems;
 
         Player player = new Player();
+        public Player Player => player;
         BattleManager BattleManagerInstance { get; set; }
 
         public int selectedIndex = 0;
@@ -43,6 +44,7 @@ namespace ReverseDungeonSparta
              menuItems = new List<(string, Action, Action)>
             {
                 ("아이템 조합", EquipItem.ItemUpgrade, () => AudioManager.PlayMoveMenuSE(0)),
+                ("소비 아이템", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
                 ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
