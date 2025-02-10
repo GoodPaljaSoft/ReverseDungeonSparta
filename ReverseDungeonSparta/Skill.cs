@@ -13,6 +13,10 @@ namespace ReverseDungeonSparta
         {
             Name = skillInfo.name;
             Value = skillInfo.value;
+            BufferType = skillInfo.buffType;
+            BufferTurn = skillInfo.bufferTurn;
+            Info = skillInfo.info;
+            ApplyType = skillInfo.applyType;
             Extent = skillInfo.extent;
             Type = skillInfo.type;
             ConsumptionMP = skillInfo.consumptionMP;
@@ -55,10 +59,9 @@ namespace ReverseDungeonSparta
         //들어온 스킬 배열을 기반으로 스킬 리스트로 반환
         public static List<Skill> AddSkillListInstance(SkillInfo[] skillInfoArray)
         {
-            List<Skill> backAllMonsterInfo = new List<Skill>();
-
-            backAllMonsterInfo = skillInfoArray
-                .Select(x => new Skill(new SkillInfo(x.name, x.value, x.extent, x.applyType, x.type, x.consumptionMP, x.buffType, x.bufferTurn, x.info))).ToList();
+            List<Skill> backAllMonsterInfo = skillInfoArray
+                .Select(x => new Skill(x))
+                .ToList();
 
             return backAllMonsterInfo;
         }
@@ -118,6 +121,8 @@ namespace ReverseDungeonSparta
         {
         new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "스킬 설명"),
         new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("공격력 강화", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5,BuffType.AttackBuff, 1, "스킬 설명"),
+        new SkillInfo("방어력 강화", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "스킬 설명"),
         new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명")
         };
 
