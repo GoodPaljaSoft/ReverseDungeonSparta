@@ -13,7 +13,7 @@ namespace ReverseDungeonSparta
     }
     public class Player : Character
     {
-        List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
+        public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
         public JobType Job { get; set; } 
         public int Level { get; set; }
         public int Gold { get; set; }
@@ -83,9 +83,9 @@ namespace ReverseDungeonSparta
         public void LoadEquipItems()
         {
             // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
-            foreach (var itemInfo in EquipItem.allEquipItem)
+            foreach (var EquipitemInfo in EquipItem.allEquipItem)
             {
-                EquipItem equipItem = new EquipItem(itemInfo); // EquipItem 객체 생성
+                EquipItem equipItem = new EquipItem(EquipitemInfo); // EquipItem 객체 생성
                 equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
             }
         }

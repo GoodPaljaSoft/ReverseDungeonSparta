@@ -40,17 +40,37 @@ namespace ReverseDungeonSparta
             Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
             Console.WriteLine("");
             Console.WriteLine("");
-            EquipItem.PrintItemList();
-
+            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
+            player.LoadEquipItems();
             menuItems = new List<(string, Action, Action)>
             {
-                ("아이템 조합", EquipItem.ItemUpgrade, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 아이템", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("소비 아이템", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
                 ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
         }
+        public void EquipItemMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("소지품 확인  - 장비");
+            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
 
+            menuItems = new List<(string, Action, Action)>
+            {
+                ("장비 장착", player.LoadEquipItems, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 합성", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
+                ("나가기", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+            };
+            Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
+        }
+        public void ItemUpgrade()
+        {
+
+        }
         public void EnterBattleMenu()
         {
             AudioManager.PlayBattleBGM();
