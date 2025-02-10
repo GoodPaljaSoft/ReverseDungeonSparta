@@ -1,6 +1,4 @@
-﻿
-
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace ReverseDungeonSparta
@@ -72,19 +70,7 @@ namespace ReverseDungeonSparta
                 else Console.WriteLine($"   {menuList[i].Item1}");
             }
 
-            ConsoleKeyInfo keyInfo;
-            while (true)
-            {
-                keyInfo = Console.ReadKey(true);
-
-                if (keyInfo.Key == ConsoleKey.Enter ||
-                    (keyInfo.Key == ConsoleKey.UpArrow && selectedIndex > 0) ||
-                    keyInfo.Key == ConsoleKey.DownArrow && selectedIndex < menuList.Count - 1)
-                {
-                    break;
-                }
-            }
-
+            ConsoleKeyInfo keyInfo = CheckKeyInput(selectedIndex, menuList.Count - 1);
             switch (keyInfo.Key)
             {
                 case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
@@ -104,6 +90,8 @@ namespace ReverseDungeonSparta
                     selectedIndex = 0;      //selectedIndex 초기화
                     menuList[tempIndex].Item2();
                     nowMenu();
+                    if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
+                    menuList[tempIndex].Item2();
                     break;
             }
         }
@@ -139,7 +127,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        //리스트를 무작위로 섞는 메서드
+        //리스트를 무작위로 섞고 반환하는 메서드
         public static List<T> ShuffleList<T>(List<T> list)
         {
             Random random = new Random();
@@ -152,6 +140,26 @@ namespace ReverseDungeonSparta
             }
 
             return list;
+        }
+
+
+        //입력 받은 키의 값이 화살표 이동에 적합한지 확인하는 메서드
+        public static ConsoleKeyInfo CheckKeyInput(int nowIndex, int maxIndex)
+        {
+            ConsoleKeyInfo keyInfo;
+            while (true)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.Enter ||
+                    keyInfo.Key == ConsoleKey.C ||
+                    (keyInfo.Key == ConsoleKey.UpArrow && nowIndex > 0) ||
+                    keyInfo.Key == ConsoleKey.DownArrow && nowIndex < maxIndex)
+                {
+                    break;
+                }
+            }
+            return keyInfo;
         }
     }
 }
