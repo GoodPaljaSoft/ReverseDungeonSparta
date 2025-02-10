@@ -1,6 +1,6 @@
 ﻿namespace ReverseDungeonSparta
 {
-    public class Character
+    public class Character : Buffer
     {
         public virtual string Name { get; set; } = string.Empty;
         public virtual int Luck { get; set; }
