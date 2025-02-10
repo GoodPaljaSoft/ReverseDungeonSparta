@@ -26,6 +26,7 @@ namespace ReverseDungeonSparta
 
         }
 
+
         public void PlayerStatusMenu()
         {
             Console.Clear();
@@ -33,24 +34,60 @@ namespace ReverseDungeonSparta
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
             Util.PrintPlayerView(player);
         }
+
+
+
         public void InventoryMenu()
         {
             Console.Clear();
-            Console.WriteLine("인벤토리");
-            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            EquipItem.PrintItemList();
+            ViewManager.DrawLine("인벤토리");
 
+            //Console.WriteLine("인벤토리");
+            //Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            //Console.WriteLine("");
+            //Console.WriteLine("");
+            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
+            player.LoadEquipItems();
+
+
+            //아이템 출력 임시 코드
+            ViewManager.PrintList(player.equipItemList);
+
+            
             menuItems = new List<(string, Action, Action)>
             {
-                ("아이템 조합", EquipItem.ItemUpgrade, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 아이템", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("소비 아이템", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
                 ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
         }
 
+
+
+        public void EquipItemMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("소지품 확인  - 장비");
+            Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
+
+
+
+            menuItems = new List<(string, Action, Action)>
+            {
+                ("장비 장착", player.LoadEquipItems, () => AudioManager.PlayMoveMenuSE(0)),
+                ("장비 합성", UsableItem.UseItemView, () => AudioManager.PlayMoveMenuSE(0)),
+                ("나가기", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+            };
+            Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
+        }
+        public void ItemUpgrade()
+        {
+
+        }
         public void EnterBattleMenu()
         {
             AudioManager.PlayBattleBGM();
@@ -61,9 +98,9 @@ namespace ReverseDungeonSparta
 
         public void GameMenu() // 시작화면 구현
         {
-            //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
-            ViewManager3.MainMenuTxt();
+            //Console.SetCursorPosition(100, 25);
 
+            ViewManager3.MainMenuTxt();
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
             //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
@@ -84,7 +121,7 @@ namespace ReverseDungeonSparta
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (0, 2));
+            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
         }
     }
 }

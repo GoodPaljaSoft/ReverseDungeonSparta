@@ -141,12 +141,10 @@ namespace ReverseDungeonSparta
         public static void MainMenuTxt()
         {
             Console.Clear();
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영입니다.");
-            Console.WriteLine("이제 전투를 시작할 수 있습니다.");
-            Console.WriteLine("");
-            Console.WriteLine("   상태 보기");
-            Console.WriteLine("   전투 시작");
-            Console.WriteLine("   인벤토리");
+            ViewManager4.PrintTitle();
+            ViewManager.PrintText(100, 24, "   상태 보기");
+            ViewManager.PrintText("   전투 시작");
+            ViewManager.PrintText("   인벤토리");
         }
     }
 }

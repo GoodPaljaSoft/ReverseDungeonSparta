@@ -13,7 +13,7 @@ namespace ReverseDungeonSparta
     }
     public class Player : Character
     {
-        List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
+        public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
         public JobType Job { get; set; } 
         public int Level { get; set; }
         public int Gold { get; set; }
@@ -45,8 +45,8 @@ namespace ReverseDungeonSparta
             Critical = 5;
             Evasion = 5;
 
-            int additionalAttack = AdditionalAttack;
-            int additionalDefence = AdditionalDefence;
+            //int additionalAttack = AdditionalAttack; //필요없다면 지우기
+            //int additionalDefence = AdditionalDefence;
 
             switch (Job)
             {
@@ -68,32 +68,32 @@ namespace ReverseDungeonSparta
 
             foreach (var equipItem in equipItemList)
             {
-                var itemInfo = equipItem.ItemInfo;
-
-                Attack += equipItem.ItemInfo.addAttack;
-                Defence += equipItem.ItemInfo.addDefence;
-                Luck += equipItem.ItemInfo.addLuck;
-                Intelligence += equipItem.ItemInfo.addIntelligence;
-                MaxHP += equipItem.ItemInfo.addMaxHp;
-                MaxMP += equipItem.ItemInfo.addMaxMp;
-            }
-        }
-        public void LoadEquipItems()
-        {
-            // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
-            foreach (var itemInfo in EquipItem.allEquipItem)
-            {
-                EquipItem equipItem = new EquipItem(itemInfo); // EquipItem 객체 생성
-                equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
+                Attack += equipItem.AddAttack;
+                Defence += equipItem.AddDefence;
+                Luck += equipItem.AddAttack;
+                Intelligence += equipItem.AddAttack;
+                MaxHP += equipItem.AddMaxHp;
+                MaxMP += equipItem.AddMaxMp;
             }
         }
         #endregion
+
+        public void LoadEquipItems()
+        {
+            // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
+            foreach (var EquipitemInfo in EquipItem.allEquipItem)
+            {
+                EquipItem equipItem = new EquipItem(EquipitemInfo); // EquipItem 객체 생성
+                equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
+            }
+        }
+        
         public void IsEquipItem(EquipItem item) //아이템 장착 로직 구현
         {
             if(!equipItemList.Contains(item))
             {
                 equipItemList.Add(item); // item이 장착된 장비아이템리스트에 없다면
-                item.isEquiped = true;
+                item.IsEquiped = true;
                 ApplyItemStat();
             }
             else
@@ -106,7 +106,7 @@ namespace ReverseDungeonSparta
             if (equipItemList.Contains(item))
             {
                 equipItemList.Remove(item); // 장비리스트에 장착된 아이템을 제거하고
-                item.isEquiped = false;
+                item.IsEquiped = false;
                 ApplyItemStat() ; //다시 스텟을 초기화
             }
         }

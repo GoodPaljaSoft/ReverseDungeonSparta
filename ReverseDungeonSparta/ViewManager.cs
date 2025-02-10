@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,20 @@ namespace ReverseDungeonSparta
 
 
             //Console.ReadLine();
+
+            List<EquipItem> tempItemList = new List<EquipItem>();
+
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+            tempItemList.Add(new EquipItem());
+
         }
 
 
@@ -49,7 +64,8 @@ namespace ReverseDungeonSparta
             DrawLine();
 
             Console.ForegroundColor = ConsoleColor.White;
-
+            Console.GetCursorPosition();
+            //PrintText()
         }
 
 
@@ -64,6 +80,7 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine(str);
             Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
         }
 
         
@@ -91,6 +108,14 @@ namespace ReverseDungeonSparta
             Console.Write(text);
             CursorY++;
         }
+        public static void PrintTextLine(int x, int y, string text)
+        {
+            CursorX = x;
+            CursorY = y;
+            Console.SetCursorPosition(x, y);
+            Console.WriteLine(text);
+            CursorY++;
+        }
 
 
         //해당 메서드로 위치를 잡은 커서를 기준으로 텍스트를 출력한다.
@@ -101,31 +126,67 @@ namespace ReverseDungeonSparta
             CursorY++;
         }
 
-
-        //startPosition의X는 item1칸 부터 item2칸 까지 Y는 item1줄부터 item2번째 줄 까지 텍스트 삭제
-        public static void RemoveText((int, int) startPostionX, (int, int) startPostionY)
+        public static void PrintList(List<EquipItem> items)
         {
-            for (int i = startPostionY.Item1; i < startPostionY.Item2; i++)
+            int[] x = { 3, 7, 24, 26, 33, 36, 45};
+            int y = 3;
+            //커서는 x==1 위치에 들어감
+            for (int i = 0; i < items.Count; i++)
             {
-                string str = "";
-                for (int j = startPostionX.Item1; j < startPostionX.Item2; j++)
+                int[] optionArray = { items[i].AddLuck, items[i].AddDefence, items[i].AddAttack, items[i].AddIntelligence, items[i].AddMaxHp, items[i].AddMaxMp };
+                string[] nameArray = { "AddLuck", "AddDefence", "AddAttack", "AddIntelligence", "AddMaxHp", "AddMaxMp" };
+                if (items[i].IsEquiped) PrintTextLine(x[0], y + i, "[E]");
+                else PrintTextLine(x[0], y + i, "[-]");
+                PrintTextLine(x[1], y + i, $"{items[i].Name}");
+                PrintTextLine(x[2], y + i, "|");
+                PrintTextLine(x[3], y + i, $"{TranslateString(items[i].Type.ToString())}");
+
+                int count = 0;
+                for (int j = 0; j < optionArray.Length; j++)
                 {
-                    str += " ";
+                    if (optionArray[j] != 0)
+                    {
+                        PrintTextLine(x[4], y + i + count, "|");
+                        PrintTextLine(x[5], y + i + count, $"{TranslateString(nameArray[j])}:{optionArray[j]}");
+                        PrintTextLine(x[6], y + i + count, "|");
+                        count++;
+                    }
                 }
-                Console.SetCursorPosition(startPostionX.Item1, startPostionY.Item1);
-                Console.WriteLine(str);
+                y += count;
             }
         }
 
-
-        //public void PrintList(int x = 1, int y = 4, List<ItemInfo> items)
-        //{
-        //    for (int i = 0; i < items.Count; i++)
-        //    {
-        //        PrintText(x, y + i, $"{items[0].name}");
-        //    }
-
-        //}
-
+        public static string TranslateString(string enumType)
+        {
+            switch(enumType)
+            {
+                case "Armor":
+                    return "방어구";
+                case "Weapon":
+                    return "무  기";
+                case "Helmet":
+                    return "모  자";
+                case "Shoes":
+                    return "신  발";
+                case "Ring":
+                    return "반  지";
+                case "Necklace":
+                    return "목걸이";
+                case "AddLuck":
+                    return "행  운";
+                case "AddDefence":
+                    return "방어력";
+                case "AddAttack":
+                    return "공격력";
+                case "AddIntelligence":
+                    return "지  력";
+                case "AddMaxHp":
+                    return "체  력";
+                case "AddMaxMp":
+                    return "마  나";
+                default:
+                    return "TranslateError";
+            }
+        }
     }
 }
