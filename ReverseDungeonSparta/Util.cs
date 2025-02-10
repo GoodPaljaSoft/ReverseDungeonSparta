@@ -15,7 +15,6 @@ namespace ReverseDungeonSparta
             }
             Console.WriteLine("");
         }
-        public static void PrintPlayerView(Player player) 
         public static void PrintPlayerView(Player player)
         {
             Console.WriteLine($"Lv. {player.Level}");
@@ -92,13 +91,11 @@ namespace ReverseDungeonSparta
         //selectedIndex는 해당 화살표의 위치 값을 저장합니다.
         //해당 값을 전달 받고 다시 바뀐 값을 보내줘야 하기에 ref를 꼭 넣어야합니다.
 
-        public static void GetUserInput(List<(String, Action)> menuList, Action nowMenu, ref int selectedIndex)
         public static void GetUserInput(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex)
         {
             for (int i = 0; i < menuList.Count; i++)
             {
                 if (i == selectedIndex) Console.WriteLine($"-> {menuList[i].Item1}");
-                else                    Console.WriteLine($"   {menuList[i].Item1}");
                 else Console.WriteLine($"   {menuList[i].Item1}");
             }
 
@@ -114,8 +111,6 @@ namespace ReverseDungeonSparta
                     break;
                 }
             }
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             switch (keyInfo.Key)
             {
                 case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
@@ -124,14 +119,14 @@ namespace ReverseDungeonSparta
                         selectedIndex--;
                         AudioManager.PlayMoveMenuSE(0);
                     }
-                        nowMenu();
+                    nowMenu();
                     selectedIndex--;
                     AudioManager.PlayMoveMenuSE(0);
                     nowMenu();
                     break;
 
                 case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
-                    if (selectedIndex < menuList.Count - 1) 
+                    if (selectedIndex < menuList.Count - 1)
                     {
                         selectedIndex++;
                         AudioManager.PlayMoveMenuSE(0);
@@ -144,22 +139,9 @@ namespace ReverseDungeonSparta
                 case ConsoleKey.Enter:      //엔터를 눌렀을 때
                     int tempIndex = selectedIndex;
                     selectedIndex = 0;      //selectedIndex 초기화
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> main
-                    menuList[tempIndex].Item2();
-                    break;
 
-                default:                    //상관 없는 키가 눌렸을 때
-                    nowMenu();
-=======
-                    if (menuList[tempIndex].Item3 != null)
-                    {
-                        menuList[tempIndex].Item3();
-                    }
                     menuList[tempIndex].Item2();
->>>>>>> Dev2_YHJ_SJW
+                    nowMenu();
                     break;
             }
         }
@@ -201,7 +183,7 @@ namespace ReverseDungeonSparta
             Random random = new Random();
             int n = list.Count;
 
-            for(int i = n - 1; i > 0; i--) //리스트의 뒤쪽 요소부터 선택하여 실행
+            for (int i = n - 1; i > 0; i--) //리스트의 뒤쪽 요소부터 선택하여 실행
             {
                 int j = random.Next(0, i + 1);//0 ~ i까지 무작위 인덱스 선택
                 (list[i], list[j]) = (list[j], list[i]);
