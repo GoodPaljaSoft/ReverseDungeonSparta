@@ -28,8 +28,8 @@ public class BattleManager
     public BattleManager(Player player)
     {
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
-        int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
-        int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
+        int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
+        int backRand = random.Next(1, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
         monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
         this.player = player;
         oldPlayerHP = player.HP;
@@ -101,6 +101,9 @@ public class BattleManager
                 {
                     bool isPlayer = battleOrderList[0] is Player;
 
+                    //버프의 턴을 시작
+                    battleOrderList[0].TurnStartBuff();
+
                     if (isPlayer)
                     {
                         playerSelectSkill = null;//등록된 플레이어 스킬 초기화
@@ -112,6 +115,7 @@ public class BattleManager
                         Monster monster = battleOrderList[0] as Monster;
                         StartMonsterBattle(monster); ;
                     }
+                    battleOrderList[0].TurnEndBuff();
 
                     battleOrderList.RemoveAt(0);
                 }
@@ -218,7 +222,7 @@ public class BattleManager
         foreach (Monster monster in monsters)
         {
             int beforeMonsterHP = monster.HP;
-            player.Attacking(monster, out int damage);
+            player.Attacking(monster,monsterList, out int damage);
             RemoveOrderListCharacter(monster);
             Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         }
@@ -244,8 +248,9 @@ public class BattleManager
     //플레이어가 자신에게 스킬을 사용할 때 사용할 메서드
     public void PlayerUseBuffer()
     {
+        int beforeAttack = player.Attack;
         //버프 추가
-        player.AddBuff(playerSelectSkill);
+        player.AddBuff(player, playerSelectSkill);
 
         //출력
         Console.Clear();
@@ -254,6 +259,7 @@ public class BattleManager
         Console.WriteLine($"{BattleOrderTxt()}");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 스킬 사용!");
+        Console.WriteLine($"플레이어 공격력 : {beforeAttack} -> {player.Attack}");
         Console.WriteLine($"{playerSelectSkill.Name}");
         Console.WriteLine($"{playerSelectSkill.Info}");
         Console.WriteLine("");
@@ -311,7 +317,7 @@ public class BattleManager
         Console.WriteLine("Battle!!");
         Console.WriteLine();
         Console.WriteLine($"Lv. {monster.Level} {monster.Name}의 공격!");
-        monster.Attacking(player, out int damage);
+        monster.Attacking(player,monsterList, out int damage);
         Console.WriteLine($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
         Console.WriteLine("");
         Console.WriteLine($"{BattleOrderTxt()}");
