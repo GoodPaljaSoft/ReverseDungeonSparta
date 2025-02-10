@@ -42,11 +42,6 @@ namespace ReverseDungeonSparta
         }
         public EquipItem()
         {
-<<<<<<< Updated upstream
-
-        }
-=======
->>>>>>> Stashed changes
 
         }
       
@@ -76,13 +71,11 @@ namespace ReverseDungeonSparta
                 this.grade = grade;
             }
         }
-<<<<<<< Updated upstream
+
         public  void TestItemUpgrade()
         {
             ItemUpgrade();
         }
-
-=======
         public static void PrintItemList()
         {
             for (int i = 0; i < allEquipItem.Length; i++)
@@ -91,7 +84,7 @@ namespace ReverseDungeonSparta
                 Console.WriteLine($"{i + 1}. {item.itemName} - {item.type} - {item.grade}");
             }
         }
->>>>>>> Stashed changes
+
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
