@@ -105,8 +105,6 @@ namespace ReverseDungeonSparta
                     }
                 }
             }
-
-
         }
 
 
@@ -116,9 +114,12 @@ namespace ReverseDungeonSparta
             BuffType buffType = skill.BufferType;
             double value = skill.Value;
             int turnCount = skill.BufferTurn;
+            Character character = (Character)this;
+
+            Console.WriteLine($"{useCharacter.Name}이(가) {character.Name}에게 {skill.Name}을 사용했습니다.");
 
             //스킬을 사용한 캐릭터가 버프가 올라가는 본인일 경우 턴 카운터를 하나 올려서 적용함.
-            if(useCharacter == (Character)this)
+            if (useCharacter == (Character)this)
             {
                 turnCount++;
             }
@@ -155,18 +156,6 @@ namespace ReverseDungeonSparta
             EvasionBuff = new List<(double, int)>();
             HealingBuff = new List<(double, int)>();
         }
-
-
-        //턴을 시작하기 전 버프의 카운터가 0인 버프를 지움.
-        //버프 카운터가 1이라면 1턴 유지.
-        //즉 A B C 순서로 반복하며 작동한다고 가정했을 때,
-        //A가 C에게 공격력 버프 1턴을 걸었음.
-        //C는 본인 차례가 될 때까지 공격력 버프를 기본적으로 가지고 있음
-        //본인 차례가 된 후 공격 이후 턴을 넘기면 해당 카운트는 0이 됨.
-        //이후 본인 차례가 오면 해당 버프가 사라짐.
-        //턴이 끝난 경우 모든 버프의 카운터를 1 줄임.
-        //버프를 남에게 걸어준 경우랑 자신에게 건 경우를 나눠서 생갹해야함.
-        //버프를 만이 본인에게 걸었다면 해당 버프카운트를 1 올린 상태로 추가하도록 함.
 
 
         //버프의 수치만큼 값을 적용시키는 메서드

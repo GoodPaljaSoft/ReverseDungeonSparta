@@ -1,15 +1,39 @@
-﻿namespace ReverseDungeonSparta
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace ReverseDungeonSparta
 {
     public class Character : Buffer
     {
         private int _hp;
         private int _attack;
-        public string Name { get; set; } = string.Empty;
-        public int Luck { get; set; }
-        public int Defence { get; set; }
-        public int Attack 
+        private int _defence;
+        private int _critical;
+        private int _evasion;
+        private int _mp;
+
+        public string Name { get; set; } = string.Empty;    //이름
+        public int Luck { get; set; }//행운(치명타 확률, 회피율에 연관)
+        public int Attack { get; set; }//공격력
+        public int Defence { get; set; }//방어력
+        public int Critical { get; set; }//치명타확률
+        public int Evasion {  get; set; }//회피력
+        public int Intelligence { get; set; }//지능 마법 스킬에 연관
+        public int TotalDefence
         {
-            get 
+            get
+            {
+                double value = 1d;
+                if (DefenceBuff.Count > 0)
+                {
+                    value = DefenceBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
+                }
+                return (int)(_defence * value);
+            }
+            set { _defence = value; }
+        }//최종 방어력
+        public int TotalAttack
+        {
+            get
             {
                 double value = 1d;
                 if (AttackBuff.Count > 0)
@@ -19,10 +43,36 @@
                 return (int)(_attack * value);
             }
             set { _attack = value; }
-        }
-        public int Intelligence { get; set; }
+        }//최종 공격력
+        public int TotalCritical
+        {
+            get
+            {
+                double value = 1d;
+                if (CriticalBuff.Count > 0)
+                {
+                    value = CriticalBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
+                }
+                return (int)(_critical * value);
+            }
+            set { _critical = value; }
+        }//최종 치명타 확률
+        public int TotalEvasion
+        {
+            get
+            {
+                double value = 1d;
+                if (EvasionBuff.Count > 0)
+                {
+                    value = EvasionBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
+                }
+                return (int)(_evasion * value);
+            }
+            set { _evasion = value; }
+        }//최종 회피율
 
-        public int HP {
+        public int HP
+        {
             get { return _hp; }
             set
             {
@@ -32,25 +82,29 @@
                 {
                     _hp = 0;
                     Monster monster = GetMonster();
-                    if(monster != null) monster.IsDead();
+                    if (monster != null) monster.IsDead();
                 }
                 else if (_hp > MaxHP) _hp = MaxHP;
             }
-        }
-        public int MaxHP { get; set; }
-        public int MP { get; set; }
-        public int MaxMP { get; set; }
-
-        public int Speed { get; set; }
-
-        public int Critical { get; set; }   // 치명타 확률
-        public int Evasion { get; set; }    // 회피율
-
-        public List<Skill> SkillList { get; set; }
+        }           //체력
+        public int MaxHP { get; set; }  //최대 체력
+        public int MP 
+        { get 
+            { return _mp; } 
+            set 
+            {
+                _mp = value;
+                if(_mp <= 0) _mp = 0;
+                else if (_mp > MaxMP) _mp = MaxMP;
+            } 
+        }               //마나
+        public int MaxMP { get; set; }  //최대 마다
+        public int Speed { get; set; }  //속도
+        public List<Skill> SkillList { get; set; }  //가지고 있는 스킬
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환
-        public virtual void Attacking(Character target,List<Monster> monsters ,out int damage)
+        public virtual void Attacking(Character target, List<Monster> monsters, out int damage)
         {
             //데미지 계산식
             double margin = Attack * 0.1f;
@@ -77,7 +131,7 @@
         //캐릭터클래스를 플레이어로 바꿔주는 메서드
         public Player GetPlayer()
         {
-            if(this is Player) return (Player)this;
+            if (this is Player) return (Player)this;
             return null;
         }
 

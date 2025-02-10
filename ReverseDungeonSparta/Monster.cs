@@ -14,23 +14,21 @@ public class Monster : Character
     {
         Name = monsterInfo.name;
         Level = random.Next(1, 5); //*** 레벨 추후에 난이도 조절에 조정 필요
-        SkillList = Skill.AddMonsterSkill(this, 3);//*** 스킬 갯수 추후에 난이도 조절에 조정 필요
-
+        Type = monsterInfo.type;
         MaxHP = monsterInfo.hp + (2 * Level);
+        Attack = monsterInfo.atk + (2 * Level);
+        Speed = monsterInfo.speed;
         HP = MaxHP;
         MaxMP = 100;
         MP = MaxMP;
-
-        Attack = monsterInfo.atk + (2 * Level);
-        Speed = monsterInfo.speed;
         Luck = 5;
         Defence = 5;
         Intelligence = 5;
-
         Critical = 5;
         Evasion = 5;
 
         IsDie = false;          //몬스터 죽음 상태 false 고정
+        //SkillList = Skill.AddMonsterSkill(this, 3);//*** 스킬 갯수 추후에 난이도 조절에 조정 필요
     }
 
     //전사 3가지 정의
@@ -80,7 +78,7 @@ public class Monster : Character
     {
         Random random = new Random();
         Skill skill = null;
-        int rand = random.Next(0, 2);
+        int rand = random.Next(0, 1);
         double attackDamage = (double)Attack;
         if(rand == 0)
         {
@@ -235,6 +233,7 @@ public class Monster : Character
         {
             name = _name;
             hp = _hp;
+            type = _type;
             atk = _atk;
             speed = _speed;
         }

@@ -5,12 +5,6 @@ using System.Threading;
 
 public class BattleManager
 {
-    //구현해야 할 것들.
-    //3. 회복 스킬 로직 완성.
-    //4. 몬스터 생성 로직 난이도 별로 다르게 조정할 필요 있음.
-    //5. 텍스트의 출력 위치를 커서 위치를 이용해 고정하여 바뀌는 텍스트만 초기화 되도록 변경.
-    //
-
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
     List<(String, Action, Action)> menuItems;
@@ -29,7 +23,7 @@ public class BattleManager
     {
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
         int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
-        int backRand = random.Next(1, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
+        int backRand = random.Next(3, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
         monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
         this.player = player;
         oldPlayerHP = player.HP;
@@ -40,6 +34,11 @@ public class BattleManager
         allCharacterList.Add(player);
 
         turnManager = new TurnManager(allCharacterList);
+
+        foreach (Monster monster in monsterList)
+        {
+            monster.SkillList = Skill.AddMonsterSkill(monster, 3);
+        }
     }
 
 
@@ -74,13 +73,15 @@ public class BattleManager
         for (int i = 0; i < monsterList.Count; i++)
         {
             //번호/레벨/이름/HP(Dead)
-            Console.Write($"{(isNum ? (i + 1) : "")}Lv.{monsterList[i].Level} {monsterList[i].Name} HP ");
+            Console.Write($"{(isNum ? (i + 1) : "")}Lv.{monsterList[i].Level} {monsterList[i].Name}");
 
             //죽은 몬스터가 있다면 사망 처리
             if (monsterList[i].IsDie)
                 Console.WriteLine("Dead");
             else
-                Console.WriteLine(monsterList[i].HP);
+                Console.WriteLine($" HP: {monsterList[i].HP} " +
+                    $"ATK: {monsterList[i].Attack} " +
+                    $"DEF: {monsterList[i].Defence}");
         }
     }
 
@@ -118,6 +119,11 @@ public class BattleManager
                     battleOrderList[0].TurnEndBuff();
 
                     battleOrderList.RemoveAt(0);
+                }
+
+                if(isDungeonEnd)
+                {
+                    break;
                 }
             }
         }
