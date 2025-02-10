@@ -39,7 +39,7 @@ namespace ReverseDungeonSparta
         }
         public EquipItem()
         {
-
+            EquipItem item = new EquipItem();
         }
 
         // 장착한 아이템 구조체
@@ -66,11 +66,11 @@ namespace ReverseDungeonSparta
             }
 
         }
-        public  void TestItemUpgrade()
+        public static void TestItemUpgrade()
         {
-            ItemUpgrade();
-        }
 
+        }
+    
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
