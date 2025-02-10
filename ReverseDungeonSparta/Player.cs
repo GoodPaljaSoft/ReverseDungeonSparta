@@ -12,6 +12,7 @@ namespace ReverseDungeonSparta
     }
     public class Player : Character
     {
+        List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
         public JobType Job { get; set; } 
         public int Level { get; set; }
         public int Gold { get; set; }
@@ -19,6 +20,7 @@ namespace ReverseDungeonSparta
         public int AdditionalDefence { get; set; }  // 장비 방어력
         public int MaxEXP { get; set; }
         public int NowEXP { get; set; }
+
 
         public Player () //Player 생성자 
         {
@@ -51,8 +53,32 @@ namespace ReverseDungeonSparta
                     break;
             }
         }
+        #region 아이템 능력치 저장
+        public void PlusItemStat() 
+        {
+            foreach (var equipItem in equipItemList)
+            {
+                var itemInfo = equipItem.ItemInfo;
 
+                Attack += equipItem.ItemInfo.addAttack;
+                Defence += equipItem.ItemInfo.addDefence;
+                Luck += equipItem.ItemInfo.addLuck;
+                Intelligence += equipItem.ItemInfo.addIntelligence;
+                MaxHP += equipItem.ItemInfo.addMaxHp;
+                MaxMP += equipItem.ItemInfo.addMaxMp;
+            }
+        }
+        #endregion
+        public void IsEquipItem(EquipItem item) //아이템 장착 로직 구현
+        {
+            if(!equipItemList.Contains(item))
+            {
+                equipItemList.Add(item); // item이 장착된 장착아이템리스트에 없다면
+                item.isEquiped = true;
+                PlusItemStat();
 
+            }
+        }
         public bool CheckPlayerCanSkill(int selectSkillNum)
         {
             bool result = false;

@@ -35,6 +35,7 @@ namespace ReverseDungeonSparta
         public EquipItem(EquipItemInfo equipItemInfo)
         {
             this.ItemInfo = equipItemInfo;
+            isEquiped = false;
         }
         public EquipItem()
         {
