@@ -126,7 +126,7 @@ namespace ReverseDungeonSparta
 
         public static void PrintList(List<EquipItem> items)
         {
-            int[] x = { 3, 7, 24, 26, 33, 36, 45};
+            int[] x = { 3, 7, 24, 26, 33, 35, 45, 47 };
             int y = 3;
             //커서는 x==1 위치에 들어감
             for (int i = 0; i < items.Count; i++)
@@ -138,6 +138,7 @@ namespace ReverseDungeonSparta
                 PrintTextLine(x[1], y + i, $"{items[i].Name}");
                 PrintTextLine(x[2], y + i, "|");
                 PrintTextLine(x[3], y + i, $"{TranslateString(items[i].Type.ToString())}");
+                PrintTextLine(x[7], y + i, $"{items[i].Information}");
 
                 int count = 0;
                 for (int j = 0; j < optionArray.Length; j++)
@@ -145,14 +146,17 @@ namespace ReverseDungeonSparta
                     if (optionArray[j] != 0)
                     {
                         PrintTextLine(x[4], y + i + count, "|");
-                        PrintTextLine(x[5], y + i + count, $"{TranslateString(nameArray[j])}:{optionArray[j]}");
+                        PrintTextLine(x[5], y + i + count, $"{TranslateString(nameArray[j])} +{optionArray[j]}");
                         PrintTextLine(x[6], y + i + count, "|");
                         count++;
                     }
                 }
                 y += count;
+
             }
         }
+
+
 
         public static string TranslateString(string enumType)
         {
@@ -186,5 +190,76 @@ namespace ReverseDungeonSparta
                     return "TranslateError";
             }
         }
+
+        //타이틀 출력
+        public static void PrintTitle()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            PrintText(1, 1, "██████  ███████ ██    ██ ███████ ██████  ███████ ███████");
+            PrintText("██   ██ ██      ██    ██ ██      ██   ██ ██      ██");
+            PrintText("██████  █████   ██    ██ █████   ██████  ███████ █████");
+            PrintText("██   ██ ██       ██  ██  ██      ██   ██      ██ ██");
+            PrintText("██   ██ ███████   ████   ███████ ██   ██ ███████ ███████");
+            PrintText("");
+            PrintText("");
+            PrintText("██████  ██    ██ ███    ██  ██████  ███████  ██████  ███    ██");
+            PrintText("██   ██ ██    ██ ████   ██ ██       ██      ██    ██ ████   ██");
+            PrintText("██   ██ ██    ██ ██ ██  ██ ██   ███ █████   ██    ██ ██ ██  ██");
+            PrintText("██   ██ ██    ██ ██  ██ ██ ██    ██ ██      ██    ██ ██  ██ ██");
+            PrintText("██████   ██████  ██   ████  ██████  ███████  ██████  ██   ████");
+            PrintText("");
+            PrintText("");
+            PrintText("███████ ██████   █████  ██████  ████████  █████");
+            PrintText("██      ██   ██ ██   ██ ██   ██    ██    ██   ██");
+            PrintText("███████ ██████  ███████ ██████     ██    ███████");
+            PrintText("     ██ ██      ██   ██ ██   ██    ██    ██   ██");
+            PrintText("███████ ██      ██   ██ ██   ██    ██    ██   ██");
+
+            //Console.ReadLine();
+        }
+
+
+        //메인 씬에서 탑 그려줄 메서드
+        public static void PrintTower()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.ForegroundColor = ConsoleColor.Red;
+            PrintText(width / 2 - 8, height / 2 - 7, "⠀⠀⠀⠀⠀⢀⡀");
+            PrintText("⠀⠀⠀⠀⠀⣸⣧");
+            PrintText("⠀⠀⢢⣶⣾⣥⣿⣷⣶⡖");
+            PrintText("⠀⠀⢹⣻⠿⣿⣿⠿⣟⡏");
+            PrintText("⠀⣤⢼⣿⡆⣻⣿⣶⣿⡧⣤");
+            PrintText("⠀⣸⣸⢿⣧⣽⣿⣿⣿⣇⣿");
+            PrintText("⠀⠿⢿⠿⡿⠿⠿⢿⣿⡯⠿");
+            PrintText("⠀⠀⣾⠀⠁⠀⠀⢘⣿⣷");
+            PrintText("⠀⠀⡟⠀⠀⢸⡞⢈⣿⣿");
+            PrintText("⠀⢀⣥⣤⣤⣾⣷⣤⣿⣯⡀");
+            PrintText("⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇");
+            PrintText("⠀⠸⠿⠟⠛⠛⠛⠛⣿⣿⠇");
+            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇");
+            PrintText("⠀⢸⠃⠀⠀⠘⠃⠘⣿⣿⡇");
+            PrintText("⠀⣼⣶⣾⣿⣿⣿⣿⣿⣿⣧");
+            PrintText("⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿");
+            PrintText("⠀⣿⡽⠹⠿⠿⠿⠿⣿⣿⣿");
+            PrintText("⠀⡇⠀⠀⠀⠀⠀⠀⣿⣿⢿");
+            PrintText("⠀⡏⠀⠀⠀⡶⢶⡄⣿⣿⣿");
+            PrintText("⢰⠀⠀⠀⠀⣿⣿⡇⠉⣛⡋⡆");
+            PrintText("⢸⣶⣶⣾⣿⣿⣿⣿⣶⣿⣿⡇");
+            PrintText("⠈⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠁");
+
+            for(int i=0; i<19; i++)
+            {
+                PrintText(width / 2 + 6, height / 2 - 5 + i, "▼");
+            }
+
+            
+
+            Console.ReadLine();
+        }
+
+
+
+
     }
 }

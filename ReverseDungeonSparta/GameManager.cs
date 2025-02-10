@@ -24,6 +24,7 @@ namespace ReverseDungeonSparta
             BattleManagerInstance = new BattleManager(player);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(120, 30);         //콘솔창 크기 지정
+
         }
 
         public void PlayerStatusMenu()
@@ -93,7 +94,7 @@ namespace ReverseDungeonSparta
         {
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             Console.Clear();
-            ViewManager4.PrintTitle();
+            ViewManager.PrintTitle();
 
             Console.SetCursorPosition(100, 25);
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
