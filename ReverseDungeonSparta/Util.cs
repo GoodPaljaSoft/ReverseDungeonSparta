@@ -88,6 +88,7 @@ namespace ReverseDungeonSparta
                 case ConsoleKey.Enter:      //엔터를 눌렀을 때
                     int tempIndex = selectedIndex;
                     selectedIndex = 0;      //selectedIndex 초기화
+                    if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
                     menuList[tempIndex].Item2();
                     nowMenu();
                     break;
