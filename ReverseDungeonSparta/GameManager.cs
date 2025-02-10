@@ -22,8 +22,6 @@ namespace ReverseDungeonSparta
         public GameManager()
         {
             BattleManagerInstance = new BattleManager(player);
-            Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
-            Console.SetWindowSize(120, 30);         //콘솔창 크기 지정
 
         }
 
