@@ -90,7 +90,6 @@ namespace ReverseDungeonSparta
                     selectedIndex = 0;      //selectedIndex 초기화
                     if (menuList[tempIndex].Item3 != null) { menuList[tempIndex].Item3(); }
                     menuList[tempIndex].Item2();
-                    nowMenu();
                     break;
             }
         }
