@@ -11,11 +11,11 @@ namespace ReverseDungeonSparta
     public class Buffer
     {
         //double은 배수 수치, int는 유지되는 턴을 가진다.
-        public List<(double, int)> AttackBuff { get; set; }
-        public List<(double, int)> DefenceBuff { get; set; }
-        public List<(double, int)> CriticalBuff { get; set; }
-        public List<(double, int)> EvasionBuff { get; set; }
-        public List<(double, int)> HealingBuff { get; set; }
+        public List<(double, int)> AttackBuff { get; set; } = new List<(double, int)>();
+        public List<(double, int)> DefenceBuff { get; set; } = new List<(double, int)>();
+        public List<(double, int)> CriticalBuff { get; set; } = new List<(double, int)>();
+        public List<(double, int)> EvasionBuff { get; set; } = new List<(double, int)>();
+        public List<(double, int)> HealingBuff { get; set; } = new List<(double, int)>();
 
 
         //턴을 끝낸 후 사용할 버프 메소드. 버프의 카운터를 1개씩 내림
@@ -111,11 +111,17 @@ namespace ReverseDungeonSparta
 
 
         //버프를 추가하는 메소드
-        public void AddBuff(Skill skill)
+        public void AddBuff(Character useCharacter,Skill skill)
         {
             BuffType buffType = skill.BufferType;
             double value = skill.Value;
             int turnCount = skill.BufferTurn;
+
+            //스킬을 사용한 캐릭터가 버프가 올라가는 본인일 경우 턴 카운터를 하나 올려서 적용함.
+            if(useCharacter == (Character)this)
+            {
+                turnCount++;
+            }
 
             if (buffType == BuffType.AttackBuff)
             {
