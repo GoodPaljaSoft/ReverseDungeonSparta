@@ -70,7 +70,6 @@ namespace ReverseDungeonSparta
         //몬스터의 스킬을 만들 때 사용할 메서드
         public static List<Skill> AddMonsterSkill(Monster monster, int num)
         {
-
             List<Skill> skillList = new List<Skill>();
 
             if (monster.Type == MonsterType.Warrior ||
