@@ -10,7 +10,8 @@ namespace ReverseDungeonSparta
     public class Player : Character
     {
         public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
-
+        public List<EquipItem> isOwnedItemList = new List<EquipItem>();
+        public List<EquipItem> isEquippedList = new List<EquipItem>();
         public List<UsableItem> UsableItemInventory = new List<UsableItem>(); // 소비 아이템 리스트
         public JobType Job { get; set; } 
         public int Level { get; set; }
@@ -90,9 +91,9 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public void IsEquipItem(EquipItem item) //아이템 장착 로직 구현
+        public void IsEquipItem(int itemIndex) //아이템 장착 로직 구현
         {
-            if (!equipItemList.Contains(item))
+            if (itemIndex >= 0 && itemIndex < isOwnedItemList.Count)
             {
                 EquipItem item = isOwnedItemList[itemIndex];
                 bool isEquipped = item.IsEquiped; 
