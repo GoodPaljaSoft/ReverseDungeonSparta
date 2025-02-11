@@ -46,11 +46,10 @@ namespace ReverseDungeonSparta
             int maxVisibleOption = 5;
             int startIndex =Math.Min(menuList.Count- maxVisibleOption, Math.Max(0, selectedIndex-2)); // 선택지가 중간에 오도록 5라서 2임
             int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시
-            
-            while (true)
-            {
-                Console.Clear();
 
+            bool isBreak = false;
+            while (isBreak == false)
+            {
                 // 현재 선택지 표시
                 if (menuList.Count < maxVisibleOption)
                 {
@@ -93,7 +92,6 @@ namespace ReverseDungeonSparta
                             }                   
                             AudioManager.PlayMoveMenuSE(0);
                         }
-                        nowMenu();
                         break;
 
                     case ConsoleKey.DownArrow: // 아래 화살표를 눌렀을 때
@@ -109,7 +107,6 @@ namespace ReverseDungeonSparta
 
                             AudioManager.PlayMoveMenuSE(0);
                         }
-                        nowMenu();
                         break;
 
                     case ConsoleKey.Enter:
@@ -118,11 +115,106 @@ namespace ReverseDungeonSparta
                         menuList[tempIndex].Item2();
                         nowMenu();
                         return;
+
+                    case ConsoleKey.C:
+                        isBreak = true;
+                        return;
                 }
+                if (isBreak) break;
             }
         }
 
+        public static void GetUserInputCursorList(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor)
+        {
+            int maxVisibleOption = 5;
+            int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
+            int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시
 
+            bool isBreak = false;
+            while (isBreak == false)
+            {
+                ViewManager.PrintText(cursor.Item1, cursor.Item2, "");
+                // 현재 선택지 표시
+                if (menuList.Count < maxVisibleOption)
+                {
+                    for (int i = 0; i < menuList.Count; i++)
+                    {
+                        string str = "";
+                        if (i == selectedIndex)
+                            str = ($"-> {menuList[i].Item1}");
+                        else
+                            str = ($"   {menuList[i].Item1}");
+                        Console.WriteLine(str);
+                    }
+                }
+                else
+                {
+                    // 위로 숨겨진 선택지 개수
+                    Console.WriteLine($"↑ ({startIndex}개)");
+                    for (int i = startIndex; i < endIndex; i++)
+                    {
+                        string str = "";
+                        if (i == selectedIndex)
+                            str = ($"-> {menuList[i].Item1}");
+                        else
+                            str = ($"   {menuList[i].Item1}");
+                        Console.WriteLine(str);
+                    }
+                    // 아래로 숨겨진 선택지 개수 표시
+                    Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                    Console.WriteLine($"↓ ({menuList.Count - endIndex} more)");
+                }
+
+                ConsoleKeyInfo keyInfo = Util.CheckKeyInputExceptionEnter(selectedIndex, menuList.Count - 1);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow: // 위 화살표를 눌렀을 때
+                        if (selectedIndex > 0)
+                        {
+                            selectedIndex--;
+                            // 선택지가 3번째 줄 이상이면 이동만, 아니면 리스트 스크롤
+                            if (selectedIndex < startIndex)
+                            {
+                                startIndex--;
+                                endIndex--;
+                            }
+                            AudioManager.PlayMoveMenuSE(0);
+                        }
+                        break;
+
+                    case ConsoleKey.DownArrow: // 아래 화살표를 눌렀을 때
+                        if (selectedIndex < menuList.Count - 1)
+                        {
+                            selectedIndex++;
+                            // 선택지가 뒤에서 3번째 줄 이하이면 이동만, 아니면 리스트 스크롤
+                            if (selectedIndex >= endIndex)
+                            {
+                                startIndex++;
+                                endIndex++;
+                            }
+
+                            AudioManager.PlayMoveMenuSE(0);
+                        }
+                        break;
+
+                    case ConsoleKey.Enter:
+                        int tempIndex = selectedIndex;
+                        if (menuList[tempIndex].Item2 != null)
+                        {
+                            selectedIndex = 0;
+                            menuList[tempIndex].Item2();
+                        }
+                        return;
+
+                    case ConsoleKey.C:
+                        isBreak = true;
+                        selectedIndex = 0;
+                        return;
+                }
+                if (isBreak) break;
+            }
+        }
     }
 }
 

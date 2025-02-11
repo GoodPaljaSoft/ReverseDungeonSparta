@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,8 +20,9 @@ namespace ReverseDungeonSparta
             ViewManager.DrawLine();
         }
 
+
         //플레이어 정보를 출력할 메서드
-        public static void PrintPlayerState(Player player)
+        public static void PrintPlayerBattleStatus(Player player)
         {
             ViewManager.PrintText(0, 3, $"{player.Name} (마왕)");
             ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
@@ -33,13 +35,34 @@ namespace ReverseDungeonSparta
             ViewManager.DrawLine();
         }
 
-       
+
+        //플레이어의 능력치를 출력할 메서드
+        public static void PrintPlayerStatus(Player player)
+        {
+            ViewManager.PrintText(0, 3, $"{player.Name} (마왕)");
+            ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"HP : {player.HP}/{player.MaxHP}");
+            ViewManager.PrintText(25, 6, $"공격력 : {player.TotalAttack}");
+            ViewManager.PrintText(50, 6, $"회피율 : {player.TotalEvasion}");
+            ViewManager.PrintText(75, 6, $"행운 : {player.Luck}");
+            ViewManager.PrintText(100, 6, $"속도 : {player.Speed}");
+            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.MaxMP}");
+            ViewManager.PrintText(25, 7, $"방어력 : {player.TotalDefence}");
+            ViewManager.PrintText(50, 7, $"치명타 : {player.TotalCritical}");
+            ViewManager.PrintText(75, 7, $"지능 : {player.Intelligence}");
+            ViewManager.PrintText(100, 7, $"골드 : {player.Gold}");
+            ViewManager.PrintText(0, 8, "");
+            ViewManager.DrawLine();
+        }
+
+
         //내려가기 창에 들어가면 출력할 메소드
         public static void PrintEnterDungeonText(Player player)
         {
             Console.Clear();
             PrintTitleTxt("내려가기", 11);
-            PrintPlayerState(player);
+            PrintPlayerBattleStatus(player);
             ViewManager.PrintText("");
             ViewManager.PrintText("??층으로 내려갑니다...");
             ViewManager.PrintText("");
@@ -62,8 +85,8 @@ namespace ReverseDungeonSparta
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
             ViewManager.PrintText("");
-            PrintPlayerState(player);
-            MonsterListInfoTxt( monsters);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
             ViewManager.PrintText("");
@@ -106,6 +129,7 @@ namespace ReverseDungeonSparta
         }
 
 
+        //몬스터의 정보를 string으로 반환하는 메서드
         public static string MonsterListInfoString(Monster monster)
         {
             string str = "";
@@ -128,8 +152,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
-            PrintPlayerState(player);
-            MonsterListInfoTxt( monsters);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
@@ -140,8 +164,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
-            PrintPlayerState(player);
-            MonsterListInfoTxt( monsters);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
             ViewManager.PrintText("");
@@ -154,8 +178,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
-            PrintPlayerState(player);
-            MonsterListInfoTxt( monsters);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
             ViewManager.PrintText("");
@@ -168,7 +192,7 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
-            PrintPlayerState(player);
+            PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 27, "-> 사용하기");
             ViewManager.PrintText(0, 29, "[C] 취소");
@@ -181,7 +205,7 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
-            PrintPlayerState(player);
+            PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 27, "-> 사용하기");
             ViewManager.PrintText(0, 29, "[C] 취소");
@@ -194,12 +218,58 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
-            PrintPlayerState(player);
+            PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
 
+
+        //플레이어가 전투에서 승리했을 때 출력할 텍스트
+        public static void PlayerWinText(Player player, List<Monster> monsters)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 결과", 12);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 28, $"   이어서 내려가기({12}층)");
+            ViewManager.PrintText($"   거점으로 돌아가기({10}층)");//***변수 추가
+            ViewManager.PrintText(0, 9, $"{player.Name}이(가) 모험가 {monsters.Count}명을 성공적으로 쫓아냈습니다!");
+            ViewManager.PrintText("");
+        }
+
+
+        //플레이어가 패배했을 때 출력할 텍스트
+        public static void PlayerDeafText(Player player, List<Monster> monsters)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 결과", 12);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 29, $"   돌아가기");
+            ViewManager.PrintText(0, 9, $"정복 실패...");
+            ViewManager.PrintText("");
+        }
+
+
+        //플레이어가 상태 창에 들어갔을 때 출력할 텍스트
+        public static void PlayerStatusTxt(Player player, ref int selectedIndex)
+        {
+            Console.Clear();
+            PrintTitleTxt("상태보기", 12);
+            PrintPlayerStatus(player);
+            ViewManager.PrintText("");
+            ViewManager.PrintText("    보유스킬");
+            ViewManager.PrintText("");
+            ViewManager.PrintText(0, 29, "[C]나가기");
+
+            //스킬 출력
+            List<(string, Action, Action)> skillList = player.SkillList
+                                                                .Select(x => ($"{x.Name}             \n   : {x.Info}\n", (Action)null, (Action)null))
+                                                                .ToList();
+
+            ScrollViewTxt(skillList, ref selectedIndex, (0, 12));
+        }
 
         //메인 메뉴 창에서 택스트 출력하는 메소드
         public static void MainMenuTxt()
@@ -209,6 +279,99 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(100, 24, "   상태 보기");
             ViewManager.PrintText("   전투 시작");
             ViewManager.PrintText("   인벤토리");
+        }
+
+
+        public static void ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor)
+        {
+            int maxVisibleOption = 5;
+            int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
+            int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시
+
+            bool isBreak = false;
+            while (isBreak == false)
+            {
+                ViewManager.PrintText(cursor.Item1, cursor.Item2, "");
+                // 현재 선택지 표시
+                if (menuList.Count < maxVisibleOption)
+                {
+                    for (int i = 0; i < menuList.Count; i++)
+                    {
+                        string str = "";
+                        if (i == selectedIndex)
+                            str = ($"-> {menuList[i].Item1}");
+                        else
+                            str = ($"   {menuList[i].Item1}");
+                        Console.WriteLine(str);
+                    }
+                }
+                else
+                {
+                    // 위로 숨겨진 선택지 개수
+                    Console.WriteLine($"↑ ({startIndex}개)");
+                    for (int i = startIndex; i < endIndex; i++)
+                    {
+                        string str = "";
+                        if (i == selectedIndex)
+                            str = ($"-> {menuList[i].Item1}");
+                        else
+                            str = ($"   {menuList[i].Item1}");
+                        Console.WriteLine(str);
+                    }
+                    // 아래로 숨겨진 선택지 개수 표시
+                    Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                    Console.WriteLine($"↓ ({menuList.Count - endIndex} more)");
+                }
+
+                ConsoleKeyInfo keyInfo = Util.CheckKeyInputExceptionEnter(selectedIndex, menuList.Count - 1);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow: // 위 화살표를 눌렀을 때
+                        if (selectedIndex > 0)
+                        {
+                            selectedIndex--;
+                            // 선택지가 3번째 줄 이상이면 이동만, 아니면 리스트 스크롤
+                            if (selectedIndex < startIndex)
+                            {
+                                startIndex--;
+                                endIndex--;
+                            }
+                            AudioManager.PlayMoveMenuSE(0);
+                        }
+                        break;
+
+                    case ConsoleKey.DownArrow: // 아래 화살표를 눌렀을 때
+                        if (selectedIndex < menuList.Count - 1)
+                        {
+                            selectedIndex++;
+                            // 선택지가 뒤에서 3번째 줄 이하이면 이동만, 아니면 리스트 스크롤
+                            if (selectedIndex >= endIndex)
+                            {
+                                startIndex++;
+                                endIndex++;
+                            }
+
+                            AudioManager.PlayMoveMenuSE(0);
+                        }
+                        break;
+
+                    case ConsoleKey.Enter:
+                        int tempIndex = selectedIndex;
+                        if (menuList[tempIndex].Item2 != null)
+                        {
+                            selectedIndex = 0;
+                            menuList[tempIndex].Item2();
+                        }
+                        return;
+
+                    case ConsoleKey.C:
+                        isBreak = true;
+                        selectedIndex = 0;
+                        return;
+                }
+                if (isBreak) break;
+            }
         }
     }
 }
