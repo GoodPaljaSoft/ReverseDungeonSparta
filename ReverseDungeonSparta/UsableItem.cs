@@ -41,26 +41,6 @@ public class UsableItem : Item
         }
     }
 
-    public static List<UsableItem> GetUsableItemList(int num) // 생성된 리스트 아이템 넣기
-    {
-        List<UsableItem> usableItemList = new List<UsableItem>();
-        for (int i = 0; i < num; i++)
-        {
-            usableItemList.Add(InstanceUsableItem(i));
-        }
-        return usableItemList;
-    }
-
-    public static UsableItem InstanceUsableItem(int index) // indx를 통한 아이템 정보를 반환
-    {
-        if (index >= 0 && index < allUsableItem.Length)
-        {
-            UsableItemInfo usableItemInfo = allUsableItem[index];
-            return new UsableItem(usableItemInfo);
-        }
-        return new UsableItem();
-    }
-
     // 소비 아이템 목록
     public static void UseItemView()
     {
@@ -171,9 +151,9 @@ public class UsableItem : Item
         if (item.Hp > 0)
         {
             if (player.HP < player.MaxHP) // 플레이어의 HP가 최대가 아닐 때
-            {
+            {              
                 int newHP = Math.Min(player.HP + item.Hp, player.MaxHP);
-                recoveryMessage += $"HP +{item.Hp} (현재 HP: {newHP}/{player.MaxHP}) ";
+                recoveryMessage += $"HP +{newHP - player.HP} (현재 HP: {newHP}/{player.MaxHP}) ";
                 player.HP = newHP;
                 itemUsed = true; // 아이템 사용 표시
             }
@@ -189,7 +169,7 @@ public class UsableItem : Item
             if (player.MP < player.MaxMP) // 플레이어의 MP가 최대가 아닐 때
             {
                 int newMP = Math.Min(player.MP + item.Mp, player.MaxMP);
-                recoveryMessage += $"MP +{item.Mp} (현재 MP: {newMP}/{player.MaxMP}) ";
+                recoveryMessage += $"MP +{newMP- player.MP} (현재 MP: {newMP}/{player.MaxMP}) ";
                 player.MP = newMP;
                 itemUsed = true; // 아이템 사용 표시
             }
