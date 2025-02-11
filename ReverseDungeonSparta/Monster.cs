@@ -74,10 +74,10 @@ public class Monster : Character
     };
 
 
-    public override void Attacking(Character target,List<Monster> monsters ,out int damage)
+    public void Attacking(Character target,List<Monster> monsters ,out int damage, out (Skill, Character) skill)
     {
         Random random = new Random();
-        Skill skill = null;
+        skill = (null, null);
         int rand = random.Next(0, 1);
         double attackDamage = (double)Attack;
         if(rand == 0)
@@ -88,10 +88,8 @@ public class Monster : Character
                 SkillList = Util.ShuffleList(SkillList);
                 if (SkillList[0].ConsumptionMP <= MP)
                 {
-                    skill = SkillList[0];
-                    attackDamage *= skill.Value;
-                    ViewManager.PrintText("");
-                    ViewManager.PrintText($"스킬 발동 : {skill.Name}");
+                    skill.Item1 = SkillList[0];
+                    attackDamage *= skill.Item1.Value;
                 }
             }
         }
@@ -102,24 +100,25 @@ public class Monster : Character
 
         damage = new Random().Next((int)(attackDamage - margin), (int)(attackDamage + margin));
 
-        if (skill != null)
+        if (skill.Item1 != null)
         {
-            if(skill.ApplyType == ApplyType.Enemy)
+            if(skill.Item1.ApplyType == ApplyType.Enemy)
             {
                 //플레이어 공격
-                OnDamage(target, damage);
+                target.OnDamage(this, damage);
             }
-            else if (skill.ApplyType == ApplyType.Team)
+            else if (skill.Item1.ApplyType == ApplyType.Team)
             {
                 //팀에게 사용
                 rand = random.Next(0, monsters.Count);
-                monsters[rand].AddBuff((Character)this, skill);
+                skill.Item2 = monsters[rand];
+                skill.Item2.AddBuff((Character)this, skill.Item1);
             }
         }
         else
         {
             //플레이어 공격
-            OnDamage(target, damage);
+            target.OnDamage(this, damage);
         }
     }
 
