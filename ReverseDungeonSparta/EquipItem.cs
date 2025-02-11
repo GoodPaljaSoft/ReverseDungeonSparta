@@ -76,44 +76,10 @@ namespace ReverseDungeonSparta
                 addMaxMp = _addMaxMp;  
             }
         }
-        public static void TestItemUpgrade()
-        {
-            //ItemUpgrade();
-        }
-        //public static void PrintItemList() //장착 가능한 아이템 출력 //추후에 유틸부분으로 넘기는게 깔끔할 수 있음.
-        //{
-        //    for (int i = 0; i < allEquipItem.Length; i++)
-        //    {
-                
-        //        var item = allEquipItem[i];
-        //        string statInfo = "";
-        //        if (item.type == Type.Helmet)  // 작성된 스텟은 예시로 저장 회의를 통한 수정 필요
-        //        {
-        //            statInfo = $"체력 +{item.addMaxHp}";
-        //        }
-        //        else if (item.type == Type.Armor | item.type == Type.Shoes)
-        //        {
-        //            statInfo = $"방어력 +{item.addDefence}";
-        //        }
-        //        else if (item.type == Type.Weapon)
-        //        {
-        //            statInfo = $"공격력 +{item.addAttack}";
-        //        }
-        //        else if (item.type == Type.Ring)
-        //        {
-        //            statInfo = $"행운 +{item.addLuck}";
-        //        }
-        //        else if (item.type != Type.Necklace)
-        //        {
-        //            statInfo = $"지력 +{item.addIntelligence}";
-        //        }
-        //        Console.WriteLine($" [-]  {item.itemName}        | {item.type}         | {statInfo}         |{item.description}");
-        //    }  //헬멧은 체력 + 방어력 // 방어구는 방어력 + 체력 // 무기는 공격력 + 행운 // 반지는 지력 + 마력 // 목걸이는 지력 + 마력
-        //}                                         방어력 + 행운
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {                                   
-            new EquipItemInfo("찢어진 도적의 망토",0,5,0,0,20,0,EquipItemType.Armor,EquipItemGrade.Normal,"    도적이 버리고 간 찢어진 망토"), 
+            new EquipItemInfo("찢어진 도적의 망토",0,5,0,0,25,0,EquipItemType.Armor,EquipItemGrade.Normal,"    도적이 버리고 간 찢어진 망토"), 
             new EquipItemInfo("치유의 지팡이",0,0,2,7,0,0,EquipItemType.Weapon, EquipItemGrade.Normal,"    마법이 부족한 지팡이"),
             new EquipItemInfo("허름한 궁수의 모자",2,4,0,0,0,0,EquipItemType.Helmet, EquipItemGrade.Normal,"    초보자가 사용한 모자"), 
             new EquipItemInfo("마법사의 천 신발",0,7,0,0,25,0,EquipItemType.Shoes, EquipItemGrade.Normal,"    견습생이 신는 신발"), 
