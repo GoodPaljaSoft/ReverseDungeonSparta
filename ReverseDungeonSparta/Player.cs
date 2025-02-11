@@ -123,5 +123,64 @@ namespace ReverseDungeonSparta
 
             return result;
         }
+        public static List<EquipItem> GetEquipItemList(EquipItemInfo equipItemInfo)
+        {
+            // 새로운 장비아이템 리스트 만들고 
+            List<EquipItem> rewardItemList = new List<EquipItem>();
+
+            // 랜덤값 생성하여
+            Random random = new Random();
+           
+            // 기본적인 반환 아이템은 초기값이 Normal 등급이 되도록
+            Grade itemgrade = Grade.Normal;
+
+            // 생성 확률에 따라 랜덤아이템이 리스트 안에 포함되도록 생성
+            double randomValue = random.NextDouble();
+
+            // 30% 확률로 Uncommon 아이템이 나오도록
+            if (randomValue <= 0.3f)
+            {
+                itemgrade = Grade.Uncommon;
+            }
+            
+            // 50%를 통해서 30%의 아이템인 Uncommon이 나오고 그다음으로 20%인 Rare인 아이템이 나오도록
+            else if (randomValue <= 0.5f)
+            {
+                itemgrade = Grade.Rare;
+            }
+            else 
+            {
+               EquipItem equipitem = new EquipItem();  
+            }
+            //enum값에 따른 Type 랜덤으로 정하기
+            Type type = (Type)random.Next(0, 6);
+
+
+            // 아이템 정보를 생성하는 
+
+            //EquipItem.EquipItemInfo itemInfo = new EquipItem.EquipItemInfo
+            //(
+            //    itemName,
+            //    _addAttack,
+            //    _addDefence,
+            //    _addIntelligence,
+            //    _addMaxHp,
+            //    _addMaxMp,
+            //    item,
+                
+
+            //);
+            EquipItem rewardItem = new EquipItem(equipItemInfo);
+
+            string itemName = $"{type} Item";
+            string description = $"{itemName} 설명";
+
+
+
+            // 반환된 아이템을 리워드리스트에 추가
+            rewardItemList.Add(rewardItem);
+
+            return new List<EquipItem> { rewardItem };
+        }
     }
 }

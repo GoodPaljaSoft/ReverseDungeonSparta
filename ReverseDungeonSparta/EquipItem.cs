@@ -28,7 +28,6 @@ namespace ReverseDungeonSparta
         public int AddMaxHp { get; set; }
         public int AddMaxMp { get; set; }
 
-        public bool IsOwned { get; set; }
         public bool IsEquiped { get; set; }
 
         public EquipItem(EquipItemInfo e)
@@ -42,7 +41,8 @@ namespace ReverseDungeonSparta
             AddAttack = e.addAttack;
             AddIntelligence = e.addIntelligence;
             AddMaxHp = e.addMaxHp;
-            AddMaxMp = e.addMaxMp;
+            AddMaxMp = e.addMaxMp; 
+            IsEquiped = false;
         }
         public EquipItem()
         {
