@@ -17,13 +17,8 @@ namespace ReverseDungeonSparta
         static public int width = 120;      //콘솔 가로 크기
         static public int height = 30;      //콘솔 세로 크기
 
-<<<<<<< HEAD
-        static int CursorX = 0;   //마우스 커서 x위치
-        static int CursorY = 0;   //마우스 커서 y위치
-=======
         static public int CursorX = 0;   //마우스 커서 x위치
         static public int CursorY = 0;   //마우스 커서 y위치
->>>>>>> main
 
         //커서 위치 받아오기
         static int top = Console.WindowTop;
@@ -97,21 +92,14 @@ namespace ReverseDungeonSparta
         //해당 메서드로 커서 위치를 잡고 텍스트를 출력한다.
         //이 메서드로 출력한 텍스트를 기준으로 한 줄 아래에 그리고 싶다면
         //이 다음으로 PrintText로 출력하면 된다.
-        public static void PrintText(int x, int y, string text)
         public static void PrintText(int cursorX, int cursorY, string text)
         {
-<<<<<<< HEAD
-            CursorX = x;
-            CursorY = y;
-            Console.SetCursorPosition(x, y);
-            Console.Write(text);
-            CursorY++;
-=======
             CursorX = cursorX;
             CursorY = cursorY;
-            Console.SetCursorPosition(CursorX, CursorY);
+            Console.SetCursorPosition(cursorX, cursorY);
             Console.Write(text);
             CursorY++;
+
         }
         public static void PrintText(int cursorX, int cursorY, string text, bool isColor, ConsoleColor color)
         {
@@ -138,7 +126,6 @@ namespace ReverseDungeonSparta
             Console.SetCursorPosition(x, y);
             Console.WriteLine(text);
             CursorY++;
->>>>>>> main
         }
 
 
@@ -148,8 +135,7 @@ namespace ReverseDungeonSparta
             Console.SetCursorPosition(CursorX, CursorY);
             Console.Write(text);
             CursorY++;
-<<<<<<< HEAD
-=======
+
         }
         public static void PrintText(string text, bool isColor, ConsoleColor color)
         {
@@ -163,7 +149,6 @@ namespace ReverseDungeonSparta
                 Console.ForegroundColor = ConsoleColor.White;
 
             CursorY++;
->>>>>>> main
         }
 
         //public void PrintList(int x = 1, int y = 4, List<ItemInfo> items)

@@ -60,12 +60,10 @@ namespace ReverseDungeonSparta
         public void InventoryMenu()
         {
             Console.Clear();
-<<<<<<< HEAD
             Console.WriteLine("소지품 확인");
             Console.WriteLine("");
             Console.WriteLine("");
-           
-=======
+
             ViewManager.DrawLine("인벤토리");
 
             //Console.WriteLine("인벤토리");
@@ -79,8 +77,6 @@ namespace ReverseDungeonSparta
             //아이템 출력 임시 코드
             ViewManager.PrintList(player.equipItemList);
 
-            
->>>>>>> main
             menuItems = new List<(string, Action, Action)>
             {
                 ("장비 아이템", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
@@ -152,7 +148,6 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("", GameMenu, null),
-                ("", GameMenu, null),
                 ("", InventoryMenu, null)
 
             };
@@ -162,14 +157,8 @@ namespace ReverseDungeonSparta
 
         public void GameMenu() // 시작화면 구현
         {
-            //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
-            Console.Clear();
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영입니다.");
-            Console.WriteLine("이제 전투를 시작할 수 있습니다.");
-            Console.WriteLine("");
-
             //Console.SetCursorPosition(100, 25);
- 
+
             ViewManager3.MainMenuTxt();
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
@@ -178,9 +167,7 @@ namespace ReverseDungeonSparta
             //새로운 (string, Action, Action) 입력하기 전 반점(,) 필수
             menuItems = new List<(string, Action, Action)>
             {
-                ("상태 보기", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                // ("인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
                 ("", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -188,22 +175,19 @@ namespace ReverseDungeonSparta
                 //("조합", sum, null)
                 //...
             };
-
-
             //Util.GetUserInput은
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex);
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
         }
 
-        
+
         public void StageClearCheck()
         {
-            for(int i=0; i < dungeonClearLevel; i++)
+            for (int i = 0; i < dungeonClearLevel; i++)
             {
-                clearCheck[i] = true; 
+                clearCheck[i] = true;
             }
         }
 
@@ -214,3 +198,4 @@ namespace ReverseDungeonSparta
         }
 
     }
+}

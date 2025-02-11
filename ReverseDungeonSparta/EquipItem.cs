@@ -46,7 +46,7 @@ namespace ReverseDungeonSparta
         }
         public EquipItem()
         {
-            EquipItem item = new EquipItem();
+
         }
         // 장착한 아이템 구조체
         public struct EquipItemInfo
@@ -132,22 +132,21 @@ namespace ReverseDungeonSparta
             new EquipItemInfo("item이름17",5,5,5,5,5,5,EquipItemType.Ring, EquipItemGrade.Rare,"아이템17"), // 아이템 17
             new EquipItemInfo("item이름18",5,5,5,5,5,5,EquipItemType.Necklace, EquipItemGrade.Rare,"아이템18"), // 아이템 18
         };
-        //public static EquipItem InstanceEquipItem(int index) // 배열 index를 통해서 아이템 정보를
-        //                                                     // 매개변수로 가진 아이템 객체 만들고 반환 
-        //{
-        //    if (index >= 0 && index <= allEquipItem.Length)
-        //    {
-        //        EquipItemInfo equipItemInfo = allEquipItem[index];
+        public static EquipItem InstanceEquipItem(int index) // 배열 index를 통해서 아이템 정보를
+                                                             // 매개변수로 가진 아이템 객체 만들고 반환 
+        {
+            if (index >= 0 && index <= allEquipItem.Length)
+            {
+                EquipItemInfo equipItemInfo = allEquipItem[index];
 
-        //        return new EquipItem(equipItemInfo);
-        //    }
-        //    else
-        //    {
-        //        return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
-        //    }
-        //}
+                return new EquipItem(equipItemInfo);
+            }
+            else
+            {
+                return new EquipItem(); //아이템 index를 초과할 시 기본 아이템 정보를 가진 아이템으로 반환
+            }
+        }
         #region 아이템 조합 로직
-        /*
         public static void ItemUpgrade()
         {
             Console.WriteLine("");
@@ -160,14 +159,14 @@ namespace ReverseDungeonSparta
             //입력한 숫자가 장비아이템의 index범위내에 있는지부터 파악
             if (number1 >= 0 && number1 < allEquipItem.Length && number2 >= 0 && number2 < allEquipItem.Length)
             {
-                EquipItemInfo item1 = allEquipItem[number1]; // 입력한 아이템의 숫자와 index가 일치하도록 
-                EquipItemInfo item2 = allEquipItem[number2]; // 로직을 구성하여 입력한 아이템을 선택하도록
+                EquipItem item1 = new EquipItem(allEquipItem[number1]); // 입력한 아이템의 숫자와 index가 일치하도록 
+                EquipItem item2 = new EquipItem(allEquipItem[number2]); // 로직을 구성하여 입력한 아이템을 선택하도록
 
                 //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
-                if (item1.type == item2.type && item1.grade == item2.grade)
+                if (item1.Type == item2.Type && item1.Grade == item2.Grade)
                 {
                     float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
-                    switch (item1.grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
+                    switch (item1.Grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
                     {
                         case EquipItemGrade.Normal:
                             upgradePercent = 0.5f;
@@ -189,27 +188,27 @@ namespace ReverseDungeonSparta
                     if (randomValue <= upgradePercent)
                     {
                         //업그레이드 된 아이템은 선택된 아이템 1번이 되도록
-                        EquipItemInfo upgradeItem = item1;
+                        EquipItem upgradeItem = item1;
 
                         // 선택된 item의 등급에 따라서 더 높은 등급이 되도록 업그레이드
-                        if (item1.grade == EquipItemGrade.Normal)
+                        if (item1.Grade == EquipItemGrade.Normal)
                         {
-                            upgradeItem.grade = EquipItemGrade.Uncommon;
+                            upgradeItem.Grade = EquipItemGrade.Uncommon;
                         }
-                        else if (item1.grade == EquipItemGrade.Uncommon)
+                        else if (item1.Grade == EquipItemGrade.Uncommon)
                         {
-                            upgradeItem.grade = EquipItemGrade.Rare;
+                            upgradeItem.Grade = EquipItemGrade.Rare;
                         }
 
                         int targetIndex = number1 + 6; // index를 통해서 업그레이드 된 아이템에 index에 할당되도록
                                                        // 아이템의 Type에 따라 갯수가 늘어난다면 index가 늘어나므로
                                                        // index +를 6이 아닌 다른 숫자를 입력해야함.
 
-                        allEquipItem[targetIndex] = upgradeItem; // 할당시킨 새로운 index를 업그레이드 된 아이템으로 초기화
+                        upgradeItem = new EquipItem(allEquipItem[targetIndex]);
 
                         Console.Clear();
                         Console.WriteLine("[조합 결과]");
-                        Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.itemName}, {upgradeItem.type}, {upgradeItem.grade}");
+                        Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
                         Thread.Sleep(1000);
                         ReturnToInventory();
                     }
@@ -219,8 +218,7 @@ namespace ReverseDungeonSparta
                         Console.WriteLine("[조합 결과]");
                         Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
                         // 조합실패시 조합된 아이템은 소멸되도록 하기 위해서 기본 아이템으로 초기화
-                        allEquipItem[number1] = new EquipItemInfo();
-                        allEquipItem[number2] = new EquipItemInfo();
+                        new EquipItem();
                         Thread.Sleep(1000);
                         ReturnToInventory();
                     }
@@ -240,7 +238,6 @@ namespace ReverseDungeonSparta
                 return;
             }
         }
-        */
         #endregion
 
         #region 다시 인벤토리 돌아가는 메서드
