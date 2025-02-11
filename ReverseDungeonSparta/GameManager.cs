@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,38 +66,37 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 
         public void InventoryMenu()
         {
-            Console.Clear();
-            ViewManager.DrawLine("인벤토리");
+            InventoryViewManager.EnterInventoryMenuTxt();
 
             //아이템 출력 임시 코드
-            ViewManager.PrintList(player.equipItemList);
+            //ViewManager.PrintList(player.equipItemList);
 
             menuItems = new List<(string, Action, Action)>
             {
-                ("장비 아이템", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("소비 아이템", UseItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("나가기", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", UseItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
-            Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex);
+            Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex, (0, 26));
         }
         #endregion 
         #region 소지품 확인 - 장비
         public void EquipmentMenu()
         {
-            Console.Clear();
-            Console.WriteLine("소지품 확인  - 장비");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            ViewManager.PrintList(player.equipItemList);
+            InventoryViewManager.InventoryEquippedMenuTxt();
+            //ViewManager.PrintList(player.equipItemList);
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
 
             menuItems = new List<(string, Action, Action)>
             {
-                ("장비 장착", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("장비 합성", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("나가기", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
-            Util.GetUserInput(menuItems, EquipmentMenu, ref selectedIndex);
+            Util.GetUserInput(menuItems, EquipmentMenu, ref selectedIndex, (0, 26));
+
+            ViewManager3.ScrollViewTxt(menuItems, ref selectedIndex, (0, 5));
+
         }
         #endregion 
         #region 소지품 확인 - 장비 장착
