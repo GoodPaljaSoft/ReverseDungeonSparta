@@ -59,7 +59,6 @@ namespace ReverseDungeonSparta
             Console.ForegroundColor = ConsoleColor.Red;
             for (int i = 0; i < width; i++)
             {
-                Console.Write("─");
                 str += "─";
             }
             Console.WriteLine(str);
