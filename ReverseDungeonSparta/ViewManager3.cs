@@ -134,6 +134,20 @@ namespace ReverseDungeonSparta
             MonsterListInfoTxt(false, monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText("");
+            ViewManager.PrintText("");
+        }
+
+
+        //플레이어가 몬스터를 선택할 때 출력할 메소드
+        public static void PlayerSelectedMonsterTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", 12);
+            PrintPlayerState(player);
+            MonsterListInfoTxt(false, monsters);
+            ViewManager.PrintText(0, 29, "[C] 취소");
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
 
 
