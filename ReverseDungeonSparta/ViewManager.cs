@@ -25,29 +25,22 @@ namespace ReverseDungeonSparta
         static int top = Console.WindowTop;
         static int left = Console.WindowLeft;
 
-        public static void StateView(Player player)
+        //플레이어 정보를 출력할 메서드
+        public static void PrintPlayerState(Player player)
         {
-            //테스트 코드
-            //DrawLine("상태보기");
-            //DrawList(player);
-            //DrawLine();
-
-            //Console.WriteLine($"width: {width}");
-            //Console.WriteLine($"height: {height}");
-            //Console.WriteLine($"top: {top}");
-            //Console.WriteLine($"left: {left}");
-
-
-            //Console.ReadLine();
-
-
+            PrintText(0, 3, $"{player.Name} (마왕)");
+            PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
+            PrintText("");
+            PrintText($"HP : {player.HP}/{player.MaxHP}");
+            PrintText($"MP : {player.MP}/{player.MaxMP}");
+            PrintText("");
+            DrawLine();
         }
 
 
         //한 줄을 길게 그리고 위에 제목을 출력하는 메소드
         public static void DrawLine(string sceneName)
         {
-
             Console.ForegroundColor = ConsoleColor.Red;
 
             Console.WriteLine($"\n {sceneName}");
@@ -56,7 +49,6 @@ namespace ReverseDungeonSparta
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.GetCursorPosition();
-            //PrintText()
         }
 
 
@@ -77,17 +69,18 @@ namespace ReverseDungeonSparta
 
         
         //플레이어 정보를 출력할 메서드
-        public static void PrintPlayerState(Player player)
-        {
-            PrintText(1, 3, $"{player.Name} (마왕)");
+        //public static void PrintPlayerState(Player player)
+        //{
+        //    PrintText(1, 3, $"{player.Name} (마왕)");
+        //    PrintText($" Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
 
-            Console.SetCursorPosition(1, 3);
-            Console.SetCursorPosition(0, 3);
-            Console.WriteLine($"{player.Name} (마왕)");
-            Console.WriteLine($" Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
-            Console.WriteLine();
-            //Console.WriteLine($" Lv. {player.Level} [{player.Exp}/{player.MaxExp}]");
-        }
+        //    Console.SetCursorPosition(1, 3);
+        //    Console.SetCursorPosition(0, 3);
+        //    Console.WriteLine($"{player.Name} (마왕)");
+        //    Console.WriteLine($" Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
+        //    Console.WriteLine();
+        //    //Console.WriteLine($" Lv. {player.Level} [{player.Exp}/{player.MaxExp}]");
+        //}
 
 
         //해당 메서드로 커서 위치를 잡고 텍스트를 출력한다.
@@ -117,7 +110,6 @@ namespace ReverseDungeonSparta
                 Console.ForegroundColor = ConsoleColor.White;
 
             CursorY++;
-
         }
 
         public static void PrintTextLine(int x, int y, string text)
@@ -152,14 +144,6 @@ namespace ReverseDungeonSparta
             CursorY++;
         }
 
-        //public void PrintList(int x = 1, int y = 4, List<ItemInfo> items)
-        //{
-        //    for (int i = 0; i < items.Count; i++)
-        //    {
-        //        PrintText(x, y + i, $"{items[0].name}");
-        //    }
-
-        //}
         public static void PrintList(List<EquipItem> items)
         {
             int[] x = { 3, 7, 24, 26, 33, 35, 45, 47 };
@@ -288,11 +272,29 @@ namespace ReverseDungeonSparta
             {
                 PrintText(width / 2 + 6, height / 2 - 5 + i, "▼", GameManager.Instance.clearCheck[i], ConsoleColor.Red);
             }
-
-            Console.ReadLine();
         }
 
+        //메인 메뉴 창에서 택스트 출력하는 메소드
+        public static void MainMenuTxt()
+        {
+            Console.Clear();
+            PrintTower();
+            PrintText(3, 24, "   상태확인");
+            PrintText("   소지품 확인");
+            PrintText("   내려가기");
+            PrintText("   휴식하기");
+            PrintText("   저장하기");
+            PrintText("   게임종료");
+        }
 
+        public static void TitleMenuTxt()
+        {
+            Console.Clear();
+            PrintTitle();
+            PrintText(100, 24, "   새로하기");
+            PrintText("   이어하기");
+            PrintText("   게임종료");
+        }
 
 
     }
