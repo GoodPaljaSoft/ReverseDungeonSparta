@@ -219,5 +219,24 @@ namespace ReverseDungeonSparta
                 }
             }
         }
+
+
+        
+        public static ConsoleKeyInfo CheckKeyInputExceptionEnter(int nowIndex, int maxIndex)
+        {
+            ConsoleKeyInfo keyInfo;
+            while (true)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.C ||
+                    (keyInfo.Key == ConsoleKey.UpArrow && nowIndex > 0) ||
+                    keyInfo.Key == ConsoleKey.DownArrow && nowIndex < maxIndex)
+                {
+                    break;
+                }
+            }
+            return keyInfo;
+        }
     }
 }
