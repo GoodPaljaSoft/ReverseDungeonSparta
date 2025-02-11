@@ -11,6 +11,10 @@ namespace ReverseDungeonSparta
 {
     public static class ViewManager3
     {
+        static public int monsterPostionValueX = 50;
+        static public int monsterPostionValueY = 2;
+
+
         //제목과 층을 출력할 타이틀 텍스트
         public static void PrintTitleTxt(string title, int floor)
         {
@@ -120,29 +124,44 @@ namespace ReverseDungeonSparta
         //몬스터의 정보의 출력할 메소드. isNum이 true면 번호를 추가해서 출력.
         public static void MonsterListInfoTxt(List<Monster> monsterList)
         {
-            ViewManager.PrintText(40, 2, "");
+            ViewManager.PrintText(monsterPostionValueX, monsterPostionValueY, "");
 
             for (int i = 0; i < monsterList.Count; i++)
             {
-                ViewManager.PrintText(MonsterListInfoString(monsterList[i]));
+                ViewManager.PrintText(MonsterListInfoNameString(monsterList[i]));
+            }
+
+
+            ViewManager.PrintText(monsterPostionValueX + 28, monsterPostionValueY, "");
+            for (int i = 0; i < monsterList.Count; i++)
+            {
+                ViewManager.PrintText(MonsterListInfoValueString(monsterList[i]));
             }
         }
 
 
         //몬스터의 정보를 string으로 반환하는 메서드
-        public static string MonsterListInfoString(Monster monster)
+        public static string MonsterListInfoNameString(Monster monster)
         {
             string str = "";
             //번호/레벨/이름/HP(Dead)
             str = ($"Lv.{monster.Level} {monster.Name}");
+            return str;
+        }
+
+
+        public static string MonsterListInfoValueString(Monster monster)
+        {
+
+            string str = "";
 
             //죽은 몬스터가 있다면 사망 처리
             if (monster.IsDie)
                 str = (str + "Dead");
             else
-                str = (str + $" HP: {monster.HP} " +
-                    $"ATK: {monster.Attack} " +
-                    $"DEF: {monster.Defence}");
+                str = (str + "H P: " + $"{monster.HP}/{monster.MaxHP}".PadRight(9) +
+                    "ATK: " + $"{monster.Attack}".PadRight(6) +
+                    "DEF: " + $"{monster.Defence}".PadRight(6));
             return str;
         }
 
@@ -308,7 +327,7 @@ namespace ReverseDungeonSparta
                 else
                 {
                     // 위로 숨겨진 선택지 개수
-                    Console.WriteLine($"↑ ({startIndex}개)");
+                    Console.WriteLine($"↑ ({startIndex} more)");
                     for (int i = startIndex; i < endIndex; i++)
                     {
                         string str = "";
