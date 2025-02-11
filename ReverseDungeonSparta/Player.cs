@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static ReverseDungeonSparta.EquipItem;
 
 namespace ReverseDungeonSparta
@@ -10,6 +11,8 @@ namespace ReverseDungeonSparta
     public class Player : Character
     {
         public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
+        public List<EquipItem> isOwnedItemList = new List<EquipItem>(); // 내가 소유한 장비
+        public List<EquipItem> isEquippedList = new List<EquipItem>(); // 내가 장착한 장비
         public JobType Job { get; set; }
         public int Level { get; set; }
         public int Gold { get; set; }
@@ -17,6 +20,7 @@ namespace ReverseDungeonSparta
         public int AdditionalDefence { get; set; }  // 장비 방어력
         public int MaxEXP { get; set; }
         public int NowEXP { get; set; }
+        public bool isEquipped { get; set; } 
 
 
         public Player() //Player 생성자 
@@ -42,9 +46,6 @@ namespace ReverseDungeonSparta
             Evasion = 5;
             InitEquipItems();
 
-            //int additionalAttack = AdditionalAttack; //필요없다면 지우기
-            //int additionalDefence = AdditionalDefence;
-
             switch (Job)
             {
                 case JobType.Warrior:
@@ -54,25 +55,7 @@ namespace ReverseDungeonSparta
         #region 아이템 능력치 저장
         public void ApplyItemStat()
         {
-            Attack = 100;  // 일단 기본값으로 초기화
-            Defence = 5;
-            Luck = 5;
-            Intelligence = 5;
-            MaxHP = 100;
-            HP = MaxHP;
-            MP = 100;
-            MP = MaxMP;
-
-            //이거 오류날 것 같습니다ㅠㅠ (혜진)
-            foreach (var equipItem in equipItemList)
-            {
-                Attack += equipItem.AddAttack;
-                Defence += equipItem.AddDefence;
-                Luck += equipItem.AddAttack;
-                Intelligence += equipItem.AddAttack;
-                MaxHP += equipItem.AddMaxHp;
-                MaxMP += equipItem.AddMaxMp;
-            }
+           
         }
         #endregion
 
@@ -86,26 +69,42 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public void IsEquipItem(EquipItem item) //아이템 장착 로직 구현
+        public void IsEquipItem(int itemIndex) //아이템 장착 로직 구현
         {
-            if (!equipItemList.Contains(item))
+            if (itemIndex >= 0 && itemIndex < isOwnedItemList.Count)
             {
-                equipItemList.Add(item); // item이 장착된 장비아이템리스트에 없다면
-                item.IsEquiped = true;
-                ApplyItemStat();
+                EquipItem item = isOwnedItemList[itemIndex];
+
+                if (!item.IsEquiped)
+                {
+                    isEquippedList.Add(item);
+                    item.IsEquiped = true;
+                    ApplyItemStat();
+                }
+                else
+                {
+                    Console.WriteLine("이미 장착된 아이템입니다.");
+                }
             }
             else
             {
-                Console.WriteLine("장착된 아이템이 아닙니다.");
+                Console.WriteLine("소유한 아이템이 아닙니다.");
             }
+            
         }
-        public void UnEquippedItem(EquipItem item) //아이템 해제 로직 구현
+        public void UnEquippedItem(int itemIndex) // 아이템 해제 로직 구현
+                                                        // reward 아이템을 매개변수로 
         {
-            if (equipItemList.Contains(item))
+            if (itemIndex >= 0 && itemIndex < isEquippedList.Count)
             {
-                equipItemList.Remove(item); // 장비리스트에 장착된 아이템을 제거하고
-                item.IsEquiped = false;
-                ApplyItemStat(); //다시 스텟을 초기화
+                EquipItem item = isEquippedList[itemIndex];
+
+                if (item.IsEquiped)
+                {
+                    isEquippedList.Remove(item);
+                    item.IsEquiped = false;
+                    isOwnedItemList.Add(item);
+                }
             }
         }
         public bool CheckPlayerCanSkill(int selectSkillNum)
@@ -121,7 +120,7 @@ namespace ReverseDungeonSparta
 
             return result;
         }
-        public void TryEquipItemUpgrade(List<EquipItem> equipItemList)
+        public void TryEquipItemUpgrade() //List<EquipItem> equipItemList
         {
             Console.WriteLine("");
             Console.WriteLine("[아이템 조합]");
@@ -134,7 +133,7 @@ namespace ReverseDungeonSparta
             EquipItem? newitem = ItemUpgrade(main, offering, equipItemList);
             if (newitem != null)
             {
-                equipItemList.Add(newitem);
+                isOwnedItemList.Add(newitem);
             }
         }
         public static EquipItem ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
@@ -184,35 +183,37 @@ namespace ReverseDungeonSparta
                         if (equipItemList[i].Grade == offering.Grade + 1)
                         {
                             tempEquipList.Add(equipItemList[i]);
-                        }
-                    }
-                    int rand = random.Next(0, tempEquipList.Count);
-                    upgradeItem = tempEquipList[rand];
 
-                    return upgradeItem;
-                    equipItemList.Remove(main);
-                    equipItemList.Remove(offering);
+                            int rand = random.Next(0, tempEquipList.Count);
+                            upgradeItem = tempEquipList[rand];
+
+                            equipItemList.Remove(main);
+                            equipItemList.Remove(offering);
+                            return upgradeItem;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("[조합 결과]");
+                            Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
+                            Thread.Sleep(1000);
+                            ReturnToInventory();
+                            equipItemList.Remove(main);
+                            equipItemList.Remove(offering);
+                        }
+                        return null;
+                    }
                 }
-                else
+                else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
                 {
-                    Console.Clear();
-                    Console.WriteLine("[조합 결과]");
-                    Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
+                    Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
                     Thread.Sleep(1000);
-                    ReturnToInventory();
-                    equipItemList.Remove(main);
-                    equipItemList.Remove(offering);
                     return null;
                 }
             }
-            else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
-            {
-                Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
-                Thread.Sleep(1000);
-                return null;
-            }
+            return null;
         }
-        public static List<EquipItem> RandomRewardList()
+        public static EquipItem RandomRewardList()
         {
             // 새로운 보상아이템정보를 리스트화 하고
             List<EquipItemInfo> rewardItemListInfo = new List<EquipItemInfo>();
@@ -232,9 +233,9 @@ namespace ReverseDungeonSparta
             // equipItemInfo가 있는 rewardItem 객체 생성
             EquipItem rewardItem = new EquipItem(equipItemInfo);
 
-            return new List<EquipItem> { rewardItem };
+            return rewardItem;
         }
-
     }
+   
 
 }

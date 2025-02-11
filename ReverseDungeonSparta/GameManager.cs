@@ -45,7 +45,7 @@ namespace ReverseDungeonSparta
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
             //뷰매니저 적용전 테스트
-            player.LoadEquipItems();
+            //  player.LoadEquipItems();
 
         }
         public void PlayerStatusMenu()
@@ -87,9 +87,6 @@ namespace ReverseDungeonSparta
             Console.WriteLine("");
             Console.WriteLine("");
             ViewManager.PrintList(player.equipItemList);
-            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
-
-
 
             menuItems = new List<(string, Action, Action)>
             {
@@ -105,7 +102,7 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비 장착");
-            // player.IsEquipItem(EquipItem item);  내일 다시 구현해야함. ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+            // player.IsEquipItem(player.rewardItem);
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -118,8 +115,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-
-            //EquipItem.ItemUpgrade();
+            ViewManager.PrintList(player.equipItemList);
+            player.TryEquipItemUpgrade();
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -144,7 +141,8 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("", GameMenu, null),
-                ("", InventoryMenu, null)
+                ("", GameMenu, null),
+                ("", GameMenu, null),
             };
 
             Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
@@ -181,12 +179,10 @@ namespace ReverseDungeonSparta
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
 
-
             //스테이지 레벨 반영 시험 코드
             dungeonClearLevel++;
 
         }
-
 
         public void StageClearCheck()
         {
@@ -202,9 +198,6 @@ namespace ReverseDungeonSparta
                 clearCheck[i] = true;
             }
         }
-
-   
-
     }
 
 }
