@@ -7,7 +7,7 @@ public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
-    List<(String, Action, Action)> menuItems;
+    List<(string, Action, Action)> menuItems;
     Skill playerSelectSkill;
     Player player;
     Random random = new Random();
