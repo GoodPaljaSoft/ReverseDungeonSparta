@@ -66,6 +66,7 @@ namespace ReverseDungeonSparta
             MP = 100;
             MP = MaxMP;
 
+            //이거 오류날 것 같습니다ㅠㅠ (혜진)
             foreach (var equipItem in equipItemList)
             {
                 Attack += equipItem.AddAttack;
