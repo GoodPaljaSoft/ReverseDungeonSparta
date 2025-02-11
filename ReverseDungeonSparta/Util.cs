@@ -206,6 +206,23 @@ namespace ReverseDungeonSparta
             return keyInfo;
         }
 
+        //입력 받은 키의 값이 화살표 이동에 적합한지 확인하는 메서드
+        public static ConsoleKeyInfo CheckKeyInput()
+        {
+            ConsoleKeyInfo keyInfo;
+            while (true)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.Enter ||
+                    keyInfo.Key == ConsoleKey.C )
+                {
+                    break;
+                }
+            }
+            return keyInfo;
+        }
+
         public static void CheckKeyInputEnter()
         {
             ConsoleKeyInfo keyInfo;

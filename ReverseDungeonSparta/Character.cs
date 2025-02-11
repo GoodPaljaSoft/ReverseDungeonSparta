@@ -1,4 +1,5 @@
-﻿using static System.Net.Mime.MediaTypeNames;
+﻿using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
 {
@@ -46,9 +47,9 @@ namespace ReverseDungeonSparta
             get
             {
                 double value = 1d;
-                if (CriticalBuff.Count > 0)
+                if (LuckBuff.Count > 0)
                 {
-                    value = CriticalBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
+                    value = LuckBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
                 return (int)(Critical * value);
             }
@@ -59,9 +60,9 @@ namespace ReverseDungeonSparta
             get
             {
                 double value = 1d;
-                if (EvasionBuff.Count > 0)
+                if (LuckBuff.Count > 0)
                 {
-                    value = EvasionBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
+                    value = LuckBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
                 return (int)(Evasion * value);
             }
@@ -109,19 +110,25 @@ namespace ReverseDungeonSparta
 
             damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
 
-            OnDamage(target, damage);
+            target.OnDamage(this, damage);
         }
 
 
         // 데미지를 입는 메소드
         public void OnDamage(Character target, int damage)
         {
-            target.HP -= damage;
+            int beforeHP = HP;
+            HP -= damage;
 
-            if (target.HP <= 0)
-            {
-                target.HP = 0;
-            }
+
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"{target.Name}은(는) 총 {damage}의 피해를 입었습니다.)");
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입혔습니다! ({beforeHP} -> {HP})");
+
+
+            ViewManager.PrintText("회피 성공!");
+            ViewManager.PrintText($"{Name}은(는) {target.Name}의 공격을 피했습니다!");
         }
 
 

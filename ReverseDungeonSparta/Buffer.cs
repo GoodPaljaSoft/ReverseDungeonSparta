@@ -13,8 +13,7 @@ namespace ReverseDungeonSparta
         //double은 배수 수치, int는 유지되는 턴을 가진다.
         public List<(double, int)> AttackBuff { get; set; } = new List<(double, int)>();
         public List<(double, int)> DefenceBuff { get; set; } = new List<(double, int)>();
-        public List<(double, int)> CriticalBuff { get; set; } = new List<(double, int)>();
-        public List<(double, int)> EvasionBuff { get; set; } = new List<(double, int)>();
+        public List<(double, int)> LuckBuff { get; set; } = new List<(double, int)>();
         public List<(double, int)> HealingBuff { get; set; } = new List<(double, int)>();
 
 
@@ -35,16 +34,9 @@ namespace ReverseDungeonSparta
                     .ToList();
             }
 
-            if (CriticalBuff.Count > 0)
+            if (LuckBuff.Count > 0)
             {
-                CriticalBuff = CriticalBuff
-                    .Select(x => (x.Item1, x.Item2 - 1))
-                    .ToList();
-            }
-
-            if (EvasionBuff.Count > 0)
-            {
-                EvasionBuff = EvasionBuff
+                LuckBuff = LuckBuff
                     .Select(x => (x.Item1, x.Item2 - 1))
                     .ToList();
             }
@@ -75,16 +67,9 @@ namespace ReverseDungeonSparta
                     .ToList();
             }
 
-            if (CriticalBuff.Count > 0)
+            if (LuckBuff.Count > 0)
             {
-                CriticalBuff = CriticalBuff
-                    .Where(x => x.Item2 > 0)
-                    .ToList();
-            }
-
-            if (EvasionBuff.Count > 0)
-            {
-                EvasionBuff = EvasionBuff
+                LuckBuff = LuckBuff
                     .Where(x => x.Item2 > 0)
                     .ToList();
             }
@@ -132,17 +117,13 @@ namespace ReverseDungeonSparta
             {
                 DefenceBuff.Add((value, turnCount));
             }
-            else if (buffType == BuffType.CriticalBuff)
+            else if(buffType == BuffType.HealingBuff)
             {
-                CriticalBuff.Add((value, turnCount));
+                HealingBuff.Add((value, turnCount));
             }
-            else if (buffType == BuffType.EvasionBuff)
+            else if (buffType == BuffType.LuckBuff)
             {
-                EvasionBuff.Add((value, turnCount));
-            }
-            else if (buffType == BuffType.HealingBuff)
-            {
-                EvasionBuff.Add((value, turnCount));
+                LuckBuff.Add((value, turnCount));
             }
         }
 
@@ -152,8 +133,7 @@ namespace ReverseDungeonSparta
         {
             AttackBuff = new List<(double, int)>();
             DefenceBuff = new List<(double, int)>();
-            CriticalBuff = new List<(double, int)>();
-            EvasionBuff = new List<(double, int)>();
+            LuckBuff = new List<(double, int)>();
             HealingBuff = new List<(double, int)>();
         }
 
@@ -177,19 +157,11 @@ namespace ReverseDungeonSparta
                 }
             }
 
-            if (CriticalBuff.Count > 0)
+            if (LuckBuff.Count > 0)
             {
-                foreach (var x in CriticalBuff)
+                foreach (var x in LuckBuff)
                 {
                     critical *= x.Item1;
-                }
-            }
-
-            if (EvasionBuff.Count > 0)
-            {
-                foreach (var x in EvasionBuff)
-                {
-                    evasion *= x.Item1;
                 }
             }
 
@@ -209,8 +181,7 @@ namespace ReverseDungeonSparta
     {
         AttackBuff,
         DefenceBuff,
-        CriticalBuff,
-        EvasionBuff,
+        LuckBuff,
         HealingBuff,
         None
     }
