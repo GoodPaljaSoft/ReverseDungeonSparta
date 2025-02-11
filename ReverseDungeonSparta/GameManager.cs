@@ -11,7 +11,7 @@ namespace ReverseDungeonSparta
     {
         public static GameManager Instance { get; } = new GameManager();
 
-        List<(String, Action, Action)> menuItems;
+        List<(string, Action, Action)> menuItems;
 
         Player player = new Player();
         public Player Player => player;
@@ -45,10 +45,9 @@ namespace ReverseDungeonSparta
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
             //뷰매니저 적용전 테스트
-            
-            
-        }
+            player.LoadEquipItems();
 
+        }
         public void PlayerStatusMenu()
         {
             Console.Clear();
@@ -70,7 +69,7 @@ namespace ReverseDungeonSparta
             //Console.WriteLine("");
             //Console.WriteLine("");
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
-            player.LoadEquipItems();
+            //player.LoadEquipItems();
 
 
             //아이템 출력 임시 코드
@@ -92,7 +91,7 @@ namespace ReverseDungeonSparta
             Console.WriteLine("소지품 확인  - 장비");
             Console.WriteLine("");
             Console.WriteLine("");
-            player.LoadEquipItems();
+           // player.LoadEquipItems();
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
 
 
@@ -195,7 +194,7 @@ namespace ReverseDungeonSparta
             dungeonClearLevel++;
 
         }
-
+        //
 
         public void StageClearCheck()
         {
