@@ -66,10 +66,13 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 
         public void InventoryMenu()
         {
+            Console.Clear();
+            //아이템 출력 임시 코드
+            ViewManager.PrintList(player.equipItemList);
+
             InventoryViewManager.EnterInventoryMenuTxt();
 
-            //아이템 출력 임시 코드
-            //ViewManager.PrintList(player.equipItemList);
+
 
             menuItems = new List<(string, Action, Action)>
             {
@@ -83,6 +86,9 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 - 장비
         public void EquipmentMenu()
         {
+
+
+
             InventoryViewManager.InventoryEquippedMenuTxt();
             //ViewManager.PrintList(player.equipItemList);
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
@@ -104,9 +110,10 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비 장착");
-            // player.IsEquipItem(player.rewardItem);
+            player.IsEquipItem(selectedIndex);  
             menuItems = new List<(string, Action, Action)>
             {
+                ("장착하고자 하는 아이템선택", () => player.IsEquipItem(selectedIndex), null),
                 ("나가기", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
@@ -117,8 +124,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-            ViewManager.PrintList(player.equipItemList);
-            player.TryEquipItemUpgrade();
+
+            // player.ItemUpgrade();
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -298,11 +305,11 @@ namespace ReverseDungeonSparta
 
         public void GameMenu() // 시작화면 구현
         {
-            
+
 
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
-            ViewManager.PrintCurrentFloors(20-DungeonClearLevel);
+            ViewManager.PrintCurrentFloors(20 - DungeonClearLevel);
             ViewManager.DrawLine(2);
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
@@ -336,7 +343,7 @@ namespace ReverseDungeonSparta
 
         public void IntroScene()
         {
-            ViewManager.PrintLongTextAnimation(DataBase.introText);                
+            ViewManager.PrintLongTextAnimation(DataBase.introText);
         }
 
         public void StageClearCheck()
@@ -353,6 +360,9 @@ namespace ReverseDungeonSparta
                 clearCheck[i] = true;
             }
         }
+
+
+
     }
 
 }

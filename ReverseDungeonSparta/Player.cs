@@ -13,6 +13,9 @@ namespace ReverseDungeonSparta
         public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
         public List<EquipItem> isOwnedItemList = new List<EquipItem>(); // 내가 소유한 장비
         public List<EquipItem> isEquippedList = new List<EquipItem>(); // 내가 장착한 장비
+
+        public List<UsableItem> UsableItemInventory = new List<UsableItem>(); // 소비 아이템 리스트
+        
         public JobType Job { get; set; }
         public int Level { get; set; }
         public int Gold { get; set; }
@@ -77,9 +80,10 @@ namespace ReverseDungeonSparta
 
                 if (!item.IsEquiped)
                 {
+                    
                     isEquippedList.Add(item);
                     item.IsEquiped = true;
-                    ApplyItemStat();
+                    // ApplyItemStat();
                 }
                 else
                 {
@@ -93,7 +97,7 @@ namespace ReverseDungeonSparta
             
         }
         public void UnEquippedItem(int itemIndex) // 아이템 해제 로직 구현
-                                                        // reward 아이템을 매개변수로 
+                                                  
         {
             if (itemIndex >= 0 && itemIndex < isEquippedList.Count)
             {
