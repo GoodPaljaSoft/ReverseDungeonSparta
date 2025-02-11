@@ -192,10 +192,11 @@ namespace ReverseDungeonSparta
                     }
                     int rand = random.Next(0, tempEquipList.Count);
                     upgradeItem = tempEquipList[rand];
-
-                    return upgradeItem;
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
+                    return upgradeItem;// return 다음 애들은 호출이 안됩니다.
+                    //equipItemList.Remove(main);
+                    //equipItemList.Remove(offering);
                 }
                 else
                 {

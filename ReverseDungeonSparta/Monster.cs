@@ -105,7 +105,7 @@ public class Monster : Character
             if(skill.Item1.ApplyType == ApplyType.Enemy)
             {
                 //플레이어 공격
-                target.OnDamage(this, damage, skill.Item1.Type);
+                target.OnDamage(this, damage, skill.Item1);
             }
             else if (skill.Item1.ApplyType == ApplyType.Team)
             {
@@ -118,7 +118,7 @@ public class Monster : Character
         else
         {
             //플레이어 공격(기본 공격)
-            target.OnDamage(this, damage, SkillType.Physical);
+            target.OnDamage(this, damage, skill.Item1);
         }
     }
 
