@@ -40,7 +40,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
-            BattleManagerInstance = new BattleManager(player);
+            BattleManagerInstance = new BattleManager(player, 20);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
@@ -50,18 +50,13 @@ namespace ReverseDungeonSparta
         }
         public void PlayerStatusMenu()
         {
-            Console.Clear();
-            ViewManager.DrawLine("상태보기","캐릭터의 정보가 표시됩니다.");
-            Util.PrintPlayerView(player);
+            ViewManager3.PlayerStatusTxt(player, ref selectedIndex);
+            GameMenu();
         }
         #region 소지품 확인 
         public void InventoryMenu()
         {
             Console.Clear();
-            Console.WriteLine("소지품 확인");
-            Console.WriteLine("");
-            Console.WriteLine("");
-
             ViewManager.DrawLine("인벤토리");
 
             //Console.WriteLine("인벤토리");
@@ -135,9 +130,9 @@ namespace ReverseDungeonSparta
         #endregion
         public void EnterBattleMenu()
         {
+            BattleManagerInstance = new BattleManager(player, 20);
             AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
-            BattleManagerInstance.StartBattle();
             BattleManagerInstance.EnterTheBattle();
         }
 
@@ -194,7 +189,7 @@ namespace ReverseDungeonSparta
             dungeonClearLevel++;
 
         }
-        //
+
 
         public void StageClearCheck()
         {
