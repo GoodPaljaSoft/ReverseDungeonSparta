@@ -7,7 +7,7 @@ public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
-    List<(String, Action, Action)> menuItems;
+    List<(string, Action, Action)> menuItems;
     Skill playerSelectSkill;
     Player player;
     Random random = new Random();
@@ -169,7 +169,7 @@ public class BattleManager
         foreach (Monster monster in monsters)
         {
             int beforeMonsterHP = monster.HP;
-            player.Attacking(monster, monsterList, out int damage);
+            player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
             RemoveOrderListCharacter(monster);
             Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         }
@@ -274,8 +274,10 @@ public class BattleManager
 
         if (skill.Item1 != null && skill.Item2 != null)
         {
+            Monster pullMonster = skill.Item2.GetMonster();
             ViewManager.PrintText($"{monster.Name}의 스킬 사용!");
-            ViewManager.PrintText($"{monster.Name}은 {skill.Item2.Name}에게 {skill.Item1.Name}을(를) 사용했다!");
+            string pullName = monster.Name == skill.Item2.Name ? "자신" : $"{skill.Item2.Name}";
+            ViewManager.PrintText($"{monster.Name}은 {pullName}에게 {skill.Item1.Name}을(를) 사용했다!");
             ViewManager.PrintText("");
             ViewManager.PrintText($"     [{skill.Item1.Name}]");
             ViewManager.PrintText($"     : {skill.Item1.Info}");
@@ -286,6 +288,8 @@ public class BattleManager
             ViewManager.PrintText($"{monster.Name}의 공격!");
             ViewManager.PrintText($"{monster.Name}은(는) 플레이어에게 공격을 시도했다!");
         }
+
+
         Util.CheckKeyInputEnter();
         if(skill.Item1 != null && skill.Item1.ApplyType == ApplyType.Team)
         {
@@ -306,6 +310,10 @@ public class BattleManager
         }
         else
         {
+            //공격 실행
+
+
+
 
         }
 

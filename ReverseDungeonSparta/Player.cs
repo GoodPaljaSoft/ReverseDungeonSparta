@@ -30,7 +30,7 @@ namespace ReverseDungeonSparta
 
             SkillList = Skill.AddPlayerSkill(this, 7);
 
-            Luck = 5;
+            Luck = 100;
             Defence = 5;
             Attack = 100;
             Intelligence = 5;

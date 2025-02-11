@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
@@ -8,13 +9,26 @@ namespace ReverseDungeonSparta
         private int _hp;
         private int _mp;
 
-        public string Name { get; set; } = string.Empty;    //이름
+        public string Name { get; set; } = string.Empty;//이름
         public int Luck { get; set; }//행운(치명타 확률, 회피율에 연관)
         public int Attack { get; set; }//공격력
         public int Defence { get; set; }//방어력
         public int Critical { get; set; }//치명타확률
-        public int Evasion {  get; set; }//회피력
+        public int Evasion { get; set; }//회피력
         public int Intelligence { get; set; }//지능 마법 스킬에 연관
+        public int TotalIntelligence
+        { 
+            get
+            {
+                double value = Intelligence;
+                if(IntelligenceBuff.Count > 0)
+                {
+                    value += IntelligenceBuff.Select(x => x.Item1).Sum();
+                }
+                return (int)(value);
+            }
+            private set { }
+        }//최종 지능
         public int TotalDefence
         {
             get
@@ -25,8 +39,7 @@ namespace ReverseDungeonSparta
                     value = DefenceBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
                 return (int)(Defence * value);
-            }
-            set { Defence = value; }
+            } private set { }
         }//최종 방어력
         public int TotalAttack
         {
@@ -39,34 +52,29 @@ namespace ReverseDungeonSparta
                 }
                 int result = (int)(Attack * value);
                 return (int)(Attack * value);
-            }
-            set { Attack = value; }
+            }private set {}
         }//최종 공격력
         public int TotalCritical
         {
             get
             {
-                double value = 1d;
-                if (LuckBuff.Count > 0)
-                {
-                    value = LuckBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
-                }
-                return (int)(Critical * value);
-            }
-            set { Critical = value; }
+                //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 치명타 확률
+                double value = Luck;
+                if (LuckBuff.Count > 0)value += LuckBuff.Select(x => x.Item1).Sum();
+                if (Critical * (value / 2) > 50) return 50;
+                else return (int)(Critical * (value / 2));
+            }private set { }
         }//최종 치명타 확률
         public int TotalEvasion
         {
             get
             {
-                double value = 1d;
-                if (LuckBuff.Count > 0)
-                {
-                    value = LuckBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
-                }
-                return (int)(Evasion * value);
-            }
-            set { Evasion = value; }
+                //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 회피 확률
+                double value = Luck;
+                if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
+                if (Evasion * (value / 2) > 50) return 50;
+                else return (int)(Evasion * (value / 2));
+            } private set { }
         }//최종 회피율
 
         public int HP
@@ -84,7 +92,7 @@ namespace ReverseDungeonSparta
                 }
                 else if (_hp > MaxHP) _hp = MaxHP;
             }
-        }           //체력
+        }               //체력
         public int MaxHP { get; set; }  //최대 체력
         public int MP 
         { get 
@@ -102,7 +110,7 @@ namespace ReverseDungeonSparta
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환
-        public virtual void Attacking(Character target, List<Monster> monsters, out int damage)
+        public virtual void Attacking(Character target, List<Monster> monsters, out int damage, Skill skill)
         {
             //데미지 계산식
             double margin = TotalAttack * 0.1f;
@@ -110,25 +118,94 @@ namespace ReverseDungeonSparta
 
             damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
 
-            target.OnDamage(this, damage);
+            target.OnDamage(this, damage, skill);
         }
 
 
         // 데미지를 입는 메소드
-        public void OnDamage(Character target, int damage)
+        public void OnDamage(Character target, int damage, Skill skill)
         {
-            int beforeHP = HP;
-            HP -= damage;
+            SkillType skillType = SkillType.Physical;
+
+            if (skill != null)
+            {
+                skillType = skill.Type;
+                ViewManager.PrintText($"{target.Name}의 스킬 사용!");
+                string pullName = target.Name == this.Name ? "자신" : $"{this.Name}";
+                ViewManager.PrintText($"{target.Name}은 {this.Name}에게 {skill.Name}을(를) 사용했다!");
+                ViewManager.PrintText("");
+                ViewManager.PrintText($"     [{skill.Name}]");
+                ViewManager.PrintText($"     : {skill.Info}");
+                ViewManager.PrintText("");
+            }
+            else
+            {
+                ViewManager.PrintText($"{target.Name}의 공격!");
+                ViewManager.PrintText($"{target.Name}은(는) {this.Name}에게 공격을 시도했다!");
+            }
+
+            Util.CheckKeyInputEnter();
 
 
-            ViewManager.PrintText("");
-            ViewManager.PrintText($"{target.Name}은(는) 총 {damage}의 피해를 입었습니다.)");
-            ViewManager.PrintText("");
-            ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입혔습니다! ({beforeHP} -> {HP})");
+            if (skill != null && skill.ApplyType == ApplyType.Team)
+            {
+                int beforeHP = this.HP;
+                int beforeATK = this.TotalAttack;
+                int beforeDEF = this.TotalDefence;
+                int beforeCritical = this.TotalCritical;
+                int beforeEvasion = this.Evasion;
+
+                AddBuff(target, skill);
+                ViewManager.PrintText($"{this.Name}의 스테이터스 변화");
+                ViewManager.PrintText($"");
+                ViewManager.PrintText($"{beforeHP} -> {this.HP}");
+                ViewManager.PrintText($"{beforeATK} -> {this.TotalAttack}");
+                ViewManager.PrintText($"{beforeDEF} -> {this.TotalDefence}");
+                ViewManager.PrintText($"{beforeCritical}% -> {this.TotalCritical}%");
+                ViewManager.PrintText($"{beforeEvasion}% -> {this.Evasion}%");
+                ViewManager.PrintText($"");
+            }
+            else
+            {
+                //공격 실행
 
 
-            ViewManager.PrintText("회피 성공!");
-            ViewManager.PrintText($"{Name}은(는) {target.Name}의 공격을 피했습니다!");
+
+
+            }
+
+
+
+
+            //TotalEvasion의 수치 만큼의 확률로 회피
+            if (ComputeManager.TryChance(TotalEvasion))
+            {
+                ViewManager.PrintText("회피 성공!");
+                ViewManager.PrintText($"{Name}은(는) {target.Name}의 공격을 피했습니다!");
+            }
+            else
+            {
+                ViewManager.PrintText("");
+                //치명타가 발생한 경우
+                if (ComputeManager.TryChance(target.TotalCritical))
+                {
+                    ViewManager.PrintText("치명적인 일격!!!");
+                    damage *= 2;
+                    Util.CheckKeyInputEnter();
+                }
+
+                //데미지에서 방어력을 제외한 데미지로 취급,
+                if (skillType == SkillType.Physical)
+                {
+                    damage -= TotalDefence;
+                }
+
+                if (damage < 0) damage = 0;
+
+                ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입었습니다! ({HP} -> {HP - damage})");
+
+                HP -= damage;
+            }
         }
 
 

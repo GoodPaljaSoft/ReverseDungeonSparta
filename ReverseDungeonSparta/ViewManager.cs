@@ -18,8 +18,6 @@ namespace ReverseDungeonSparta
         static int top = Console.WindowTop;
         static int left = Console.WindowLeft;
 
-
-
         // DrawLine 1
         // 한 줄을 길게 그리는 메서드
         public static void DrawLine()
@@ -189,7 +187,7 @@ namespace ReverseDungeonSparta
 
         public static void PrintList(List<EquipItem> items)
         {
-            int[] x = { 3, 7 , 24 + 5, 26 + 6, 33 + 6, 35 + 6, 45 + 6, 47 + 6 };
+            int[] x = { 3, 7 , 29, 32, 39, 41, 51, 53 };
             int y = 3;
             //커서는 x==1 위치에 들어감
             for (int i = 0; i < items.Count; i++)
