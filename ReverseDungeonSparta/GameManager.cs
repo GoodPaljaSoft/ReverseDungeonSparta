@@ -31,8 +31,12 @@ namespace ReverseDungeonSparta
             {
                 //플레이어의 공략 진척도에 변화가 생기면
                 //StageClearCheck() 메서드를 통해 각 스테이지 클리어 여부를 확인한다.(후진했을 수도 있으므로...)
-                dungeonClearLevel = value;
-                StageClearCheck();
+
+                if (value < 20)
+                {
+                    dungeonClearLevel = value;
+                    StageClearCheck();
+                }
             }
         }
         public bool[] clearCheck = new bool[19];
@@ -42,9 +46,6 @@ namespace ReverseDungeonSparta
             BattleManagerInstance = new BattleManager(player, 20);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
-
-            //뷰매니저 적용전 테스트
-            //player.LoadEquipItems();
 
             //인트로 데이터베이스 초기화
             DataBase.IntroTextInit();
@@ -147,8 +148,7 @@ namespace ReverseDungeonSparta
 
         public void GameMenu() // 시작화면 구현
         {
-            //스테이지 레벨 반영 시험 코드
-            DungeonClearLevel++;
+            
 
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
@@ -177,6 +177,10 @@ namespace ReverseDungeonSparta
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
+
+            //스테이지 레벨 반영 시험 코드
+            DungeonClearLevel++;
+
 
         }
 
