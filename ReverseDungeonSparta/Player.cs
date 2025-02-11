@@ -66,6 +66,7 @@ namespace ReverseDungeonSparta
             MP = 100;
             MP = MaxMP;
 
+            //이거 오류날 것 같습니다ㅠㅠ (혜진)
             foreach (var equipItem in equipItemList)
             {
                 Attack += equipItem.AddAttack;
@@ -132,7 +133,7 @@ namespace ReverseDungeonSparta
             Random random = new Random();
            
             // 기본적인 반환 아이템은 초기값이 Normal 등급이 되도록
-             EquipItemGrade itemgrade = EquipItemGrade.Normal;
+            EquipItemGrade itemgrade = EquipItemGrade.Normal;
 
             // 생성 확률에 따라 랜덤아이템이 리스트 안에 포함되도록 생성
             double randomValue = random.NextDouble();
