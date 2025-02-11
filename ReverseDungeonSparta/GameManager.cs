@@ -93,7 +93,7 @@ namespace ReverseDungeonSparta
             Console.WriteLine("소지품 확인  - 장비");
             Console.WriteLine("");
             Console.WriteLine("");
-            player.LoadEquipItems();
+            ViewManager.PrintList(player.equipItemList);
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
 
 
@@ -126,7 +126,7 @@ namespace ReverseDungeonSparta
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
 
-            EquipItem.ItemUpgrade();
+            // EquipItem.ItemUpgrade();
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))

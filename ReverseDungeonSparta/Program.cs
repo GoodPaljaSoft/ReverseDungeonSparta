@@ -8,7 +8,7 @@
             //ViewManager.PrintTower();
             // 게임 시작
             Console.SetWindowSize(120, 30);         //콘솔창 크기 지정
-            Console.SetBufferSize(120, 200);
+            Console.SetBufferSize(120, 300);
             AudioManager.PlayMenuBGM();
             GameManager.Instance.GameMenu();
         }
