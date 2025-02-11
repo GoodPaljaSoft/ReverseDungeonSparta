@@ -122,7 +122,10 @@ namespace ReverseDungeonSparta
         new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "스킬 설명"),
         new SkillInfo("공격력 강화", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5,BuffType.AttackBuff, 1, "스킬 설명"),
         new SkillInfo("방어력 강화", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "스킬 설명"),
-        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명")
+        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명"),
+        new SkillInfo("힐링", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 1, "스킬 설명"),
+        new SkillInfo("퓨어 힐", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.HealingBuff, 1, "스킬 설명"),
+        new SkillInfo("지속 힐", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 3, BuffType.HealingBuff, 3, "스킬 설명")
         };
 
 
