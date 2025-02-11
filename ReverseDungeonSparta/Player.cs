@@ -40,7 +40,7 @@ namespace ReverseDungeonSparta
             MaxMP = 100;
             MP = MaxMP;
 
-            Speed = 8;
+            Speed = 3;
 
             Critical = 5;
             Evasion = 5;
@@ -68,14 +68,12 @@ namespace ReverseDungeonSparta
 
             foreach (var equipItem in equipItemList)
             {
-                var itemInfo = equipItem.ItemInfo;
-
-                Attack += equipItem.ItemInfo.addAttack;
-                Defence += equipItem.ItemInfo.addDefence;
-                Luck += equipItem.ItemInfo.addLuck;
-                Intelligence += equipItem.ItemInfo.addIntelligence;
-                MaxHP += equipItem.ItemInfo.addMaxHp;
-                MaxMP += equipItem.ItemInfo.addMaxMp;
+                Attack += equipItem.AddAttack;
+                Defence += equipItem.AddDefence;
+                Luck += equipItem.AddAttack;
+                Intelligence += equipItem.AddAttack;
+                MaxHP += equipItem.AddMaxHp;
+                MaxMP += equipItem.AddMaxMp;
             }
         }
         #endregion
@@ -95,7 +93,7 @@ namespace ReverseDungeonSparta
             if(!equipItemList.Contains(item))
             {
                 equipItemList.Add(item); // item이 장착된 장비아이템리스트에 없다면
-                item.isEquiped = true;
+                item.IsEquiped = true;
                 ApplyItemStat();
             }
             else
@@ -108,7 +106,7 @@ namespace ReverseDungeonSparta
             if (equipItemList.Contains(item))
             {
                 equipItemList.Remove(item); // 장비리스트에 장착된 아이템을 제거하고
-                item.isEquiped = false;
+                item.IsEquiped = false;
                 ApplyItemStat() ; //다시 스텟을 초기화
             }
         }

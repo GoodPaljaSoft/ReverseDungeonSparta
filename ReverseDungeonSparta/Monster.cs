@@ -90,7 +90,8 @@ public class Monster : Character
                 {
                     skill = SkillList[0];
                     attackDamage *= skill.Value;
-                    Console.WriteLine($"스킬 발동 : {skill.Name}");
+                    ViewManager.PrintText("");
+                    ViewManager.PrintText($"스킬 발동 : {skill.Name}");
                 }
             }
         }
@@ -191,7 +192,7 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = frontAllMonsterInfo[rand];
 
-        return new Monster(new MonsterInfo(monsterInfo.name, monsterInfo.type ,monsterInfo.hp, monsterInfo.atk, monsterInfo.speed));
+        return new Monster(monsterInfo);
     }
 
 
