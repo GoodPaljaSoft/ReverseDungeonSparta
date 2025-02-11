@@ -45,8 +45,8 @@ namespace ReverseDungeonSparta
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
             //뷰매니저 적용전 테스트
-            player.LoadEquipItems();
-
+            
+            
         }
         public void PlayerStatusMenu()
         {
@@ -86,7 +86,7 @@ namespace ReverseDungeonSparta
             Console.WriteLine("소지품 확인  - 장비");
             Console.WriteLine("");
             Console.WriteLine("");
-           // player.LoadEquipItems();
+            ViewManager.PrintList(player.equipItemList);
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
 
 
@@ -144,7 +144,6 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("", GameMenu, null),
-                ("", GameMenu, null),
                 ("", InventoryMenu, null)
             };
 
@@ -176,8 +175,6 @@ namespace ReverseDungeonSparta
                 //("조합", sum, null)
                 //...
             };
-
-
             //Util.GetUserInput은
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
