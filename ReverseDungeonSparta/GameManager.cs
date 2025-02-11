@@ -21,6 +21,7 @@ namespace ReverseDungeonSparta
 
         //플레이어의 공략 진척도
         private int dungeonClearLevel = 0;
+        public bool[] clearCheck = new bool[19];
         public int DungeonClearLevel
         {
             get
@@ -35,7 +36,7 @@ namespace ReverseDungeonSparta
                 StageClearCheck();
             }
         }
-        public bool[] clearCheck = new bool[19];
+        
 
         public GameManager()
         {
@@ -51,8 +52,7 @@ namespace ReverseDungeonSparta
         public void PlayerStatusMenu()
         {
             Console.Clear();
-            Console.WriteLine("상태보기");
-            Console.WriteLine("캐릭터의 정보가 표시됩니다.");
+            ViewManager.DrawLine("상태보기","캐릭터의 정보가 표시됩니다.");
             Util.PrintPlayerView(player);
         }
         #region 소지품 확인 
@@ -199,6 +199,13 @@ namespace ReverseDungeonSparta
 
         public void StageClearCheck()
         {
+            //초기화
+            for (int i = 0; i < clearCheck.Length; i++)
+            {
+                clearCheck[i] = false;
+            }
+
+            //클리어한 스테이지까지 true로 변경
             for (int i = 0; i < dungeonClearLevel; i++)
             {
                 clearCheck[i] = true;
