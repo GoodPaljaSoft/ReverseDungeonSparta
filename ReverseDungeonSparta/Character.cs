@@ -5,10 +5,6 @@ namespace ReverseDungeonSparta
     public class Character : Buffer
     {
         private int _hp;
-        private int _attack;
-        private int _defence;
-        private int _critical;
-        private int _evasion;
         private int _mp;
 
         public string Name { get; set; } = string.Empty;    //이름
@@ -27,9 +23,9 @@ namespace ReverseDungeonSparta
                 {
                     value = DefenceBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
-                return (int)(_defence * value);
+                return (int)(Defence * value);
             }
-            set { _defence = value; }
+            set { Defence = value; }
         }//최종 방어력
         public int TotalAttack
         {
@@ -40,9 +36,10 @@ namespace ReverseDungeonSparta
                 {
                     value = AttackBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
-                return (int)(_attack * value);
+                int result = (int)(Attack * value);
+                return (int)(Attack * value);
             }
-            set { _attack = value; }
+            set { Attack = value; }
         }//최종 공격력
         public int TotalCritical
         {
@@ -53,9 +50,9 @@ namespace ReverseDungeonSparta
                 {
                     value = CriticalBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
-                return (int)(_critical * value);
+                return (int)(Critical * value);
             }
-            set { _critical = value; }
+            set { Critical = value; }
         }//최종 치명타 확률
         public int TotalEvasion
         {
@@ -66,9 +63,9 @@ namespace ReverseDungeonSparta
                 {
                     value = EvasionBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
-                return (int)(_evasion * value);
+                return (int)(Evasion * value);
             }
-            set { _evasion = value; }
+            set { Evasion = value; }
         }//최종 회피율
 
         public int HP
@@ -107,10 +104,10 @@ namespace ReverseDungeonSparta
         public virtual void Attacking(Character target, List<Monster> monsters, out int damage)
         {
             //데미지 계산식
-            double margin = Attack * 0.1f;
+            double margin = TotalAttack * 0.1f;
             margin = Math.Ceiling(margin);
 
-            damage = new Random().Next(Attack - (int)margin, Attack + (int)margin);
+            damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
 
             OnDamage(target, damage);
         }
