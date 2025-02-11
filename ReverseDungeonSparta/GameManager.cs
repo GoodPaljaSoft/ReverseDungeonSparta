@@ -60,12 +60,10 @@ namespace ReverseDungeonSparta
         public void InventoryMenu()
         {
             Console.Clear();
-<<<<<<< HEAD
             Console.WriteLine("소지품 확인");
             Console.WriteLine("");
             Console.WriteLine("");
-           
-=======
+
             ViewManager.DrawLine("인벤토리");
 
             //Console.WriteLine("인벤토리");
@@ -79,8 +77,6 @@ namespace ReverseDungeonSparta
             //아이템 출력 임시 코드
             ViewManager.PrintList(player.equipItemList);
 
-            
->>>>>>> main
             menuItems = new List<(string, Action, Action)>
             {
                 ("장비 아이템", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
@@ -130,7 +126,7 @@ namespace ReverseDungeonSparta
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
 
-            EquipItem.ItemUpgrade();
+            //EquipItem.ItemUpgrade();
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -169,7 +165,7 @@ namespace ReverseDungeonSparta
             Console.WriteLine("");
 
             //Console.SetCursorPosition(100, 25);
- 
+
             ViewManager3.MainMenuTxt();
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
@@ -178,9 +174,6 @@ namespace ReverseDungeonSparta
             //새로운 (string, Action, Action) 입력하기 전 반점(,) 필수
             menuItems = new List<(string, Action, Action)>
             {
-                ("상태 보기", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("전투 시작", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
                 ("", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -198,12 +191,12 @@ namespace ReverseDungeonSparta
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
         }
 
-        
+
         public void StageClearCheck()
         {
-            for(int i=0; i < dungeonClearLevel; i++)
+            for (int i = 0; i < dungeonClearLevel; i++)
             {
-                clearCheck[i] = true; 
+                clearCheck[i] = true;
             }
         }
 
@@ -214,3 +207,5 @@ namespace ReverseDungeonSparta
         }
 
     }
+
+}
