@@ -482,12 +482,12 @@ public class BattleManager
             ViewManager.PrintText(3, 12, $"스킬 : {playerSelectSkill.Name}");
             ViewManager.PrintText($"     : {playerSelectSkill.Info}");
 
-            ConsoleKeyInfo keyInfo = Util.CheckKeyInput(0, 0);
+            ConsoleKeyInfo keyInfo = Util.CheckKeyInput();
             switch (keyInfo.Key)
             {
                 case ConsoleKey.C:
                     selectedMonsterIndex = null;
-                    AudioManager.PlayMoveMenuSE(0);
+                    //AudioManager.PlayMoveMenuSE(0);
                     playerSelectSkill = null;
                     StartPlayerBattle();
                     break;
