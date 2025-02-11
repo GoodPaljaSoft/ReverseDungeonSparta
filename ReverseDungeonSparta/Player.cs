@@ -123,66 +123,143 @@ namespace ReverseDungeonSparta
 
             return result;
         }
+        public void TryEquipItemUpgrade()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 조합]");
+            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요."); 
+            int number1 = Util.GetUserIntInput(1, equipItemList.Count) - 1;//매개변수 숫자로 넣지 말아주세요
+            EquipItem main = equipItemList[number1];
+            Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
+            int number2 = Util.GetUserIntInput(1, equipItemList.Count) - 1;//매개변수 숫자로 넣지 말아주세요
+            EquipItem offering = equipItemList[number2];
+            EquipItem? newitem=ItemUpgrade(main, offering);
+            if (newitem != null) equipItemList.Add(newitem);
+        }
+        public static EquipItem ItemUpgrade(EquipItem main, EquipItem offering)
+        {
+                //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
+                if (main.Type == offering.Type && main.Grade == offering.Grade)
+                {
+                    float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
+                    switch (main.Grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
+                    {
+                        case EquipItemGrade.Normal:
+                            upgradePercent = 0.5f;
+                            break;
+                        case EquipItemGrade.Uncommon:
+                            upgradePercent = 0.3f;
+                            break;
+                        default:
+                            Console.Clear();
+                            Console.WriteLine("더 이상 강화할 등급이 없습니다.");
+                            return null ;
+                    }
+                    //업그레이드 확률을 랜덤으로 설정
+                    Random random = new Random();
+                    // 업그레이드퍼센트를 0 ~ 100퍼센트로 만들기 위한 NextDoulbe메서드 사용
+                    double randomValue = random.NextDouble();
+
+                    // 업그레이드 등급확률이 랜덤확률값보다 높을 떄 조합이 성공되도록
+                    if (randomValue <= upgradePercent)
+                    {
+                        //업그레이드 된 아이템은 선택된 아이템 1번이 되도록
+                        EquipItem upgradeItem;
+
+                    int targetIndex =0; // number1 + 6;  index를 통해서 업그레이드 된 아이템에 index에 할당되도록
+                                                       // 아이템의 Type에 따라 갯수가 늘어난다면 index가 늘어나므로
+                                                       // index +를 6이 아닌 다른 숫자를 입력해야함.
+
+                        upgradeItem = new EquipItem(allEquipItem[targetIndex]);
+
+                        Console.Clear();
+                        Console.WriteLine("[조합 결과]");
+                        Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
+                        Thread.Sleep(1000);
+                        ReturnToInventory();
+                        return upgradeItem ;
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("[조합 결과]");
+                        Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
+                        // 조합실패시 조합된 아이템은 소멸되도록 하기 위해서 기본 아이템으로 초기화
+                        new EquipItem();
+                        Thread.Sleep(1000);
+                        ReturnToInventory();
+                        return null;
+                    }
+                }
+                else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
+                {
+                    Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
+                    Thread.Sleep(1000);
+                    return null;
+
+                }
+            }
+        }
         //public static List<EquipItem> GetEquipItemList(EquipItemInfo equipItemInfo)
         // {
-            //        // 새로운 장비아이템 리스트 만들고 
-            //        List<EquipItem> rewardItemList = new List<EquipItem>();
+        //        // 새로운 장비아이템 리스트 만들고 
+        //        List<EquipItem> rewardItemList = new List<EquipItem>();
 
-            //        // 랜덤값 생성하여
-            //        Random random = new Random();
+        //        // 랜덤값 생성하여
+        //        Random random = new Random();
 
-            //        // 기본적인 반환 아이템은 초기값이 Normal 등급이 되도록
-            //        // Grade itemgrade = Grade.Normal;
+        //        // 기본적인 반환 아이템은 초기값이 Normal 등급이 되도록
+        //        // Grade itemgrade = Grade.Normal;
 
-            //        // 생성 확률에 따라 랜덤아이템이 리스트 안에 포함되도록 생성
-            //        double randomValue = random.NextDouble();
+        //        // 생성 확률에 따라 랜덤아이템이 리스트 안에 포함되도록 생성
+        //        double randomValue = random.NextDouble();
 
-            //        // 30% 확률로 Uncommon 아이템이 나오도록
-            //        if (randomValue <= 0.3f)
-            //        {
-            //            itemgrade = Grade.Uncommon;
-            //        }
+        //        // 30% 확률로 Uncommon 아이템이 나오도록
+        //        if (randomValue <= 0.3f)
+        //        {
+        //            itemgrade = Grade.Uncommon;
+        //        }
 
-            //        // 50%를 통해서 30%의 아이템인 Uncommon이 나오고 그다음으로 20%인 Rare인 아이템이 나오도록
-            //        else if (randomValue <= 0.5f)
-            //        {
-            //            itemgrade = Grade.Rare;
-            //        }
-            //        else 
-            //        {
-            //           EquipItem equipitem = new EquipItem();  
-            //        }
-            //        //enum값에 따른 Type 랜덤으로 정하기
-            //        Type type = (Type)random.Next(0, 6);
-
-
-            //        // 아이템 정보를 생성하는 
-
-            //        //EquipItem.EquipItemInfo itemInfo = new EquipItem.EquipItemInfo
-            //        //(
-            //        //    itemName,
-            //        //    _addAttack,
-            //        //    _addDefence,
-            //        //    _addIntelligence,
-            //        //    _addMaxHp,
-            //        //    _addMaxMp,
-            //        //    item,
+        //        // 50%를 통해서 30%의 아이템인 Uncommon이 나오고 그다음으로 20%인 Rare인 아이템이 나오도록
+        //        else if (randomValue <= 0.5f)
+        //        {
+        //            itemgrade = Grade.Rare;
+        //        }
+        //        else 
+        //        {
+        //           EquipItem equipitem = new EquipItem();  
+        //        }
+        //        //enum값에 따른 Type 랜덤으로 정하기
+        //        Type type = (Type)random.Next(0, 6);
 
 
-            //        //);
-            //        EquipItem rewardItem = new EquipItem(equipItemInfo);
+        //        // 아이템 정보를 생성하는 
 
-            //        string itemName = $"{type} Item";
-            //        string description = $"{itemName} 설명";
+        //        //EquipItem.EquipItemInfo itemInfo = new EquipItem.EquipItemInfo
+        //        //(
+        //        //    itemName,
+        //        //    _addAttack,
+        //        //    _addDefence,
+        //        //    _addIntelligence,
+        //        //    _addMaxHp,
+        //        //    _addMaxMp,
+        //        //    item,
+
+
+        //        //);
+        //        EquipItem rewardItem = new EquipItem(equipItemInfo);
+
+        //        string itemName = $"{type} Item";
+        //        string description = $"{itemName} 설명";
 
 
 
-            //        // 반환된 아이템을 리워드리스트에 추가
-            //        rewardItemList.Add(rewardItem);
+        //        // 반환된 아이템을 리워드리스트에 추가
+        //        rewardItemList.Add(rewardItem);
 
-            //        return new List<EquipItem> { rewardItem };
-            //    }
-            //}
-        
+        //        return new List<EquipItem> { rewardItem };
+        //    }
+        //}
+
     }
 }
