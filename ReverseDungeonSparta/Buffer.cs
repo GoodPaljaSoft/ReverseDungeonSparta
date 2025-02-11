@@ -13,8 +13,9 @@ namespace ReverseDungeonSparta
         //double은 배수 수치, int는 유지되는 턴을 가진다.
         public List<(double, int)> AttackBuff { get; set; } = new List<(double, int)>();
         public List<(double, int)> DefenceBuff { get; set; } = new List<(double, int)>();
-        public List<(double, int)> LuckBuff { get; set; } = new List<(double, int)>();
+        public List<(int, int)> LuckBuff { get; set; } = new List<(int, int)>();
         public List<(double, int)> HealingBuff { get; set; } = new List<(double, int)>();
+        public List<(int, int)> IntelligenceBuff { get; set; } = new List<(int, int)>();
 
 
         //턴을 끝낸 후 사용할 버프 메소드. 버프의 카운터를 1개씩 내림
@@ -44,6 +45,13 @@ namespace ReverseDungeonSparta
             if (HealingBuff.Count > 0)
             {
                 HealingBuff = HealingBuff
+                    .Select(x => (x.Item1, x.Item2 - 1))
+                    .ToList();
+            }
+
+            if (IntelligenceBuff.Count > 0)
+            {
+                IntelligenceBuff = IntelligenceBuff
                     .Select(x => (x.Item1, x.Item2 - 1))
                     .ToList();
             }
@@ -101,8 +109,6 @@ namespace ReverseDungeonSparta
             int turnCount = skill.BufferTurn;
             Character character = (Character)this;
 
-            Console.WriteLine($"{useCharacter.Name}이(가) {character.Name}에게 {skill.Name}을 사용했습니다.");
-
             //스킬을 사용한 캐릭터가 버프가 올라가는 본인일 경우 턴 카운터를 하나 올려서 적용함.
             if (useCharacter == (Character)this)
             {
@@ -117,13 +123,17 @@ namespace ReverseDungeonSparta
             {
                 DefenceBuff.Add((value, turnCount));
             }
-            else if(buffType == BuffType.HealingBuff)
+            else if (buffType == BuffType.HealingBuff)
             {
                 HealingBuff.Add((value, turnCount));
             }
             else if (buffType == BuffType.LuckBuff)
             {
-                LuckBuff.Add((value, turnCount));
+                LuckBuff.Add(((int)value, turnCount));
+            }
+            else if (buffType == BuffType.Intelligence)
+            {
+                IntelligenceBuff.Add(((int)value, turnCount));
             }
         }
 
@@ -133,7 +143,7 @@ namespace ReverseDungeonSparta
         {
             AttackBuff = new List<(double, int)>();
             DefenceBuff = new List<(double, int)>();
-            LuckBuff = new List<(double, int)>();
+            LuckBuff = new List<(int, int)>();
             HealingBuff = new List<(double, int)>();
         }
 
@@ -176,13 +186,13 @@ namespace ReverseDungeonSparta
     }
 
 
-
     public enum BuffType
     {
         AttackBuff,
         DefenceBuff,
         LuckBuff,
         HealingBuff,
+        Intelligence,
         None
     }
 }

@@ -132,7 +132,7 @@ namespace ReverseDungeonSparta
             }
 
 
-            ViewManager.PrintText(monsterPostionValueX + 28, monsterPostionValueY, "");
+            ViewManager.PrintText(monsterPostionValueX + 27, monsterPostionValueY, "");
             for (int i = 0; i < monsterList.Count; i++)
             {
                 ViewManager.PrintText(MonsterListInfoValueString(monsterList[i]));
@@ -152,16 +152,16 @@ namespace ReverseDungeonSparta
 
         public static string MonsterListInfoValueString(Monster monster)
         {
-
             string str = "";
 
             //죽은 몬스터가 있다면 사망 처리
             if (monster.IsDie)
                 str = (str + "Dead");
             else
-                str = (str + "H P: " + $"{monster.HP}/{monster.MaxHP}".PadRight(9) +
-                    "ATK: " + $"{monster.Attack}".PadRight(6) +
-                    "DEF: " + $"{monster.Defence}".PadRight(6));
+                str = (str + "HP:" + $"{monster.HP}/{monster.MaxHP}".PadRight(9) +
+                    "MP:" + $"{monster.MP}/{monster.MaxMP}".PadRight(9) +
+                    "ATK:" + $"{monster.Attack}".PadRight(4) +
+                    "DEF:" + $"{monster.Defence}".PadRight(4));
             return str;
         }
 
