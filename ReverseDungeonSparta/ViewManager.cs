@@ -18,8 +18,6 @@ namespace ReverseDungeonSparta
         static int top = Console.WindowTop;
         static int left = Console.WindowLeft;
 
-
-
         // DrawLine 1
         // 한 줄을 길게 그리는 메서드
         public static void DrawLine()
