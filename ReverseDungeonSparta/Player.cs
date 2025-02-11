@@ -77,16 +77,19 @@ namespace ReverseDungeonSparta
             if (itemIndex >= 0 && itemIndex < isOwnedItemList.Count)
             {
                 EquipItem item = isOwnedItemList[itemIndex];
-
-                if (!item.IsEquiped)
+                bool isEquipped = item.IsEquiped; 
+                if (isEquipped == true)
                 {
+                    isEquipped = false;
+                    isEquippedList.Remove(item);
                     
-                    isEquippedList.Add(item);
-                    item.IsEquiped = true;
                     // ApplyItemStat();
                 }
                 else
                 {
+                    isEquipped = true;
+                    // 가지고 있는 장비 아이템을 모두 가져옴
+                    // 그렇게 가져온 아이템 타입의 아이템을 for문 또는 foreach문을 통해서 isEquipped가 true상태인지 체크 
                     Console.WriteLine("이미 장착된 아이템입니다.");
                 }
             }
