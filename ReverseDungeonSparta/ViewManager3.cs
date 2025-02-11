@@ -294,7 +294,7 @@ namespace ReverseDungeonSparta
         public static void MainMenuTxt()
         {
             Console.Clear();
-            ViewManager4.PrintTitle();
+
             ViewManager.PrintText(100, 24, "   상태 보기");
             ViewManager.PrintText("   전투 시작");
             ViewManager.PrintText("   인벤토리");

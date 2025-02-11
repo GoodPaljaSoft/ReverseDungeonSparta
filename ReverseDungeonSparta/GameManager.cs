@@ -53,6 +53,9 @@ namespace ReverseDungeonSparta
             //애니메이션 텍스트 메서드 테스트
             //IntroScene();
 
+            //아이템 장착 테스트
+            //player.
+
         }
         public void PlayerStatusMenu()
         {
@@ -281,7 +284,7 @@ namespace ReverseDungeonSparta
         public void TitleSMenu()
         {
             ViewManager.TitleMenuTxt();
-            
+            ViewManager.PrintTitle();
 
             menuItems = new List<(string, Action, Action)>
             {
@@ -299,7 +302,7 @@ namespace ReverseDungeonSparta
 
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
-            ViewManager.PrintCurrentFloors(DungeonClearLevel);
+            ViewManager.PrintCurrentFloors(20-DungeonClearLevel);
             ViewManager.DrawLine(2);
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
