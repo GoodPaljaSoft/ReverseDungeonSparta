@@ -108,29 +108,29 @@ namespace ReverseDungeonSparta
         //            statInfo = $"지력 +{item.addIntelligence}";
         //        }
         //        Console.WriteLine($" [-]  {item.itemName}        | {item.type}         | {statInfo}         |{item.description}");
-        //    }
-        //}
+        //    }  //헬멧은 체력 + 방어력 // 방어구는 방어력 + 체력 // 무기는 공격력 + 행운 // 반지는 지력 + 마력 // 목걸이는 지력 + 마력
+        //}                                         방어력 + 행운
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
-        {                                   //행운, 방어력, 공격력, 지능,  최대 체력, 최대 마력
-            new EquipItemInfo("찢어진 도적의 망토",0,5,0,0,20,0,EquipItemType.Armor,EquipItemGrade.Normal,"    도적이 버리고 간 찢어진 망토"), // 아이템 1 설명작성필요
-            new EquipItemInfo("치유의 지팡이",0,0,1,7,0,0,EquipItemType.Weapon, EquipItemGrade.Normal,"    마법이 부족한 지팡이"), // 아이템 2 노말 무기
-            new EquipItemInfo("허름한 궁수의 모자",2,4,0,0,0,0,EquipItemType.Helmet, EquipItemGrade.Normal,"    초보자가 사용한 모자"), // 아이템 3 
-            new EquipItemInfo("",0,7,0,0,10,0,EquipItemType.Shoes, EquipItemGrade.Normal,"    "), // 아이템 4
-            new EquipItemInfo("item이름5",5,5,5,5,5,5,EquipItemType.Ring, EquipItemGrade.Normal,"아이템5"), // 아이템 5
-            new EquipItemInfo("item이름6",5,5,5,5,5,5,EquipItemType.Necklace, EquipItemGrade.Normal,"아이템6"), // 아이템 6
-            new EquipItemInfo("item이름7",5,5,5,5,5,5,EquipItemType.Armor,EquipItemGrade.Uncommon,"아이템7"), // 아이템 7
-            new EquipItemInfo("item이름8",5,5,5,5,5,5,EquipItemType.Weapon, EquipItemGrade.Uncommon,"아이템8"), // 아이템 8
-            new EquipItemInfo("item이름9",5,5,5,5,5,5,EquipItemType.Helmet, EquipItemGrade.Uncommon,"아이템9"), // 아이템 9
-            new EquipItemInfo("item이름10",5,5,5,5,5,5,EquipItemType.Shoes, EquipItemGrade.Uncommon,"아이템10"), // 아이템 10
-            new EquipItemInfo("item이름11",5,5,5,5,5,5,EquipItemType.Ring, EquipItemGrade.Uncommon,"아이템11"), // 아이템 11
-            new EquipItemInfo("item이름12",5,5,5,5,5,5,EquipItemType.Necklace, EquipItemGrade.Uncommon,"아이템12"), // 아이템 12
-            new EquipItemInfo("item이름13",5,5,5,5,5,5,EquipItemType.Armor,EquipItemGrade.Rare,"아이템13"), // 아이템 13
-            new EquipItemInfo("태양의 활",10,0,15,0,0,0,EquipItemType.Weapon, EquipItemGrade.Rare,"아이템14"), // 아이템 14
-            new EquipItemInfo("그림자의 두건",0,15,0,0,25,0,EquipItemType.Helmet, EquipItemGrade.Rare,"아이템15"), // 아이템 15
-            new EquipItemInfo("용맹의 전투신발",0,15,0,0,25,0,EquipItemType.Shoes, EquipItemGrade.Rare,"아이템16"), // 아이템 16
-            new EquipItemInfo("날렵한 명사수의 반지",5,0,15,0,0,0,EquipItemType.Ring, EquipItemGrade.Rare,"아이템17"), // 아이템 17
-            new EquipItemInfo("힐러의 목걸이",7,0,0,10,0,0,EquipItemType.Necklace, EquipItemGrade.Rare,"아이템18"), // 아이템 18
+        {                                   
+            new EquipItemInfo("찢어진 도적의 망토",0,5,0,0,20,0,EquipItemType.Armor,EquipItemGrade.Normal,"    도적이 버리고 간 찢어진 망토"), 
+            new EquipItemInfo("치유의 지팡이",0,0,2,7,0,0,EquipItemType.Weapon, EquipItemGrade.Normal,"    마법이 부족한 지팡이"),
+            new EquipItemInfo("허름한 궁수의 모자",2,4,0,0,0,0,EquipItemType.Helmet, EquipItemGrade.Normal,"    초보자가 사용한 모자"), 
+            new EquipItemInfo("마법사의 천 신발",0,7,0,0,25,0,EquipItemType.Shoes, EquipItemGrade.Normal,"    견습생이 신는 신발"), 
+            new EquipItemInfo("금이 간 전사의 반지",0,0,0,10,0,25,EquipItemType.Ring, EquipItemGrade.Normal,"    전투하다 금이 간 전사의 반지"), 
+            new EquipItemInfo("생명의 구슬 목걸이",0,0,0,10,0,25,EquipItemType.Necklace, EquipItemGrade.Normal,"    여러 사람 구한 힐러의 목걸이"), 
+            new EquipItemInfo("전사의 강철 갑옷",0,10,0,0,35,0,EquipItemType.Armor,EquipItemGrade.Uncommon,"    가문 대대로 내려온 강철 갑옷"), 
+            new EquipItemInfo("빛 바랜 단검",5,0,10,0,0,0,EquipItemType.Weapon, EquipItemGrade.Uncommon,"    옛날부터 수련에 사용된 단검"), 
+            new EquipItemInfo("마법사의 마나의 왕관",0,10,0,0,35,0,EquipItemType.Helmet, EquipItemGrade.Uncommon,"    숙련된 마법사의 왕관"), 
+            new EquipItemInfo("도적의 철의 발걸음",10,10,0,0,0,0,EquipItemType.Shoes, EquipItemGrade.Uncommon,"    대장장이가 만든 도적의 철 신발"),
+            new EquipItemInfo("힐러의 생명의 반지",0,0,0,15,0,35,EquipItemType.Ring, EquipItemGrade.Uncommon,"    지능을 상당히 증가시키는 반지"),
+            new EquipItemInfo("명사의 목걸이",0,0,15,0,0,35,EquipItemType.Necklace, EquipItemGrade.Uncommon,"    백발백중 명사가 사용했던 목걸이"), 
+            new EquipItemInfo("마법사의 고대 로브",5,9,0,0,0,0,EquipItemType.Armor,EquipItemGrade.Rare,"    해리포터가 사용한 고대 로브"), 
+            new EquipItemInfo("태양의 활",10,0,15,0,0,0,EquipItemType.Weapon, EquipItemGrade.Rare,"    태양의 힘을 서린 활"),
+            new EquipItemInfo("그림자의 두건",0,15,0,0,50,0,EquipItemType.Helmet, EquipItemGrade.Rare,"    도적 군집이 사용했던 그림자 두건"),
+            new EquipItemInfo("용맹의 전투신발",0,15,0,0,50,0,EquipItemType.Shoes, EquipItemGrade.Rare,"    용맹함이 가득한 전사의 신발"),           
+            new EquipItemInfo("날렵한 명사수의 반지",5,0,15,0,0,0,EquipItemType.Ring, EquipItemGrade.Rare,"    일등사수가 사용했던 명사수의 반지"),
+            new EquipItemInfo("힐러의 목걸이",0,0,0,10,0,50,EquipItemType.Necklace, EquipItemGrade.Rare,"    신성력이 가득한 힐러의 목걸이"), 
         };
         public static EquipItem InstanceEquipItem(int index) // 배열 index를 통해서 아이템 정보를
                                                              // 매개변수로 가진 아이템 객체 만들고 반환 
