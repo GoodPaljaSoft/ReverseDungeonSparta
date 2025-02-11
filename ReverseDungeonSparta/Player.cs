@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ReverseDungeonSparta.EquipItem;
 
 namespace ReverseDungeonSparta
@@ -44,6 +40,7 @@ namespace ReverseDungeonSparta
 
             Critical = 5;
             Evasion = 5;
+            InitEquipItems();
 
             //int additionalAttack = AdditionalAttack; //필요없다면 지우기
             //int additionalDefence = AdditionalDefence;
@@ -78,12 +75,12 @@ namespace ReverseDungeonSparta
         }
         #endregion
 
-        public void LoadEquipItems()
+        public void InitEquipItems()
         {
             // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
-            foreach (var EquipitemInfo in EquipItem.allEquipItem)
+            foreach (var info in EquipItem.allEquipItem)
             {
-                EquipItem equipItem = new EquipItem(EquipitemInfo); // EquipItem 객체 생성
+                EquipItem equipItem = new EquipItem(info); // EquipItem 객체 생성
                 equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
             }
         }
@@ -167,7 +164,7 @@ namespace ReverseDungeonSparta
                 if (randomValue <= upgradePercent)
                 {
                     //아이템 등급의 enum값을 이용하여 nextgrade로 만들기
-                    EquipItemGrade nextgrade = (EquipItemGrade)((int)main.Grade+1);
+                    EquipItemGrade nextgrade = (EquipItemGrade)((int)main.Grade + 1);
 
                     EquipItem upgradeItem = new EquipItem();
                     Console.Clear();
@@ -177,9 +174,9 @@ namespace ReverseDungeonSparta
                     ReturnToInventory();
 
                     List<EquipItem> tempEquipList = new List<EquipItem>();
-                    for (int i=0; i < equipItemList.Count; i++)
+                    for (int i = 0; i < equipItemList.Count; i++)
                     {
-                        
+
                         //장착 가능한 아이템 리스트를 모두 검사를 돌린다.
                         //검사를 돌려서 받은 아이템 등급보다 한 등급 높은 아이템들을 모두 임시 리스트에 받아온다.
                         //받아온 리스트에서 랜덤으로 하나를 고른다.
@@ -188,7 +185,7 @@ namespace ReverseDungeonSparta
                             tempEquipList.Add(equipItemList[i]);
                         }
                     }
-                    int rand = random.Next(0, tempEquipList.Count); 
+                    int rand = random.Next(0, tempEquipList.Count);
                     upgradeItem = tempEquipList[rand];
 
                     return upgradeItem;
@@ -214,68 +211,29 @@ namespace ReverseDungeonSparta
                 return null;
             }
         }
-    
-    
-        //public static List<EquipItem> GetEquipItemList(EquipItemInfo equipItemInfo)
-        // {
-        //        // 새로운 장비아이템 리스트 만들고 
-        //        List<EquipItem> rewardItemList = new List<EquipItem>();
+        public static List<EquipItem> RandomRewardList()
+        {
+            // 새로운 보상아이템정보를 리스트화 하고
+            List<EquipItemInfo> rewardItemListInfo = new List<EquipItemInfo>();
 
-        //        // 랜덤값 생성하여
-        //        Random random = new Random();
+            Random random = new Random();
 
-        //        // 기본적인 반환 아이템은 초기값이 Normal 등급이 되도록
-        //        // Grade itemgrade = Grade.Normal;
+            // 리스트안에 장비아이템정보를 입력
+            foreach (EquipItemInfo rewardItemInfo in allEquipItem)
+            {
+                rewardItemListInfo.Add(rewardItemInfo);
+            }
+            int rand = random.Next(0, rewardItemListInfo.Count);
 
-        //        // 생성 확률에 따라 랜덤아이템이 리스트 안에 포함되도록 생성
-        //        double randomValue = random.NextDouble();
+            // 랜덤으로 equipItemInfo가 리스트에 들어가고,
+            EquipItemInfo equipItemInfo = rewardItemListInfo[rand];
 
-        //        // 30% 확률로 Uncommon 아이템이 나오도록
-        //        if (randomValue <= 0.3f)
-        //        {
-        //            itemgrade = Grade.Uncommon;
-        //        }
+            // equipItemInfo가 있는 rewardItem 객체 생성
+            EquipItem rewardItem = new EquipItem(equipItemInfo);
 
-        //        // 50%를 통해서 30%의 아이템인 Uncommon이 나오고 그다음으로 20%인 Rare인 아이템이 나오도록
-        //        else if (randomValue <= 0.5f)
-        //        {
-        //            itemgrade = Grade.Rare;
-        //        }
-        //        else 
-        //        {
-        //           EquipItem equipitem = new EquipItem();  
-        //        }
-        //        //enum값에 따른 Type 랜덤으로 정하기
-        //        Type type = (Type)random.Next(0, 6);
-
-
-        //        // 아이템 정보를 생성하는 
-
-        //        //EquipItem.EquipItemInfo itemInfo = new EquipItem.EquipItemInfo
-        //        //(
-        //        //    itemName,
-        //        //    _addAttack,
-        //        //    _addDefence,
-        //        //    _addIntelligence,
-        //        //    _addMaxHp,
-        //        //    _addMaxMp,
-        //        //    item,
-
-
-        //        //);
-        //        EquipItem rewardItem = new EquipItem(equipItemInfo);
-
-        //        string itemName = $"{type} Item";
-        //        string description = $"{itemName} 설명";
-
-
-
-        //        // 반환된 아이템을 리워드리스트에 추가
-        //        rewardItemList.Add(rewardItem);
-
-        //        return new List<EquipItem> { rewardItem };
-        //    }
-        //}
+            return new List<EquipItem> { rewardItem };
+        }
 
     }
+
 }
