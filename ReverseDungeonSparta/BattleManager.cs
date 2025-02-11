@@ -19,8 +19,11 @@ public class BattleManager
     int listCount = 0;              //battleOrderList의 Lengh를 업데이트 할 때 사용
 
     //배틀 매니저 생성자
-    public BattleManager(Player player)
+    public BattleManager(Player player, int floor)
     {
+        //***
+        //추후 층 수를 기반으로 난이도 조절
+
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
         int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
         int backRand = random.Next(3, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
@@ -94,7 +97,7 @@ public class BattleManager
                     battleOrderList.RemoveAt(0);
                 }
 
-                if(isDungeonEnd)
+                if (isDungeonEnd)
                 {
                     break;
                 }
@@ -126,11 +129,11 @@ public class BattleManager
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
         List<(string, Action, Action)> skillList = player.SkillList
-                                .Select(x => (x.Name + $"\n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
+                                .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
                                 .ToList();
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
-        PlayerInputSkillNum(skillList, PlayerSelectSkillNum, ref selectedIndex, StartPlayerBattle);
+        PlayerInputSkillNum(skillList, ref selectedIndex);
 
         //selectedIndex의 값을 받고 해당 칸의 스킬을 입력
     }
@@ -166,7 +169,7 @@ public class BattleManager
         foreach (Monster monster in monsters)
         {
             int beforeMonsterHP = monster.HP;
-            player.Attacking(monster,monsterList, out int damage);
+            player.Attacking(monster, monsterList, out int damage);
             RemoveOrderListCharacter(monster);
             Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         }
@@ -254,7 +257,7 @@ public class BattleManager
         ViewManager.PrintText("");
         ViewManager.PrintText($"Lv. {monster.Level} {monster.Name}의 공격!");
         Util.CheckKeyInputEnter();
-        monster.Attacking(player,monsterList, out int damage);
+        monster.Attacking(player, monsterList, out int damage);
         ViewManager.PrintText($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
         ViewManager.PrintText("");
         ViewManager.PrintText($"{player.Name}에게 총 {damage} 데미지를 입혔습니다! ({beforeplayerHP} -> {player.HP})");
@@ -281,31 +284,32 @@ public class BattleManager
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
-        //승리
-        Console.Clear();
-        Console.WriteLine("Battle!! - Result");
-        Console.WriteLine();
-        Console.WriteLine("Victory");
-        Console.WriteLine($"던전에서 몬스터 {monsterList.Count}마리를 잡았습니다.");
-        Console.WriteLine();
-        Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {oldPlayerHP} -> {player.HP}"); //던전 입장시 체력을 만들어서 출력해 주었습니다
-        Console.WriteLine();
-        Console.WriteLine("-> 0. 다음");
-
-        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-        switch (keyInfo.Key)
+        menuItems = new List<(string, Action, Action)>
         {
-            case ConsoleKey.Enter:
-                isDungeonEnd = true;
-                //승리 처리
-                player.ResetAllBuff(); //버프 초기화
-                AudioManager.PlayMenuBGM();
-                GameManager gameManager = new GameManager();
-                AudioManager.PlayMoveMenuSE(0);
-                gameManager.GameMenu();
-                break;
-        }
+            ("", GameManager.Instance.EnterBattleMenu, null),
+            ("", GameManager.Instance.GameMenu, AudioManager.PlayMenuBGM)
+        };
+
+        //승리
+        ViewManager3.PlayerWinText(player, monsterList);
+
+
+        Console.WriteLine("");
+        Console.WriteLine($"[흭득 보상]");
+        Console.WriteLine($"");
+        Console.WriteLine($"-EXP  {10}");//***
+        Console.WriteLine($"-Gold {500}");
+        Console.WriteLine($"");
+        Console.WriteLine($"[흭득 아이템 출력 필요]");
+        Console.WriteLine($"[...]");
+        Console.WriteLine($"[...]");
+
+        isDungeonEnd = true;    //던전 종료
+        player.ResetAllBuff(); //버프 초기화
+        Util.GetUserInput(menuItems, PlayerWin, ref selectedIndex, (0, 27));
+        AudioManager.PlayMoveMenuSE(0);
+
+        //메뉴 출력 추가
     }
 
 
@@ -313,29 +317,16 @@ public class BattleManager
     public void PlayerDefeat()
     {
         //패배
-        Console.Clear();
-        Console.WriteLine("Battle!! - Result");
-        Console.WriteLine();
-        Console.WriteLine("You Lose");
-        Console.WriteLine($"Lv. {player.Level} {player.Name}");
-        Console.WriteLine($"HP {oldPlayerHP} -> {player.HP}");
-        Console.WriteLine();
-        Console.WriteLine("-> 다음");
+        ViewManager3.PlayerDeafText(player, monsterList);
 
-        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-        switch (keyInfo.Key)
-        {
-            case ConsoleKey.Enter:
-                isDungeonEnd = true;
-                player.ResetAllBuff();      //버프 초기화
-                //패배 처리
-                break;
-        }
+        Util.CheckKeyInputEnter();
+        isDungeonEnd = true;
+        player.ResetAllBuff();      //버프 초기화
     }
 
 
     //원하는 스킬을 선택하고 선택에 성공한다면 해당 스킬을 playerSelectSkill에 저장하는 메서드
-    public void PlayerInputSkillNum(List<(string, Action, Action)> menuList, Action nowMenu, ref int selectedIndex, Action beforeMenu)
+    public void PlayerInputSkillNum(List<(string, Action, Action)> menuList, ref int selectedIndex)
     {
         int maxVisibleOption = 5;
         int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
@@ -344,7 +335,7 @@ public class BattleManager
 
         while (true)
         {
-            ViewManager.PrintText(0, 11, "");
+            ViewManager.PrintText(0, 12, "");
 
             // 현재 선택지 표시
             if (menuList.Count < maxVisibleOption)
@@ -373,10 +364,11 @@ public class BattleManager
                     Console.WriteLine(str);
                 }
                 // 아래로 숨겨진 선택지 개수 표시
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
                 Console.WriteLine($"↓ ({menuList.Count - endIndex}개)");
             }
 
-            ConsoleKeyInfo keyInfo = Util.CheckKeyInput(selectedIndex, menuItems.Count);
+            ConsoleKeyInfo keyInfo = Util.CheckKeyInput(selectedIndex, menuList.Count - 1);
 
             switch (keyInfo.Key)
             {
