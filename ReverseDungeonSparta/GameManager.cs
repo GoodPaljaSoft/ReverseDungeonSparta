@@ -55,7 +55,7 @@ namespace ReverseDungeonSparta
             //IntroScene();
 
             //아이템 장착 테스트
-            //player.
+            //player.equipItemList[0].IsEquiped = true;
 
         }
         public void PlayerStatusMenu()
