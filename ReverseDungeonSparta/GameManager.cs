@@ -44,7 +44,7 @@ namespace ReverseDungeonSparta
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
             //뷰매니저 적용전 테스트
-            player.LoadEquipItems();
+            //player.LoadEquipItems();
 
             //인트로 데이터베이스 초기화
             DataBase.IntroTextInit();
@@ -138,7 +138,8 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("", GameMenu, null),
-                ("", InventoryMenu, null)
+                ("", GameMenu, null),
+                ("", GameMenu, null)
             };
 
             Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
