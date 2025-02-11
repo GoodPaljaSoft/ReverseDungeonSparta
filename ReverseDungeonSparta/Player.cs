@@ -40,7 +40,7 @@ namespace ReverseDungeonSparta
             MaxMP = 100;
             MP = MaxMP;
 
-            Speed = 8;
+            Speed = 3;
 
             Critical = 5;
             Evasion = 5;

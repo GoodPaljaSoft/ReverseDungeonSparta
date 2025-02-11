@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static ReverseDungeonSparta.EquipItem;
+﻿using System.Text;
+
 
 namespace ReverseDungeonSparta
 {
@@ -16,8 +9,8 @@ namespace ReverseDungeonSparta
         static public int width = 120;      //콘솔 가로 크기
         static public int height = 30;      //콘솔 세로 크기
 
-        static int CursorX = 0;   //마우스 커서 x위치
-        static int CursorY = 0;   //마우스 커서 y위치
+        static public int CursorX = 0;   //마우스 커서 x위치
+        static public int CursorY = 0;   //마우스 커서 y위치
 
         //커서 위치 받아오기
         static int top = Console.WindowTop;
@@ -38,18 +31,6 @@ namespace ReverseDungeonSparta
 
             //Console.ReadLine();
 
-            List<EquipItem> tempItemList = new List<EquipItem>();
-
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
 
         }
 
@@ -72,11 +53,13 @@ namespace ReverseDungeonSparta
         //한 줄을 길게 그리는 메서드
         public static void DrawLine()
         {
+            string str = "";
             Console.ForegroundColor = ConsoleColor.Red;
             for (int i = 0; i < width; i++)
             {
-                Console.Write("─");
+                str += "─";
             }
+            Console.WriteLine(str);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
         }
@@ -87,7 +70,7 @@ namespace ReverseDungeonSparta
         {
             PrintText(1, 3, $"{player.Name} (마왕)");
 
-            Console.SetCursorPosition(1, 3);
+            Console.SetCursorPosition(0, 3);
             Console.WriteLine($"{player.Name} (마왕)");
             Console.WriteLine($" Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
             Console.WriteLine();
@@ -98,14 +81,32 @@ namespace ReverseDungeonSparta
         //해당 메서드로 커서 위치를 잡고 텍스트를 출력한다.
         //이 메서드로 출력한 텍스트를 기준으로 한 줄 아래에 그리고 싶다면
         //이 다음으로 PrintText로 출력하면 된다.
-        public static void PrintText(int x, int y, string text)
+        public static void PrintText(int cursorX, int cursorY, string text)
         {
-            CursorX = x;
-            CursorY = y;
-            Console.SetCursorPosition(x, y);
+            CursorX = cursorX;
+            CursorY = cursorY;
+            Console.SetCursorPosition(CursorX, CursorY);
             Console.Write(text);
             CursorY++;
         }
+        public static void PrintText(int cursorX, int cursorY, string text, bool isColor, ConsoleColor color)
+        {
+            if (isColor)
+                Console.ForegroundColor = color;
+
+
+            CursorX = cursorX;
+            CursorY = cursorY;
+            Console.SetCursorPosition(CursorX, CursorY);
+            Console.Write(text);
+            
+            if (isColor)
+                Console.ForegroundColor = ConsoleColor.White;
+
+            CursorY++;
+
+        }
+
         public static void PrintTextLine(int x, int y, string text)
         {
             CursorX = x;
@@ -123,10 +124,24 @@ namespace ReverseDungeonSparta
             Console.Write(text);
             CursorY++;
         }
+        public static void PrintText(string text, bool isColor, ConsoleColor color)
+        {
+            if (isColor)
+                Console.ForegroundColor = color;
+
+            Console.SetCursorPosition(CursorX, CursorY);
+            Console.Write(text);
+
+            if (isColor)
+                Console.ForegroundColor = ConsoleColor.White;
+
+            CursorY++;
+        }
+
 
         public static void PrintList(List<EquipItem> items)
         {
-            int[] x = { 3, 7, 24, 26, 33, 36, 45};
+            int[] x = { 3, 7, 24, 26, 33, 35, 45, 47 };
             int y = 3;
             //커서는 x==1 위치에 들어감
             for (int i = 0; i < items.Count; i++)
@@ -138,6 +153,7 @@ namespace ReverseDungeonSparta
                 PrintTextLine(x[1], y + i, $"{items[i].Name}");
                 PrintTextLine(x[2], y + i, "|");
                 PrintTextLine(x[3], y + i, $"{TranslateString(items[i].Type.ToString())}");
+                PrintTextLine(x[7], y + i, $"{items[i].Information}");
 
                 int count = 0;
                 for (int j = 0; j < optionArray.Length; j++)
@@ -145,14 +161,17 @@ namespace ReverseDungeonSparta
                     if (optionArray[j] != 0)
                     {
                         PrintTextLine(x[4], y + i + count, "|");
-                        PrintTextLine(x[5], y + i + count, $"{TranslateString(nameArray[j])}:{optionArray[j]}");
+                        PrintTextLine(x[5], y + i + count, $"{TranslateString(nameArray[j])} +{optionArray[j]}");
                         PrintTextLine(x[6], y + i + count, "|");
                         count++;
                     }
                 }
                 y += count;
+
             }
         }
+
+
 
         public static string TranslateString(string enumType)
         {
@@ -186,5 +205,74 @@ namespace ReverseDungeonSparta
                     return "TranslateError";
             }
         }
+
+        //타이틀 출력
+        public static void PrintTitle()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            PrintText(1, 1, "██████  ███████ ██    ██ ███████ ██████  ███████ ███████");
+            PrintText("██   ██ ██      ██    ██ ██      ██   ██ ██      ██");
+            PrintText("██████  █████   ██    ██ █████   ██████  ███████ █████");
+            PrintText("██   ██ ██       ██  ██  ██      ██   ██      ██ ██");
+            PrintText("██   ██ ███████   ████   ███████ ██   ██ ███████ ███████");
+            PrintText("");
+            PrintText("");
+            PrintText("██████  ██    ██ ███    ██  ██████  ███████  ██████  ███    ██");
+            PrintText("██   ██ ██    ██ ████   ██ ██       ██      ██    ██ ████   ██");
+            PrintText("██   ██ ██    ██ ██ ██  ██ ██   ███ █████   ██    ██ ██ ██  ██");
+            PrintText("██   ██ ██    ██ ██  ██ ██ ██    ██ ██      ██    ██ ██  ██ ██");
+            PrintText("██████   ██████  ██   ████  ██████  ███████  ██████  ██   ████");
+            PrintText("");
+            PrintText("");
+            PrintText("███████ ██████   █████  ██████  ████████  █████");
+            PrintText("██      ██   ██ ██   ██ ██   ██    ██    ██   ██");
+            PrintText("███████ ██████  ███████ ██████     ██    ███████");
+            PrintText("     ██ ██      ██   ██ ██   ██    ██    ██   ██");
+            PrintText("███████ ██      ██   ██ ██   ██    ██    ██   ██");
+
+            //Console.ReadLine();
+        }
+
+
+        //메인 씬에서 탑 그려줄 메서드
+        public static void PrintTower()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            PrintText(width / 2 - 8, height / 2 - 7, "⠀⠀⠀⠀⠀⢀⡀", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
+            PrintText("⠀⠀⠀⠀⠀⣸⣧", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
+            PrintText("⠀⠀⢢⣶⣾⣥⣿⣷⣶⡖", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
+            PrintText("⠀⠀⢹⣻⠿⣿⣿⠿⣟⡏", GameManager.Instance.clearCheck[1], ConsoleColor.Red);
+            PrintText("⠀⣤⢼⣿⡆⣻⣿⣶⣿⡧⣤", GameManager.Instance.clearCheck[2], ConsoleColor.Red);
+            PrintText("⠀⣸⣸⢿⣧⣽⣿⣿⣿⣇⣿", GameManager.Instance.clearCheck[3], ConsoleColor.Red);
+            PrintText("⠀⠿⢿⠿⡿⠿⠿⢿⣿⡯⠿", GameManager.Instance.clearCheck[4], ConsoleColor.Red);
+            PrintText("⠀⠀⣾⠀⠁⠀⠀⢘⣿⣷", GameManager.Instance.clearCheck[5], ConsoleColor.Red);
+            PrintText("⠀⠀⡟⠀⠀⢸⡞⢈⣿⣿", GameManager.Instance.clearCheck[6], ConsoleColor.Red);
+            PrintText("⠀⢀⣥⣤⣤⣾⣷⣤⣿⣯⡀", GameManager.Instance.clearCheck[7], ConsoleColor.Red);
+            PrintText("⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇", GameManager.Instance.clearCheck[8], ConsoleColor.Red);
+            PrintText("⠀⠸⠿⠟⠛⠛⠛⠛⣿⣿⠇", GameManager.Instance.clearCheck[9], ConsoleColor.Red);
+            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇", GameManager.Instance.clearCheck[10], ConsoleColor.Red);
+            PrintText("⠀⢸⠃⠀⠀⠘⠃⠘⣿⣿⡇", GameManager.Instance.clearCheck[11], ConsoleColor.Red);
+            PrintText("⠀⣼⣶⣾⣿⣿⣿⣿⣿⣿⣧", GameManager.Instance.clearCheck[12], ConsoleColor.Red);
+            PrintText("⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿", GameManager.Instance.clearCheck[13], ConsoleColor.Red);
+            PrintText("⠀⣿⡽⠹⠿⠿⠿⠿⣿⣿⣿", GameManager.Instance.clearCheck[14], ConsoleColor.Red);
+            PrintText("⠀⡇⠀⠀⠀⠀⠀⠀⣿⣿⢿", GameManager.Instance.clearCheck[15], ConsoleColor.Red);
+            PrintText("⠀⡏⠀⠀⠀⡶⢶⡄⣿⣿⣿", GameManager.Instance.clearCheck[16], ConsoleColor.Red);
+            PrintText("⢰⠀⠀⠀⠀⣿⣿⡇⠉⣛⡋⡆", GameManager.Instance.clearCheck[17], ConsoleColor.Red);
+            PrintText("⢸⣶⣶⣾⣿⣿⣿⣿⣶⣿⣿⡇", GameManager.Instance.clearCheck[18], ConsoleColor.Red);
+            PrintText("⠈⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠁", GameManager.Instance.clearCheck[18], ConsoleColor.Red);
+
+            for(int i=0; i<19; i++)
+            {
+                PrintText(width / 2 + 6, height / 2 - 5 + i, "▼", GameManager.Instance.clearCheck[i], ConsoleColor.Red);
+            }
+
+            Console.ReadLine();
+        }
+
+
+
+
     }
 }
