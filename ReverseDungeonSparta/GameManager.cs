@@ -66,6 +66,10 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 
         public void InventoryMenu()
         {
+            // Console.Clear();
+            //아이템 출력 임시 코드
+            // ViewManager.PrintList(player.equipItemList);
+
             InventoryViewManager.EnterInventoryMenuTxt();
 
             //아이템 출력 임시 코드

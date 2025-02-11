@@ -94,22 +94,42 @@ namespace ReverseDungeonSparta
         {
             if (!equipItemList.Contains(item))
             {
-                equipItemList.Add(item); // item이 장착된 장비아이템리스트에 없다면
-                item.IsEquiped = true;
-                ApplyItemStat();
+                EquipItem item = isOwnedItemList[itemIndex];
+                bool isEquipped = item.IsEquiped; 
+                if (isEquipped == true)
+                {
+                    isEquipped = false;
+                    isEquippedList.Remove(item);
+                    
+                    // ApplyItemStat();
+                }
+                else
+                {
+                    isEquipped = true;
+                    // 가지고 있는 장비 아이템을 모두 가져옴
+                    // 그렇게 가져온 아이템 타입의 아이템을 for문 또는 foreach문을 통해서 isEquipped가 true상태인지 체크 
+                    Console.WriteLine("이미 장착된 아이템입니다.");
+                }
             }
             else
             {
-                Console.WriteLine("장착된 아이템이 아닙니다.");
+                Console.WriteLine("소유한 아이템이 아닙니다.");
             }
+            
         }
-        public void UnEquippedItem(EquipItem item) //아이템 해제 로직 구현
+        public void UnEquippedItem(int itemIndex) // 아이템 해제 로직 구현
+                                                  
         {
-            if (equipItemList.Contains(item))
+            if (itemIndex >= 0 && itemIndex < isEquippedList.Count)
             {
-                equipItemList.Remove(item); // 장비리스트에 장착된 아이템을 제거하고
-                item.IsEquiped = false;
-                ApplyItemStat(); //다시 스텟을 초기화
+                EquipItem item = isEquippedList[itemIndex];
+
+                if (item.IsEquiped)
+                {
+                    isEquippedList.Remove(item);
+                    item.IsEquiped = false;
+                    isOwnedItemList.Add(item);
+                }
             }
         }
         public bool CheckPlayerCanSkill(int selectSkillNum)
