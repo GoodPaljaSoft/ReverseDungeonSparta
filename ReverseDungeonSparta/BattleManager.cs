@@ -145,7 +145,7 @@ public class BattleManager
         List<string> monsterListTxt = new List<string>();
 
         monsterListTxt = monsterList
-            .Select(x => ViewManager3.MonsterListInfoString(x))
+            .Select(x => ViewManager3.MonsterListInfoNameString(x))
             .ToList();
 
         //여기서 먼저 플레이어가 지정한 공격 타입이 어택인지 버퍼인지 확인하는 로직이 필요함***
@@ -194,19 +194,33 @@ public class BattleManager
     //플레이어가 자신에게 스킬을 사용할 때 사용할 메서드
     public void PlayerUseBuffer()
     {
-        int beforeAttack = player.Attack;
-        //버프 추가
-        player.AddBuff(player, playerSelectSkill);
+        int beforeHP = player.HP;
+        int beforeAttack = player.TotalAttack;
+        int beforeDeffense = player.TotalDefence;
+        int beforeCritical = player.Critical;
+        int beforeEvasion = player.Evasion;
 
         //출력
         ViewManager3.PlayerUseBuff(player, monsterList, battleOrderList);
         Console.WriteLine("");
         Console.WriteLine("");
-        Console.WriteLine($"{player.Name} 의 스킬 사용!");
+        Console.WriteLine("");
+        player.AddBuff(player, playerSelectSkill);
+        Console.WriteLine($"효과 : {playerSelectSkill.Info}");
+        Console.WriteLine("");
+        Console.WriteLine("");
+        Console.WriteLine("");
+        Console.WriteLine($"플레이어 체  력 : {beforeHP} -> {player.HP}");
+        Console.WriteLine("");
         Console.WriteLine($"플레이어 공격력 : {beforeAttack} -> {player.TotalAttack}");
         Console.WriteLine("");
-        Console.WriteLine($"{playerSelectSkill.Name}");
-        Console.WriteLine($"{playerSelectSkill.Info}");
+        Console.WriteLine($"플레이어 방어력 : {beforeDeffense} -> {player.TotalDefence}");
+        Console.WriteLine("");
+        Console.WriteLine($"플레이어 치명타 : {beforeCritical} -> {player.Critical}");
+        Console.WriteLine("");
+        Console.WriteLine($"플레이어 회  피 : {beforeEvasion} -> {player.Evasion}");
+        Console.WriteLine("");
+        Console.WriteLine("");
 
         Util.CheckKeyInputEnter();
     }
@@ -252,15 +266,50 @@ public class BattleManager
         int beforeplayerHP = player.HP;
 
         ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList);
+
         ViewManager.PrintText(0, 11, $"{monster.Name}의 차례입니다!");
-        Util.CheckKeyInputEnter();
         ViewManager.PrintText("");
-        ViewManager.PrintText($"Lv. {monster.Level} {monster.Name}의 공격!");
         Util.CheckKeyInputEnter();
-        monster.Attacking(player, monsterList, out int damage);
-        ViewManager.PrintText($"{player.Name}을(를) 맞췄습니다.  [데미지 : {damage}]");
-        ViewManager.PrintText("");
-        ViewManager.PrintText($"{player.Name}에게 총 {damage} 데미지를 입혔습니다! ({beforeplayerHP} -> {player.HP})");
+        monster.Attacking(player, monsterList, out int damage, out (Skill, Character) skill);
+
+        if (skill.Item1 != null && skill.Item2 != null)
+        {
+            ViewManager.PrintText($"{monster.Name}의 스킬 사용!");
+            ViewManager.PrintText($"{monster.Name}은 {skill.Item2.Name}에게 {skill.Item1.Name}을(를) 사용했다!");
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"     [{skill.Item1.Name}]");
+            ViewManager.PrintText($"     : {skill.Item1.Info}");
+            ViewManager.PrintText("");
+        }
+        else
+        {
+            ViewManager.PrintText($"{monster.Name}의 공격!");
+            ViewManager.PrintText($"{monster.Name}은(는) 플레이어에게 공격을 시도했다!");
+        }
+        Util.CheckKeyInputEnter();
+        if(skill.Item1 != null && skill.Item1.ApplyType == ApplyType.Team)
+        {
+            int beforeHP = skill.Item2.HP;
+            int beforeATK = skill.Item2.TotalAttack;
+            int beforeDEF = skill.Item2.TotalDefence;
+            int beforeCritical = skill.Item2.TotalCritical;
+            int beforeEvasion = skill.Item2.Evasion;
+
+            ViewManager.PrintText($"{skill.Item2.Name}은(는) {skill.Item1.Name}에 의해 능력치가 상승했다!");
+            ViewManager.PrintText($"");
+            ViewManager.PrintText($"{beforeHP} -> {skill.Item2.HP}");
+            ViewManager.PrintText($"{beforeATK} -> {skill.Item2.TotalAttack}");
+            ViewManager.PrintText($"{beforeDEF} -> {skill.Item2.TotalDefence}");
+            ViewManager.PrintText($"{beforeCritical} -> {skill.Item2.TotalCritical}");
+            ViewManager.PrintText($"{beforeEvasion} -> {skill.Item2.Evasion}");
+            ViewManager.PrintText($"");
+        }
+        else
+        {
+
+        }
+
+        
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
 
@@ -453,7 +502,7 @@ public class BattleManager
             bool isBreak = false;
             while (isBreak == false)
             {
-                ViewManager.PrintText(37, 2, "");
+                ViewManager.PrintText(ViewManager3.monsterPostionValueX - 3 , ViewManager3.monsterPostionValueY, "");
                 //지정한 몬스터를 담을 리스트
                 List<Monster> selectMonsterList = new List<Monster>();
 
