@@ -26,8 +26,10 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
             ViewManager.PrintText("");
             ViewManager.PrintText($"HP : {player.HP}/{player.MaxHP}");
-            ViewManager.PrintText($"MP : {player.MP}/{player.MaxMP}");
-            ViewManager.PrintText("");
+            ViewManager.PrintText(14, 6, $"ATK : {player.TotalAttack}");
+            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.MaxMP}");
+            ViewManager.PrintText(14, 7, $"DEF : {player.TotalDefence}");
+            ViewManager.PrintText(0, 8, "");
             ViewManager.DrawLine();
         }
 
@@ -50,7 +52,7 @@ namespace ReverseDungeonSparta
             Thread.Sleep(300);
             ViewManager.PrintText("플레이어가 모험가 무리와 마주쳤습니다!");
             Thread.Sleep(300);
-            ViewManager.PrintText(0, 29,"-> 다음으로");
+            ViewManager.PrintText(0, 29, "-> 다음으로");
         }
 
 
@@ -61,12 +63,11 @@ namespace ReverseDungeonSparta
             PrintTitleTxt("전투 발생", 12);
             ViewManager.PrintText("");
             PrintPlayerState(player);
-            MonsterListInfoTxt(false, monsters);
+            MonsterListInfoTxt( monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
-            ViewManager.PrintText(0, 9,BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
             ViewManager.PrintText("");
             ViewManager.PrintText("플레이어의 차례입니다!");
-            Util.CheckKeyInputEnter();
             ViewManager.PrintText(0, 25, "   공격");
             ViewManager.PrintText("   스킬");
             ViewManager.PrintText("   상황을 지켜보기");
@@ -94,22 +95,31 @@ namespace ReverseDungeonSparta
 
 
         //몬스터의 정보의 출력할 메소드. isNum이 true면 번호를 추가해서 출력.
-        public static void MonsterListInfoTxt(bool isNum, List<Monster> monsterList)
+        public static void MonsterListInfoTxt(List<Monster> monsterList)
         {
             ViewManager.PrintText(40, 2, "");
+
             for (int i = 0; i < monsterList.Count; i++)
             {
-                //번호/레벨/이름/HP(Dead)
-                string str = ($"{(isNum ? (i + 1) : "")}Lv.{monsterList[i].Level} {monsterList[i].Name}");
-
-                //죽은 몬스터가 있다면 사망 처리
-                if (monsterList[i].IsDie)
-                    ViewManager.PrintText(str + "Dead");
-                else
-                    ViewManager.PrintText(str + $" HP: {monsterList[i].HP} " +
-                        $"ATK: {monsterList[i].Attack} " +
-                        $"DEF: {monsterList[i].Defence}");
+                ViewManager.PrintText(MonsterListInfoString(monsterList[i]));
             }
+        }
+
+
+        public static string MonsterListInfoString(Monster monster)
+        {
+            string str = "";
+            //번호/레벨/이름/HP(Dead)
+            str = ($"Lv.{monster.Level} {monster.Name}");
+
+            //죽은 몬스터가 있다면 사망 처리
+            if (monster.IsDie)
+                str = (str + "Dead");
+            else
+                str = (str + $" HP: {monster.HP} " +
+                    $"ATK: {monster.Attack} " +
+                    $"DEF: {monster.Defence}");
+            return str;
         }
 
 
@@ -119,7 +129,7 @@ namespace ReverseDungeonSparta
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
             PrintPlayerState(player);
-            MonsterListInfoTxt(false, monsters);
+            MonsterListInfoTxt( monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
@@ -131,7 +141,7 @@ namespace ReverseDungeonSparta
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
             PrintPlayerState(player);
-            MonsterListInfoTxt(false, monsters);
+            MonsterListInfoTxt( monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
             ViewManager.PrintText("");
@@ -145,8 +155,48 @@ namespace ReverseDungeonSparta
             Console.Clear();
             PrintTitleTxt("전투 발생", 12);
             PrintPlayerState(player);
-            MonsterListInfoTxt(false, monsters);
+            MonsterListInfoTxt( monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText("");
+            ViewManager.PrintText("대상을 선택해 주세요.");
+        }
+
+
+        //플레리어가 버프 스킬을 사용할 때 사용 여부를 묻는 메소드
+        public static void PlayerUseBuffSkillTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", 12);
+            PrintPlayerState(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 27, "-> 사용하기");
+            ViewManager.PrintText(0, 29, "[C] 취소");
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+        }
+
+
+        //플레이어가 몬스터를 때릴 때 출력할 텍스트
+        public static void PlayerAttackMonsterTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", 12);
+            PrintPlayerState(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 27, "-> 사용하기");
+            ViewManager.PrintText(0, 29, "[C] 취소");
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+        }
+
+
+        //플레이어가 버프를 사용할 때 출력할 텍스트
+        public static void PlayerUseBuff(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", 12);
+            PrintPlayerState(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 29, "-> 다음");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
 

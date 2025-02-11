@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿
+using System.Text;
 
 namespace ReverseDungeonSparta
 {
@@ -121,7 +122,7 @@ namespace ReverseDungeonSparta
             CursorY = cursorY;
             Console.SetCursorPosition(CursorX, CursorY);
             Console.Write(text);
-
+            
             if (isColor)
                 Console.ForegroundColor = ConsoleColor.White;
 
@@ -270,7 +271,7 @@ namespace ReverseDungeonSparta
             PrintText("⠀⢀⣥⣤⣤⣾⣷⣤⣿⣯⡀", ConsoleColor.Red, GameManager.Instance.clearCheck[7]);
             PrintText("⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[8]);
             PrintText("⠀⠸⠿⠟⠛⠛⠛⠛⣿⣿⠇", ConsoleColor.Red, GameManager.Instance.clearCheck[9]);
-            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[10]);
+            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[10]);  
             PrintText("⠀⢸⠃⠀⠀⠘⠃⠘⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[11]);
             PrintText("⠀⣼⣶⣾⣿⣿⣿⣿⣿⣿⣧", ConsoleColor.Red, GameManager.Instance.clearCheck[12]);
             PrintText("⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿", ConsoleColor.Red, GameManager.Instance.clearCheck[13]);
@@ -281,7 +282,7 @@ namespace ReverseDungeonSparta
             PrintText("⢸⣶⣶⣾⣿⣿⣿⣿⣶⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[18]);
             PrintText("⠈⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠁", ConsoleColor.Red, GameManager.Instance.clearCheck[18]);
 
-            for (int i = 0; i < 19; i++)
+            for (int i=0; i<19; i++)
             {
                 PrintText(width / 2 + 6, height / 2 - 5 + i, "▼", ConsoleColor.Red, GameManager.Instance.clearCheck[i]);
             }

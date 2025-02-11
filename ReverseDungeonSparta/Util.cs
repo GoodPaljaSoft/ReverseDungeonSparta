@@ -214,7 +214,7 @@ namespace ReverseDungeonSparta
                 keyInfo = Console.ReadKey(true);
                 if (keyInfo.Key == ConsoleKey.Enter) 
                 {
-                    AudioManager.PlayMoveMenuSE(0);
+                    //***AudioManager.PlayMoveMenuSE(0);
                     break; 
                 }
             }

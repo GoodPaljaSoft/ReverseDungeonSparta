@@ -21,6 +21,7 @@ namespace ReverseDungeonSparta
 
         //플레이어의 공략 진척도
         private int dungeonClearLevel = 0;
+        public bool[] clearCheck = new bool[19];
         public int DungeonClearLevel
         {
             get
@@ -35,7 +36,7 @@ namespace ReverseDungeonSparta
                 StageClearCheck();
             }
         }
-        public bool[] clearCheck = new bool[19];
+        
 
         public GameManager()
         {
@@ -43,17 +44,15 @@ namespace ReverseDungeonSparta
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
-
-            //공략 진척도에 따라 탑 출력 색 변함
-            //level 5 == 현재 15층까지 클리어한 상태
-            DungeonClearLevel = 5;
+            //뷰매니저 적용전 테스트
+            
+            
         }
 
         public void PlayerStatusMenu()
         {
             Console.Clear();
-            Console.WriteLine("상태보기");
-            Console.WriteLine("캐릭터의 정보가 표시됩니다.");
+            ViewManager.DrawLine("상태보기","캐릭터의 정보가 표시됩니다.");
             Util.PrintPlayerView(player);
         }
         #region 소지품 확인 
@@ -126,7 +125,7 @@ namespace ReverseDungeonSparta
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
 
-            // EquipItem.ItemUpgrade();
+            //EquipItem.ItemUpgrade();
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -145,21 +144,25 @@ namespace ReverseDungeonSparta
 
         public void TitleSMenu()
         {
+            ViewManager.TitleMenuTxt();
+            
+
             menuItems = new List<(string, Action, Action)>
             {
                 ("", GameMenu, null),
                 ("", InventoryMenu, null)
-
             };
 
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
+            Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
         }
 
         public void GameMenu() // 시작화면 구현
         {
+            //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             //Console.SetCursorPosition(100, 25);
 
-            ViewManager3.MainMenuTxt();
+            //ViewManager3.MainMenuTxt();
+            ViewManager.MainMenuTxt();
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
             //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
@@ -167,10 +170,13 @@ namespace ReverseDungeonSparta
             //새로운 (string, Action, Action) 입력하기 전 반점(,) 필수
             menuItems = new List<(string, Action, Action)>
             {
-                // ("인벤토리", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                //상태 확인, 소지품 확인, 내려가기, 휴식하기, 저장하기, 게임종료
                 ("", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
                 //("아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름], [출력할 오디오 메소드])
                 //("조합", sum, null)
                 //...
@@ -179,23 +185,32 @@ namespace ReverseDungeonSparta
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
+            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
+
+
+            //스테이지 레벨 반영 시험 코드
+            dungeonClearLevel++;
+
         }
 
 
         public void StageClearCheck()
         {
+            //초기화
+            for (int i = 0; i < clearCheck.Length; i++)
+            {
+                clearCheck[i] = false;
+            }
+
+            //클리어한 스테이지까지 true로 변경
             for (int i = 0; i < dungeonClearLevel; i++)
             {
                 clearCheck[i] = true;
             }
         }
 
-        public void tempCountdawn()
-        {
-            dungeonClearLevel++;
-            Thread.Sleep(3000);
-        }
+   
 
     }
+
 }
