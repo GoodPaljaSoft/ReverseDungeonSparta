@@ -83,9 +83,9 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 - 장비
         public void EquipmentMenu()
         {
-            InventoryViewManager.InventoryEquippedMenuTxt();
             //ViewManager.PrintList(player.equipItemList);
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
+            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
 
             menuItems = new List<(string, Action, Action)>
             {
