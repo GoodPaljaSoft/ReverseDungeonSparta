@@ -110,11 +110,23 @@ namespace ReverseDungeonSparta
             BattleManagerInstance.EnterTheBattle();
         }
 
+        public void TitleSMenu()
+        {
+            menuItems = new List<(string, Action, Action)>
+            {
+                ("", GameMenu, null),
+                ("", GameMenu, null),
+                ("", InventoryMenu, null)
+
+            };
+
+            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (100, 23));
+        }
 
         public void GameMenu() // 시작화면 구현
         {
             //Console.SetCursorPosition(100, 25);
-
+ 
             ViewManager3.MainMenuTxt();
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
@@ -146,6 +158,12 @@ namespace ReverseDungeonSparta
             {
                 clearCheck[i] = true; 
             }
+        }
+
+        public void tempCountdawn()
+        {
+            dungeonClearLevel++;
+            Thread.Sleep(3000);
         }
 
     }

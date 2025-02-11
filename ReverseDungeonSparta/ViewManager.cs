@@ -31,18 +31,6 @@ namespace ReverseDungeonSparta
 
             //Console.ReadLine();
 
-            List<EquipItem> tempItemList = new List<EquipItem>();
-
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
-            tempItemList.Add(new EquipItem());
 
         }
 
@@ -251,8 +239,6 @@ namespace ReverseDungeonSparta
         public static void PrintTower()
         {
             Console.OutputEncoding = Encoding.UTF8;
-            //Console.ForegroundColor = ConsoleColor.Red;
-
 
             PrintText(width / 2 - 8, height / 2 - 7, "⠀⠀⠀⠀⠀⢀⡀", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
             PrintText("⠀⠀⠀⠀⠀⣸⣧", GameManager.Instance.clearCheck[0], ConsoleColor.Red);
