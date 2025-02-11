@@ -152,7 +152,7 @@ namespace ReverseDungeonSparta
         {
         new SkillInfo("공격력 강화", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5,BuffType.AttackBuff, 1, "스킬 설명"),
         new SkillInfo("방어력 강화", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "스킬 설명"),
-        new SkillInfo("회피력 강화", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 10, BuffType.EvasionBuff, 3, "스킬 설명")
+        new SkillInfo("행운 강화", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 10, BuffType.LuckBuff, 3, "스킬 설명")
         };
 
 

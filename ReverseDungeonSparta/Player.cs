@@ -28,7 +28,7 @@ namespace ReverseDungeonSparta
             Name = "플레이어";
             Level = 1;
 
-            SkillList = Skill.AddPlayerSkill(this, 3);
+            SkillList = Skill.AddPlayerSkill(this, 7);
 
             Luck = 5;
             Defence = 5;

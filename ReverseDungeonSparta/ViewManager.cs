@@ -1,5 +1,6 @@
 ﻿
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
 {
@@ -32,6 +33,12 @@ namespace ReverseDungeonSparta
             Console.WriteLine(str);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
+        }
+
+        public static void DrawLine(int y)
+        {
+            Console.SetCursorPosition(0, y);
+            DrawLine();
         }
 
         // DrawLine 2
@@ -147,9 +154,42 @@ namespace ReverseDungeonSparta
             CursorY++;
         }
 
+        //string을 받아와 char 단위로 하나씩 출력해준다.
+        public static void PrintTextAnimation(string text)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                Console.Write(text.Substring(i, 1));
+                Thread.Sleep(100);
+            }
+        }
+        //string을 받아와 지정한 좌표값에 char 단위로 하나씩 출력해준다.
+        public static void PrintTextAnimation(int x, int y, string text)
+        {
+            Console.SetCursorPosition(x, y);
+            PrintTextAnimation(text);
+        }
+        //string 타입 List를 받아와 char 단위로 하나씩 출력해준다.
+        public static void PrintTextAnimation(List<string> textList)
+        {
+            foreach (var str in textList)
+            {
+                PrintTextAnimation(str);
+            }
+        }
+        //string 타입 List를 받아와 한 문장씩 출력해준다.
+        public static void PrintLongTextAnimation(List<string> textList)
+        {
+            foreach (var str in textList)
+            {
+                Console.Write(str);
+                Thread.Sleep(1500);
+            }
+        }
+
         public static void PrintList(List<EquipItem> items)
         {
-            int[] x = { 3, 7, 24, 26, 33, 35, 45, 47 };
+            int[] x = { 3, 7 , 24 + 5, 26 + 6, 33 + 6, 35 + 6, 45 + 6, 47 + 6 };
             int y = 3;
             //커서는 x==1 위치에 들어감
             for (int i = 0; i < items.Count; i++)
@@ -178,6 +218,7 @@ namespace ReverseDungeonSparta
 
             }
         }
+
         //플레이어 정보를 출력할 메서드
         public static void PrintPlayerState(Player player)
         {
@@ -288,7 +329,7 @@ namespace ReverseDungeonSparta
             }
         }
 
-        //메인 메뉴 창에서 택스트 출력하는 메소드
+        //메인 메뉴 창에서 텍스트 출력하는 메소드
         public static void MainMenuTxt()
         {
             Console.Clear();
@@ -310,5 +351,9 @@ namespace ReverseDungeonSparta
             PrintText("   게임종료");
         }
 
+        public static void PrintCurrentFloors(int floors)
+        {
+            PrintText(width - 30, 1, $"현재 위치: 스파르타 던전 {floors}층", ConsoleColor.Red);
+        }
     }
 }

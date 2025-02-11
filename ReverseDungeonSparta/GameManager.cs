@@ -21,7 +21,6 @@ namespace ReverseDungeonSparta
 
         //플레이어의 공략 진척도
         private int dungeonClearLevel = 0;
-        public bool[] clearCheck = new bool[19];
         public int DungeonClearLevel
         {
             get
@@ -32,11 +31,15 @@ namespace ReverseDungeonSparta
             {
                 //플레이어의 공략 진척도에 변화가 생기면
                 //StageClearCheck() 메서드를 통해 각 스테이지 클리어 여부를 확인한다.(후진했을 수도 있으므로...)
-                dungeonClearLevel = value;
-                StageClearCheck();
+
+                if (value < 20)
+                {
+                    dungeonClearLevel = value;
+                    StageClearCheck();
+                }
             }
         }
-        
+        public bool[] clearCheck = new bool[19];
 
         public GameManager()
         {
@@ -44,8 +47,11 @@ namespace ReverseDungeonSparta
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
-            //뷰매니저 적용전 테스트
-            //  player.LoadEquipItems();
+            //인트로 데이터베이스 초기화
+            DataBase.IntroTextInit();
+
+            //애니메이션 텍스트 메서드 테스트
+            //IntroScene();
 
         }
         public void PlayerStatusMenu()
@@ -58,14 +64,6 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             ViewManager.DrawLine("인벤토리");
-
-            //Console.WriteLine("인벤토리");
-            //Console.WriteLine("갖고 있는 아이템의 정보가 표시됩니다.");
-            //Console.WriteLine("");
-            //Console.WriteLine("");
-            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
-            //player.LoadEquipItems();
-
 
             //아이템 출력 임시 코드
             ViewManager.PrintList(player.equipItemList);
@@ -120,7 +118,6 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
-
             };
             Util.GetUserInput(menuItems, ItemUpgradeMenu, ref selectedIndex);
         }
@@ -142,7 +139,7 @@ namespace ReverseDungeonSparta
             {
                 ("", GameMenu, null),
                 ("", GameMenu, null),
-                ("", GameMenu, null),
+                ("", GameMenu, null)
             };
 
             Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
@@ -150,11 +147,12 @@ namespace ReverseDungeonSparta
 
         public void GameMenu() // 시작화면 구현
         {
-            //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
-            //Console.SetCursorPosition(100, 25);
+            
 
-            //ViewManager3.MainMenuTxt();
+            //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
+            ViewManager.PrintCurrentFloors(DungeonClearLevel);
+            ViewManager.DrawLine(2);
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
             //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
@@ -180,8 +178,14 @@ namespace ReverseDungeonSparta
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
 
             //스테이지 레벨 반영 시험 코드
-            dungeonClearLevel++;
+            DungeonClearLevel++;
 
+
+        }
+
+        public void IntroScene()
+        {
+            ViewManager.PrintLongTextAnimation(DataBase.introText);                
         }
 
         public void StageClearCheck()

@@ -10,14 +10,8 @@
             
             Console.Title = "REVERSE DUNGEON : SPARTA"; //콘솔창 제목 지정
 
-            //Console.WriteLine(Console.BufferWidth);
-            //Console.WriteLine(Console.BufferHeight);
-
-            //Console.ReadKey();
-
             ViewManager.width = Console.WindowWidth;
             ViewManager.height = Console.WindowHeight;
-
 
             // 게임 시작
             AudioManager.PlayMenuBGM();
