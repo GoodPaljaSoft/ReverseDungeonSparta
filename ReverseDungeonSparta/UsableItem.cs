@@ -1,241 +1,221 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio.Dmo;
-using static Monster;
-using static ReverseDungeonSparta.EquipItem;
+﻿using Microsoft.VisualBasic;
+using ReverseDungeonSparta;
+using System.Xml.Linq;
 
-namespace ReverseDungeonSparta
+public class UsableItem : Item
 {
-    public class UsableItem : Item
+    public int Hp { get; set; }
+    public int Mp { get; set; }
+    public int Count { get; set; }
+
+    public UsableItem(UsableItemInfo u)
     {
-        public UsableItemInfo ItemInfo { get; private set; }
-        string Name { get; set; }
-        string Description { get; set; }
-        int Hp { get; set; }
-        int Mp { get; set; }
+        Name = u.name;
+        Information = u.info;
+        Hp = u.hp;
+        Mp = u.mp;
+        Count = u.count;
+    }
 
-        public int Count { get; set; }
+    public UsableItem() 
+    {
+        UsableItem item = new UsableItem();
+    }
 
-        public UsableItem(UsableItemInfo usableItemInfo)
+    // 소비 아이템 구조체
+    public struct UsableItemInfo
+    {
+        public string name;
+        public string info;
+        public int hp;
+        public int mp;
+        public int count;
+
+        public UsableItemInfo(string _name, string _info, int _hp, int _mp, int _count)
         {
-            this.ItemInfo = usableItemInfo;
+            name = _name;
+            info = _info;
+            hp = _hp;
+            mp = _mp;
+            count = _count;
         }
-        public UsableItem()
-        {
+    }
 
+    public static List<UsableItem> GetUsableItemList(int num) // 생성된 리스트 아이템 넣기
+    {
+        List<UsableItem> usableItemList = new List<UsableItem>();
+        for (int i = 0; i < num; i++)
+        {
+            usableItemList.Add(InstanceUsableItem(i));
         }
+        return usableItemList;
+    }
 
-        // 소비 아이템 구조체
-        public struct UsableItemInfo
+    public static UsableItem InstanceUsableItem(int index) // indx를 통한 아이템 정보를 반환
+    {
+        if (index >= 0 && index < allUsableItem.Length)
         {
-            public string name;
-            public string description;
-            public int hp;
-            public int mp;
-            public int count;
-
-            public UsableItemInfo(string _name, string _description, int _hp, int _mp, int _count)
-            {
-                name = _name;
-                description = _description;
-                hp = _hp;
-                mp = _mp;
-                count = _count;
-            }
+            UsableItemInfo usableItemInfo = allUsableItem[index];
+            return new UsableItem(usableItemInfo);
         }
+        return new UsableItem();
+    }
 
-        public static UsableItemInfo[] allUsableItem =
-        {
-            new UsableItemInfo("체력 회복 포션", "플레이어의 HP를 50 회복합니다.", 50, 0, 10), // 체력 포션
-            new UsableItemInfo("마나 회복 포션", "플레이어의 MP를 50 회복합니다.", 0, 50, 6), // 마나 포션
-            new UsableItemInfo("만능 회복 포션", "플레이어의 HP와 MP를 50 회복합니다.", 50, 50,1), // 만능 포션
-        };
-
-        public static List<UsableItem> GetUsableItemList(int num) // 생성된 리스트 아이템 넣기
-        {
-            List<UsableItem> usableItemList = new List<UsableItem>();
-
-            for (int i = 0; i < num; i++)
-            {
-                usableItemList.Add(InstanceUsableItem(i));
-            }
-            return usableItemList;
-        }
-        public static UsableItem InstanceUsableItem(int index) // indx를 통한 아이템 정보를 반환
-        {
-            if (index >= 0 && index <= allUsableItem.Length)
-            {
-                UsableItemInfo usableItemInfo = allUsableItem[index];
-
-                return new UsableItem(usableItemInfo);
-            }
-            else
-            {
-                return new UsableItem();
-            }
-        }
-
-        // 소비 아이템 목록
-        public static void UseItemView()
+    // 소비 아이템 목록
+    public static void UseItemView()
+    {
+        while (true)
         {
             Console.Clear();
             Console.WriteLine("소지품 확인 - 소비");
             Console.WriteLine("");
 
-            for (int i = 0; i < allUsableItem.Length; i++)
+            Player player = GameManager.Instance.Player; // Player 객체 가져오기
+
+            // 소비 아이템 목록 출력
+            for (int i = 0; i < player.UsableItemInventory.Count; i++)
             {
-                UsableItemInfo item = allUsableItem[i];
+                UsableItem item = player.UsableItemInventory[i];
                 string recoveryInfo = "";
-                if (item.hp > 0 && item.mp > 0)
+
+                if (item.Hp > 0)
                 {
-                    recoveryInfo = $"HP +{item.hp}, MP +{item.mp}";
-                }
-                else if (item.hp > 0)
-                {
-                    recoveryInfo = $"HP +{item.hp}";
-                }
-                else if (item.mp > 0)
-                {
-                    recoveryInfo = $"MP +{item.mp}";
+                    recoveryInfo += $"HP +{item.Hp}";
                 }
 
-                Console.WriteLine($"{item.name} | {recoveryInfo} | {item.description} | 보유 수 : {item.count}개");
-            }
-            Console.WriteLine("");
-            List<(String, Action, Action)> inventoryItems = new List<(string, Action, Action)>
-            {
-                ("아이템 사용", UseSelectedItem, () => AudioManager.PlayMoveMenuSE(0)),
-                ("나가기", GameManager.Instance.InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
-            };
-            Util.GetUserInput(inventoryItems, UseItemView, ref GameManager.Instance.selectedIndex);
-        }
-
-        // 소비 아이템 사용
-        public static void UseSelectedItem()
-        {
-            Console.Clear();
-            Console.WriteLine("소지품 확인 - 소비 아이템 사용");
-            Console.WriteLine("");
-            for (int i = 0; i < allUsableItem.Length; i++)
-            {
-                UsableItemInfo item = allUsableItem[i];
-                string recoveryInfo = "";
-                if (item.hp > 0 && item.mp > 0)
+                if (item.Mp > 0)
                 {
-                    recoveryInfo = $"HP +{item.hp}, MP +{item.mp}";
-                }
-                else if (item.hp > 0)
-                {
-                    recoveryInfo = $"HP +{item.hp}";
-                }
-                else if (item.mp > 0)
-                {
-                    recoveryInfo = $"MP +{item.mp}";
-                }
-
-                Console.WriteLine($"{i + 1} {item.name} | {recoveryInfo} | {item.description} | 보유 수 : {item.count}개");
-            }
-            Console.WriteLine("");
-            Console.WriteLine("사용할 소비 아이템을 선택해주세요.");
-            string input = Console.ReadLine();
-            int selectedIndex = -1;
-
-            if (int.TryParse(input, out selectedIndex) && selectedIndex >= 1 && selectedIndex <= allUsableItem.Length)
-            {
-                selectedIndex--;
-                ref UsableItemInfo selectedItem = ref allUsableItem[selectedIndex];
-
-                if (selectedItem.count > 0)
-                {
-                    // 아이템 효과 적용
-                    bool itemUsed = ApplyItemEffect(selectedItem);
-
-                    if (itemUsed) // 아이템이 효과를 적용했다면, 보유 수 차감
+                    if (recoveryInfo != "") // HP 정보가 있으면 공백 추가
                     {
-                        selectedItem.count--;
-                        Console.WriteLine($"{selectedItem.name}을(를) 사용했습니다! 남은 개수: {selectedItem.count}개");
+                        recoveryInfo += " ";
                     }
+                    recoveryInfo += $"MP +{item.Mp}";
                 }
-                else // 보유 수가 0개일 경우
+
+                Console.WriteLine($"{i + 1}. {item.Name} | {recoveryInfo} | {item.Information} | 보유 수 : {item.Count}개");
+            }
+
+            Console.WriteLine("\n사용할 소비 아이템을 선택해주세요.");
+
+            List<(string, Action, Action)> inventoryItems = new List<(string, Action, Action)>();
+
+            for (int i = 0; i < player.UsableItemInventory.Count; i++)
+            {
+                int index = i;
+                inventoryItems.Add(($"{player.UsableItemInventory[i].Name}",
+                    () =>
+                    {
+                        UseSelectedItem(index); // 아이템 사용
+                        ShowRecoveryMessage();  // 회복 메시지 출력
+                    },
+                    () => AudioManager.PlayMoveMenuSE(0))); // 메뉴 이동 효과음
+            }
+
+            inventoryItems.Add(("나가기",
+                () => GameManager.Instance.InventoryMenu(),
+                () => AudioManager.PlayMoveMenuSE(0))); // 나가기 옵션
+
+            Util.GetUserInput(inventoryItems, UseItemView, ref GameManager.Instance.selectedIndex); // 사용자 입력 받기
+        }
+    }
+
+    private static void ShowRecoveryMessage()
+    {
+        Console.WriteLine("\n엔터 키를 눌러 계속 진행하세요...");
+        Console.ReadLine();
+        Console.Clear();
+    }
+
+    // 소비 아이템 사용
+    public static void UseSelectedItem(int itemIndex)
+    {
+        Player player = GameManager.Instance.Player;
+        UsableItem selectedItem = player.UsableItemInventory[itemIndex];
+
+        if (selectedItem.Count > 0)
+        {
+            bool itemUsed = ApplyItemEffect(selectedItem);  // 아이템 효과 적용
+
+            if (itemUsed)
+            {
+                selectedItem.Count--; // 사용하면 보유 수 차감
+                Console.WriteLine($"{selectedItem.Name}을(를) 사용했습니다! 남은 개수: {selectedItem.Count}개");
+
+                // 만약 사용한 아이템의 개수가 0이 되면 리스트에서 제거
+                if (selectedItem.Count == 0)
                 {
-                    Console.WriteLine("이 아이템을 더 이상 사용할 수 없습니다.");
+                    player.UsableItemInventory.RemoveAt(itemIndex);
                 }
             }
             else
             {
-                Console.WriteLine("잘못된 입력입니다. 다시 선택해주세요.");
+                // HP 또는 MP가 이미 최대치라면 사용되지 않음
+                Console.WriteLine("이 아이템을 사용할 수 없습니다.");
             }
-
-            Console.WriteLine("\n엔터 키를 눌러 계속 진행하세요...");
-            Console.ReadLine();
-            UseItemView(); // 다시 아이템 목록을 출력
         }
-
-
-        //아이템 효과 적용
-        public static bool ApplyItemEffect(UsableItemInfo item)
+        else
         {
-            Player player = GameManager.Instance.Player; // Player 객체 가져오기
-            bool itemUsed = false;
-
-            // HP와 MP 회복을 합쳐서 출력할 변수
-            string recoveryMessage = "";
-
-            // HP 회복
-            if (item.hp > 0)
-            {
-                if (player.HP == player.MaxHP)
-                {
-                    recoveryMessage += $"플레이어의 HP는 이미 최대입니다. ";
-                }
-                else
-                {
-                    int newHP = Math.Min(player.HP + item.hp, player.MaxHP);
-                    recoveryMessage += $"플레이어의 HP가 {item.hp}만큼 회복되었습니다. (현재 HP: {newHP}/{player.MaxHP}) ";
-                    player.HP = newHP;
-                    itemUsed = true; // 효과 적용됨
-                }
-            }
-
-            // MP 회복
-            if (item.mp > 0)
-            {
-                if (player.MP == player.MaxMP)
-                {
-                    recoveryMessage += $"플레이어의 MP는 이미 최대입니다. ";
-                }
-                else
-                {
-                    int newMP = Math.Min(player.MP + item.mp, player.MaxMP);
-                    recoveryMessage += $"플레이어의 MP가 {item.mp}만큼 회복되었습니다. (현재 MP: {newMP}/{player.MaxMP}) ";
-                    player.MP = newMP;
-                    itemUsed = true; // 효과 적용됨
-                }
-            }
-
-            // HP와 MP 모두 최대일 경우
-            if (item.hp > 0 && player.HP == player.MaxHP && item.mp > 0 && player.MP == player.MaxMP)
-            {
-                recoveryMessage = "플레이어의 HP와 MP는 이미 최대입니다.";
-            }
-
-            // HP와 MP 모두 회복되었을 경우, 메시지 출력
-            if (item.hp > 0 || item.mp > 0)
-            {
-                if (recoveryMessage != "")
-                {
-                    Console.WriteLine(recoveryMessage);
-                }
-            }
-
-            return itemUsed; // 아이템이 사용되었는지 여부 반환
+            // 아이템이 없다면
+            Console.WriteLine("이 아이템을 사용할 수 없습니다.");
         }
     }
 
+    // 아이템 효과 적용
+    public static bool ApplyItemEffect(UsableItem item)
+    {
+        Player player = GameManager.Instance.Player;
+        bool itemUsed = false; // 아이템 사용 여부 확인
+        string recoveryMessage = ""; // 회복 메시지
 
+        // HP 회복 아이템일 때
+        if (item.Hp > 0)
+        {
+            if (player.HP < player.MaxHP) // 플레이어의 HP가 최대가 아닐 때
+            {
+                int newHP = Math.Min(player.HP + item.Hp, player.MaxHP);
+                recoveryMessage += $"HP +{item.Hp} (현재 HP: {newHP}/{player.MaxHP}) ";
+                player.HP = newHP;
+                itemUsed = true; // 아이템 사용 표시
+            }
+            else
+            {
+                recoveryMessage += "HP가 이미 최대입니다. "; // 이미 HP가 최대일 때
+            }
+        }
+
+        // MP 회복 아이템일 때
+        if (item.Mp > 0)
+        {
+            if (player.MP < player.MaxMP) // 플레이어의 MP가 최대가 아닐 때
+            {
+                int newMP = Math.Min(player.MP + item.Mp, player.MaxMP);
+                recoveryMessage += $"MP +{item.Mp} (현재 MP: {newMP}/{player.MaxMP}) ";
+                player.MP = newMP;
+                itemUsed = true; // 아이템 사용 표시
+            }
+            else
+            {
+                recoveryMessage += "MP가 이미 최대입니다. "; // 이미 최대 MP일 때
+            }
+        }
+
+        // 회복 메시지가 비어있지 않으면 출력
+        if (!string.IsNullOrEmpty(recoveryMessage))
+        {
+            Console.WriteLine(recoveryMessage);
+        }
+
+        return itemUsed; // 아이템 사용 여부 반환
+    }
+
+    // 소비 아이템 정보
+    public static UsableItemInfo[] allUsableItem =
+    {
+        new UsableItemInfo("하급 체력 회복 포션", "플레이어의 HP를 30 회복합니다.", 30, 0, 0),
+        new UsableItemInfo("중급 체력 회복 포션", "플레이어의 HP를 50 회복합니다.", 50, 0, 0),
+        new UsableItemInfo("상급 체력 회복 포션", "플레이어의 HP를 70 회복합니다.", 70, 0, 0),
+        new UsableItemInfo("하급 마나 회복 포션", "플레이어의 MP를 30 회복합니다.", 0, 30, 0),
+        new UsableItemInfo("중급 마나 회복 포션", "플레이어의 MP를 50 회복합니다.", 0, 50, 0),
+        new UsableItemInfo("상급 마나 회복 포션", "플레이어의 MP를 70 회복합니다.", 0, 70, 0),
+    };
 }
-    
-

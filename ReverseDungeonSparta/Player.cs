@@ -14,6 +14,8 @@ namespace ReverseDungeonSparta
     public class Player : Character
     {
         public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
+
+        public List<UsableItem> UsableItemInventory = new List<UsableItem>(); // 소비 아이템 리스트
         public JobType Job { get; set; } 
         public int Level { get; set; }
         public int Gold { get; set; }
@@ -47,6 +49,9 @@ namespace ReverseDungeonSparta
 
             //int additionalAttack = AdditionalAttack; //필요없다면 지우기
             //int additionalDefence = AdditionalDefence;
+
+            // 기본으로 주어지는 소비 아이템 추가
+            AddInitialItems();
 
             switch (Job)
             {
@@ -182,6 +187,46 @@ namespace ReverseDungeonSparta
             rewardItemList.Add(rewardItem);
 
             return new List<EquipItem> { rewardItem };
+        }
+        // 소비 아이템 추가
+        public void AddItemToInventory(UsableItem item, int count)
+        {
+            // 이미 해당 아이템이 존재하는 경우, 수량을 증가시킴
+            var existingItem = UsableItemInventory.FirstOrDefault(i => i.Name == item.Name);
+            if (existingItem != null)
+            {
+                existingItem.Count += count;
+            }
+            else
+            {
+                // 새로운 아이템인 경우, 인벤토리에 추가
+                item.Count = count;
+                UsableItemInventory.Add(item);
+            }
+        }
+        /*
+               예시: 플레이어에게 체력 회복 포션 3개 추가
+               UsableItem hpPotion = new UsableItem(UsableItem.allUsableItem[0]); // 체력 회복 포션 생성
+               GameManager.Instance.Player.AddItemToInventory(hpPotion, 3); // 플레이어 인벤토리에 3개 추가
+        */
+
+        // 기본으로 주어지는 소비 아이템 추가
+        private void AddInitialItems()
+        {
+            UsableItem LowHpPotion = new UsableItem(UsableItem.allUsableItem[0]); // 하급 체력 회복 포션
+            UsableItem MidHpPotion = new UsableItem(UsableItem.allUsableItem[1]); // 중급 체력 회복 포션
+            UsableItem HighHpPotion = new UsableItem(UsableItem.allUsableItem[2]); // 상급 체력 회복 포션
+            UsableItem LowMpPotion = new UsableItem(UsableItem.allUsableItem[3]); // 하급 마나 회복 포션
+            UsableItem MidMpPotion = new UsableItem(UsableItem.allUsableItem[4]); // 중급 마나 회복 포션
+            UsableItem HighMpPotion = new UsableItem(UsableItem.allUsableItem[5]); // 상급 마나 회복 포션
+
+            // 인벤토리에 추가 
+            AddItemToInventory(LowHpPotion, 5);
+            AddItemToInventory(MidHpPotion, 5);
+            AddItemToInventory(HighHpPotion, 5);
+            AddItemToInventory(LowMpPotion, 5);
+            AddItemToInventory(MidMpPotion, 5);
+            AddItemToInventory(HighMpPotion, 5);
         }
     }
 }
