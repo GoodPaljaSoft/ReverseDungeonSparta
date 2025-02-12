@@ -187,6 +187,22 @@ namespace ReverseDungeonSparta
                 ItemUpgradeMenu();
             }
         }
+        #endregion
+
+        // 소비 아이템 선택 메뉴
+        public void UseItemMenu()
+        {
+            Player player = GameManager.Instance.Player; // Player 객체 가져오기
+            InventoryViewManager.InventoryUseItemTxt(player);
+
+
+            while (true)
+            {
+                if (ViewUsableItemList()) break;
+            }
+
+            InventoryMenu();
+        }
 
         //소비 아이템의 리스트를 보여 줄 때 실행할 메서드
         public bool ViewUsableItemList()
