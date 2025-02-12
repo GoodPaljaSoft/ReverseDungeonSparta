@@ -174,6 +174,14 @@ namespace ReverseDungeonSparta
         }
 
 
+        private static void ShowRecoveryMessage()
+        {
+            Console.WriteLine("엔터 키를 눌러 계속 진행하세요...");
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+
         // 선택한 소비 아이템 사용
         public static void UseSelectedItem(ref int itemIndex)
         {
@@ -183,6 +191,7 @@ namespace ReverseDungeonSparta
             if (selectedItem.Count > 0)
             {
                 (bool itemUsed, string recoveryMessage) = ApplyItemEffect(selectedItem);  // 아이템 효과 적용
+
                 if (itemUsed)
                 {
                     selectedItem.Count--; // 사용하면 보유 수 차감
@@ -206,23 +215,14 @@ namespace ReverseDungeonSparta
                     {
                         Console.WriteLine(recoveryMessage);
                     }
-                }                
+                }
             }
             else
             {
                 // 아이템이 없다면
                 Console.WriteLine("이 아이템을 사용할 수 없습니다.");
             }
-            ShowRecoveryMessage();
-            GameManager.Instance.UseItemMenu();
         }
-
-        private static void ShowRecoveryMessage()
-        {
-            Console.WriteLine("엔터 키를 눌러 계속 진행하세요...");
-            Console.ReadLine();
-        }
-
 
 
         // 아이템 효과 적용
@@ -238,7 +238,7 @@ namespace ReverseDungeonSparta
                 if (player.HP < player.MaxHP) // 플레이어의 HP가 최대가 아닐 때
                 {
                     int newHP = Math.Min(player.HP + item.Hp, player.MaxHP);
-                    recoveryMessage += $"플레이어의 HP를 {newHP - player.HP} 회복합니다.\n현재 플레이어의 HP: {player.HP} -> {newHP}\n";
+                    recoveryMessage += $"\n플레이어의 HP를 {newHP - player.HP} 회복합니다.\n현재 플레이어의 HP: {player.HP} -> {newHP}\n";
                     player.HP = newHP;
                     itemUsed = true; // 아이템 사용 표시
                 }
@@ -254,7 +254,7 @@ namespace ReverseDungeonSparta
                 if (player.MP < player.MaxMP) // 플레이어의 MP가 최대가 아닐 때
                 {
                     int newMP = Math.Min(player.MP + item.Mp, player.MaxMP);
-                    recoveryMessage += $"플레이어의 MP를 {newMP - player.MP} 회복합니다.\n현재 플레이어의 MP: {player.MP} -> {newMP}\n";
+                    recoveryMessage += $"\n플레이어의 MP를 {newMP - player.MP} 회복합니다.\n현재 플레이어의 MP: {player.MP} -> {newMP}\n";
                     player.MP = newMP;
                     itemUsed = true; // 아이템 사용 표시
                 }
