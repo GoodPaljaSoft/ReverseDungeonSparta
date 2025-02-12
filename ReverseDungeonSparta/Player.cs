@@ -155,6 +155,8 @@ namespace ReverseDungeonSparta
 
             return result;
         }
+
+        /*
         public void TryEquipItemUpgrade(List<EquipItem> equipItemList)
         {
             Console.WriteLine("");
@@ -278,6 +280,7 @@ namespace ReverseDungeonSparta
                 return null;
             }
         }
+        */
         public static EquipItem RandomRewardList()
         {
             // 새로운 보상아이템정보를 리스트화 하고

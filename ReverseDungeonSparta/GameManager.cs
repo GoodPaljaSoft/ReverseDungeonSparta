@@ -54,7 +54,7 @@ namespace ReverseDungeonSparta
             DataBase.IntroTextInit();
 
             //애니메이션 텍스트 메서드 테스트
-            //IntroScene();
+            IntroScene();
 
         }
 
@@ -63,6 +63,7 @@ namespace ReverseDungeonSparta
         {
             ViewManager3.PlayerStatusTxt(player, ref selectedIndex);
             GameMenu();
+
         }
 
 
@@ -129,7 +130,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-            player.TryEquipItemUpgrade(player.equipItemList);
+            
+            //player.TryEquipItemUpgrade(player.equipItemList);
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -317,11 +319,10 @@ namespace ReverseDungeonSparta
         //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
-            
-
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
-            ViewManager.PrintCurrentFloors(20-DungeonClearLevel);
+
+            ViewManager.PrintCurrentFloors(20 - DungeonClearLevel);
             ViewManager.DrawLine(2);
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
@@ -358,8 +359,11 @@ namespace ReverseDungeonSparta
         {
             ViewManager.PrintLongTextAnimation(DataBase.introText);
 
-            
             player.Name = Console.ReadLine();
+            DataBase.playerName = player.Name;
+
+            ViewManager.PrintLongTextAnimation(DataBase.introText2);
+
 
         }
 

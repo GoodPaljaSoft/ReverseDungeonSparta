@@ -163,23 +163,43 @@ namespace ReverseDungeonSparta
             Console.SetCursorPosition(x, y);
             PrintTextAnimation(text);
         }
+
         //string 타입 List를 받아와 char 단위로 하나씩 출력해준다.
         public static void PrintTextAnimation(List<string> textList)
         {
+            StringBuilder sb = new StringBuilder();
+
             foreach (var str in textList)
             {
-                PrintTextAnimation(str);
+                sb.Append(str);
+            }
+
+            for(int i=0; i< sb.Length; i++)
+            {
+                Console.Write(sb[i]);
             }
         }
+
         //string 타입 List를 받아와 한 문장씩 출력해준다.
         public static void PrintLongTextAnimation(List<string> textList)
         {
-            foreach (var str in textList)
+
+            for(int i=0; i< textList.Count; i++)
             {
-                Console.Write(str);
-                Thread.Sleep(1500);
+                textList[i] = textList[i].Replace("[이름]", DataBase.playerName);
+
+                Console.Write(textList[i]);
+                Thread.Sleep(1000);
             }
+
+
+
         }
+
+
+
+
+
 
         public static void PrintList(List<EquipItem> items)
         {
