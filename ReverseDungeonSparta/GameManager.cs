@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -117,7 +118,7 @@ namespace ReverseDungeonSparta
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.EquipEquipItem(ref itemIndex)), (Action)null))
+                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
@@ -162,53 +163,33 @@ namespace ReverseDungeonSparta
 
 
         // 소비 아이템 선택 메뉴
-        public static void UseItemMenu()
+        public void UseItemMenu()
         {
+            Player player = GameManager.Instance.Player; // Player 객체 가져오기
+            InventoryViewManager.InventoryUseItemTxt(player);
+
+
             while (true)
             {
-                Player player = GameManager.Instance.Player; // Player 객체 가져오기
-                InventoryViewManager.InventoryUseItemTxt(player);
-
-                player.SortUseItemList();//플레이어 아이템 정렬
-
-
-
-                List<(string, Action, Action)> inventoryItems = new List<(string, Action, Action)>();
-
-                for (int i = 0; i < player.UsableItemInventory.Count; i++)
-                {
-                    int index = i;
-                    UsableItem item = player.UsableItemInventory[i];
-                    string recoveryInfo = "";
-
-                    if (item.Hp > 0)
-                    {
-                        recoveryInfo += $"HP +{item.Hp}";
-                    }
-
-                    if (item.Mp > 0)
-                    {
-                        if (recoveryInfo != "") // HP 정보가 있으면 공백 추가
-                        {
-                            recoveryInfo += " ";
-                        }
-                        recoveryInfo += $"MP +{item.Mp}";
-                    }
-
-                    inventoryItems.Add(($"{item.Name} | {recoveryInfo} | {item.Information} | 보유 수 : {item.Count}개",
-                        () =>
-                        {
-                            UseSelectedItem(index); // 아이템 사용
-                            ShowRecoveryMessage();  // 회복 메시지 출력
-                        },
-                        () => AudioManager.PlayMoveMenuSE(0))); // 메뉴 이동 효과음
-                }
-
-                inventoryItems.Add(("나가기",
-                    () => GameManager.Instance.InventoryMenu(),
-                    () => AudioManager.PlayMoveMenuSE(0))); // 나가기 옵션
-                Util.GetUserInput(inventoryItems, UseItemMenu, ref GameManager.Instance.selectedIndex); // 사용자 입력 받기
+                if (ViewUsableItemList()) break;
             }
+
+            InventoryMenu();
+        }
+
+        //소비 아이템의 리스트를 보여 줄 때 실행할 메서드
+        public bool ViewUsableItemList()
+        {
+            player.SortUseItemList();//플레이어 사용 아이템 정렬
+            int itemIndex = 0;
+            //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
+            List<(string, Action, Action)> usableItemList = player.UsableItemInventory
+                                            .Select(x => (InventoryViewManager.SortUseItemList(x) + "\n", (Action)(() => UseSelectedItem(ref itemIndex)), (Action)null))
+                                            .ToList();
+
+            bool isExit = ViewManager3.ScrollViewTxt(usableItemList, ref selectedIndex, (0, 10), true, ref itemIndex);
+
+            return isExit;
         }
 
 
@@ -221,7 +202,7 @@ namespace ReverseDungeonSparta
 
 
         // 선택한 소비 아이템 사용
-        public static void UseSelectedItem(int itemIndex)
+        public static void UseSelectedItem(ref int itemIndex)
         {
             Player player = GameManager.Instance.Player;
             UsableItem selectedItem = player.UsableItemInventory[itemIndex];
@@ -301,7 +282,7 @@ namespace ReverseDungeonSparta
                     recoveryMessage += "MP가 이미 최대입니다.\n"; // 이미 최대 MP일 때
                 }
             }
-  
+
             return (itemUsed, recoveryMessage); // 아이템 사용 여부 반환
         }
 
@@ -336,11 +317,11 @@ namespace ReverseDungeonSparta
         //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
-            
+
 
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
-            ViewManager.PrintCurrentFloors(20-DungeonClearLevel);
+            ViewManager.PrintCurrentFloors(20 - DungeonClearLevel);
             ViewManager.DrawLine(2);
 
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
@@ -375,7 +356,7 @@ namespace ReverseDungeonSparta
 
         public void IntroScene()
         {
-            ViewManager.PrintLongTextAnimation(DataBase.introText);                
+            ViewManager.PrintLongTextAnimation(DataBase.introText);
         }
 
 

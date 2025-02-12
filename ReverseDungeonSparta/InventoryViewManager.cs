@@ -49,13 +49,15 @@ namespace ReverseDungeonSparta
             Console.Clear();
             PrintTitleTxt("소지품 확인 - 소비 아이템 사용");
             ViewManager3.PrintPlayerStatus(player);
-            ViewManager.PrintText(0, 28, "   아이템 사용");
+            ViewManager.PrintText(0, 26, "[Enter]아이템 사용");
+            ViewManager.PrintText("");
+            ViewManager.PrintText("");
             ViewManager.PrintText("[C]나가기");
         }
 
 
         //인벤토리를 정렬할 때 사용할 메서드
-        public static string InventorySortList(EquipItem equipItem)
+        public static string SortEquippedItemList(EquipItem equipItem)
         {
 
             int count = 0;
@@ -117,6 +119,21 @@ namespace ReverseDungeonSparta
                 default:
                     return "TranslateError";
             }
+        }
+
+
+        //소비 아이템의 정보를 정렬할 때 사용할 메서드
+        public static string SortUseItemList(UsableItem usableItem)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"{usableItem.Name.SortPadRight(10)} | ");
+            if (usableItem.Hp > 0) sb.Append($"HP +{usableItem.Hp}".SortPadRight(10) + " | ");
+            if (usableItem.Mp > 0) sb.Append($"MP +{usableItem.Mp}".SortPadRight(10) + " | ");
+            sb.Append($"{usableItem.Information.SortPadRight(20)}" + " | 보유 수 : ");
+            sb.Append($"{usableItem.Count}개");
+
+            return sb.ToString();
         }
     }
     
