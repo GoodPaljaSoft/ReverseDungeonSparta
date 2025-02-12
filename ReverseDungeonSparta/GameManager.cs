@@ -20,7 +20,7 @@ namespace ReverseDungeonSparta
 
         Player player = new Player();
         public Player Player => player;
-        BattleManager BattleManagerInstance { get; set; }
+        public BattleManager BattleManagerInstance { get; set; }
 
         private EquipItem main= new();
         private EquipItem offering = new();
