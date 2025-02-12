@@ -342,12 +342,21 @@ namespace ReverseDungeonSparta
         }
 
 
-        //플레이어의 아이템 리스트를 정렬해주는 메소드
-        public void SortItemList()
+        //플레이어의 장비 아이템 리스트를 정렬해주는 메소드
+        public void SortEquippedItemList()
         {
             equipItemList = equipItemList
                                     .OrderByDescending(x => x.IsEquiped)
                                     .ThenBy(x => (int)x.Type)
+                                    .ToList();
+        }
+
+
+        //플레이어의 소비 아이템 리스트를 정렬해주는 메소드
+        public void SortUseItemList()
+        {
+            UsableItemInventory = UsableItemInventory
+                                    .OrderBy(x => x.Name)
                                     .ToList();
         }
     }

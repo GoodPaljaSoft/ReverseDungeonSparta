@@ -57,11 +57,15 @@ namespace ReverseDungeonSparta
             //IntroScene();
 
         }
+
+
         public void PlayerStatusMenu()
         {
             ViewManager3.PlayerStatusTxt(player, ref selectedIndex);
             GameMenu();
         }
+
+
         #region 소지품 확인 
         public void InventoryMenu()
         {
@@ -86,23 +90,28 @@ namespace ReverseDungeonSparta
             GameMenu();
         }
         #endregion 
+
+
         #region 소지품 확인 - 장비 장착
+        //아이템을 장착할 때 실행할 메서드
         public void EquipItemMenu()
         {
             InventoryViewManager.InventoryEquippedItemTxt();
 
             while (true)
             {
-                if (Test() == true) break;
+                if (ViewEquippedEquippedList() == true) break;
             }
 
             InventoryMenu();
         }
 
-        public bool Test()
+
+        //아이템의 리스트를 보여 줄 때 실행할 메서드
+        public bool ViewEquippedEquippedList()
         {
             int itemIndex = 0;
-            player.SortItemList();
+            player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> itemScrollView = player.equipItemList
                                             .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
@@ -112,8 +121,9 @@ namespace ReverseDungeonSparta
 
             return isExit;
         }
-
         #endregion
+
+
         #region 소지품 확인 - 장비 합성 씬
         public void ItemUpgradeMenu()
         {
@@ -133,12 +143,14 @@ namespace ReverseDungeonSparta
             while (true)
             {
                 Player player = GameManager.Instance.Player; // Player 객체 가져오기
-                Console.Clear();
-                ViewManager3.PrintTitleTxt("소지품 확인 - 소비 아이템 사용", 12);
-                UsableStatusView(player);
+                InventoryViewManager.InventoryUseItemTxt(player);
+
+                player.SortUseItemList();//플레이어 아이템 정렬
+
 
 
                 List<(string, Action, Action)> inventoryItems = new List<(string, Action, Action)>();
+
                 for (int i = 0; i < player.UsableItemInventory.Count; i++)
                 {
                     int index = i;
@@ -167,6 +179,7 @@ namespace ReverseDungeonSparta
                         },
                         () => AudioManager.PlayMoveMenuSE(0))); // 메뉴 이동 효과음
                 }
+
                 inventoryItems.Add(("나가기",
                     () => GameManager.Instance.InventoryMenu(),
                     () => AudioManager.PlayMoveMenuSE(0))); // 나가기 옵션
@@ -188,7 +201,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        // 소비 아이템 사용
+        // 선택한 소비 아이템 사용
         public static void UseSelectedItem(int itemIndex)
         {
             Player player = GameManager.Instance.Player;
@@ -274,7 +287,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        
+        //플레이어가 메인 메뉴에서 던전에 입장할 때 실행할 메서드
         public void EnterBattleMenu()
         {
             DungeonClearLevel++;
@@ -283,6 +296,7 @@ namespace ReverseDungeonSparta
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.EnterTheBattle();
         }
+
 
         public void TitleSMenu()
         {
@@ -299,6 +313,8 @@ namespace ReverseDungeonSparta
             Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
         }
 
+
+        //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
             
@@ -337,6 +353,7 @@ namespace ReverseDungeonSparta
 
         }
 
+
         public void IntroScene()
         {
             ViewManager.PrintLongTextAnimation(DataBase.introText);
@@ -345,6 +362,7 @@ namespace ReverseDungeonSparta
             player.Name = Console.ReadLine();
 
         }
+
 
         public void StageClearCheck()
         {
