@@ -44,12 +44,11 @@ namespace ReverseDungeonSparta
         //인벤토리를 정렬할 때 사용할 메서드
         public static string InventorySortList(EquipItem equipItem)
         {
-
             int count = 0;
             int[] optionArray = { equipItem.AddLuck, equipItem.AddDefence, equipItem.AddAttack, equipItem.AddIntelligence, equipItem.AddMaxHp, equipItem.AddMaxMp };
             string[] nameArray = { "AddLuck", "AddDefence", "AddAttack", "AddIntelligence", "AddMaxHp", "AddMaxMp" };
-            StringBuilder sb = new StringBuilder();
             bool isEquipped = equipItem.IsEquiped;
+            StringBuilder sb = new StringBuilder();
             sb.Append(isEquipped ? " [E] ".PadRight(5) : " [-] ".PadRight(5));
             sb.Append(Util.SortPadRightItemList(equipItem.Name, 24));
             sb.Append(Util.SortPadRightItemList($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
@@ -70,7 +69,33 @@ namespace ReverseDungeonSparta
             }
             return sb.ToString();
         }
+        public static string InventoryUpgradeSortList(EquipItem equipItem)
+        {
+            int count = 0;
+            int[] optionArray = { equipItem.AddLuck, equipItem.AddDefence, equipItem.AddAttack, equipItem.AddIntelligence, equipItem.AddMaxHp, equipItem.AddMaxMp };
+            string[] nameArray = { "AddLuck", "AddDefence", "AddAttack", "AddIntelligence", "AddMaxHp", "AddMaxMp" };
+            bool isSelected = equipItem.IsSelected;
+            StringBuilder sb = new StringBuilder();
+            sb.Append(isSelected ? " [V] ".PadRight(5) : " [-] ".PadRight(5));
+            sb.Append(Util.SortPadRightItemList(equipItem.Name, 24));
+            sb.Append(Util.SortPadRightItemList($"| {TranslateString(equipItem.Type.ToString())} ", 8));
+            for (int i = 0; i < optionArray.Length; i++)
+            {
 
+                if (optionArray[i] != 0)
+                {
+                    sb.Append(Util.SortPadRightItemList($"| {TranslateString(nameArray[i])} +{optionArray[i]} ", 13));
+                    sb.Append(Util.SortPadRightItemList($"|", 2));
+                    if (count == 0)
+                    {
+                        sb.Append($"{equipItem.Information}\n");
+                        sb.Append(Util.SortPadRightItemList($"", 41));
+                    }
+                    count++;
+                }
+            }
+            return sb.ToString();
+        }
 
         //아이템의 타입 별로 string을 반환하는 메서드
         public static string TranslateString(string enumType)

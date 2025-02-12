@@ -41,7 +41,7 @@ namespace ReverseDungeonSparta
     }
     public static class ViewTech
     {
-        public static void GetUserInput2(List<(string, Action, Action)> menuList, Action nowMenu, ref int selectedIndex)
+        public static void GetUserInput2(List<(string, Action, Action?)> menuList, Action nowMenu, ref int selectedIndex)
         {
             int maxVisibleOption = 5;
             int startIndex =Math.Min(menuList.Count- maxVisibleOption, Math.Max(0, selectedIndex-2)); // 선택지가 중간에 오도록 5라서 2임
@@ -124,7 +124,7 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public static void GetUserInputCursorList(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor)
+        public static void GetUserInputCursorList(List<(string, Action, Action?)> menuList, ref int selectedIndex, (int, int) cursor)
         {
             int maxVisibleOption = 5;
             int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임

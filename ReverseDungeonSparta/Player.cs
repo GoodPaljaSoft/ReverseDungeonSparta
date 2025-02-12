@@ -174,7 +174,7 @@ namespace ReverseDungeonSparta
         public static void ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
         {
             //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
-            if (main.Type == offering.Type && main.Grade == offering.Grade)
+            if (main.Type == offering.Type && main.Grade == offering.Grade && main.Name!="")
             {
                 float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
                 switch (main.Grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
@@ -203,25 +203,23 @@ namespace ReverseDungeonSparta
                     int itemCount = allEquipItem.Length;
 
                     int randomMax = itemCount / 3;
-                    int randomIndex = random.Next(0, randomMax + 1);
+                    int randomIndex = random.Next(1, randomMax + 1);
                     EquipItem upgradeItem;
                     if (main.Grade == EquipItemGrade.Normal)
                     {
                         upgradeItem = new EquipItem(allEquipItem[randomIndex - 2]);
                         //allEquipItem의 인덱스 중에서 %3하면 1인걸 찾아와야 함
                     }
-
-                    else  // (main.Grade == EquipItemGrade.Uncommon)
-                    {
-                        //2,5,8,11,14,17
-
+                    else
+                    {                     
                         upgradeItem = new EquipItem(allEquipItem[randomIndex - 1]);
                         //allEquipItem의 인덱스 중에서 %3하면 2인걸 찾아와야 함
                     }
+                
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                     equipItemList.Add(upgradeItem);
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
@@ -233,7 +231,7 @@ namespace ReverseDungeonSparta
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
                     return;

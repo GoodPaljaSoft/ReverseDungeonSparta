@@ -7,7 +7,7 @@ public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
-    List<(string, Action, Action)> menuItems;
+    List<(string, Action, Action?)> menuItems;
     Skill playerSelectSkill;
     Player player;
     Random random = new Random();
@@ -111,7 +111,7 @@ public class BattleManager
     {
         ViewManager3.PrintPlayerTurnText(player, monsterList, battleOrderList);
 
-        menuItems = new List<(string, Action, Action)>
+        menuItems = new List<(string, Action, Action?)>
             {
                 ("", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
@@ -128,7 +128,7 @@ public class BattleManager
         ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
-        List<(string, Action, Action)> skillList = player.SkillList
+        List<(string, Action, Action?)> skillList = player.SkillList
                                 .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
                                 .ToList();
 
@@ -341,7 +341,7 @@ public class BattleManager
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
-        menuItems = new List<(string, Action, Action)>
+        menuItems = new List<(string, Action, Action?)>
         {
             ("", GameManager.Instance.EnterBattleMenu, null),
             ("", GameManager.Instance.GameMenu, AudioManager.PlayMenuBGM)
@@ -383,7 +383,7 @@ public class BattleManager
 
 
     //원하는 스킬을 선택하고 선택에 성공한다면 해당 스킬을 playerSelectSkill에 저장하는 메서드
-    public void PlayerInputSkillNum(List<(string, Action, Action)> menuList, ref int selectedIndex)
+    public void PlayerInputSkillNum(List<(string, Action, Action?)> menuList, ref int selectedIndex)
     {
         int maxVisibleOption = 5;
         int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임

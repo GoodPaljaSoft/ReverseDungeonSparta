@@ -29,6 +29,7 @@ namespace ReverseDungeonSparta
         public int AddMaxMp { get; set; }
 
         public bool IsEquiped { get; set; }
+        public bool IsSelected { get; set; }
 
         public EquipItem(EquipItemInfo e)
         {
@@ -43,6 +44,7 @@ namespace ReverseDungeonSparta
             AddMaxHp = e.addMaxHp;
             AddMaxMp = e.addMaxMp; 
             IsEquiped = false;
+            IsSelected = false;
         }
         public EquipItem()
         {
@@ -121,7 +123,7 @@ namespace ReverseDungeonSparta
         {
             Console.WriteLine("인벤토리로 돌아갑니다...");
             // 인벤토리 메뉴로 돌아가는 동작
-            List<(String, Action, Action)> inventoryItems = new List<(string, Action, Action)>
+            List<(String, Action, Action?)> inventoryItems = new List<(string, Action, Action?)>
             {
                 ("나가기", GameManager.Instance.InventoryMenu, () => AudioManager.PlayMoveMenuSE(0)) // 나가기 버튼을 눌렀을 때 인벤토리 메뉴를 호출
             };
