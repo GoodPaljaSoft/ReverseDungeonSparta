@@ -9,14 +9,7 @@ namespace ReverseDungeonSparta
     }
     public class Player : Character
     {
-        public List<EquipItem> equipItemList = new List<EquipItem>() //아이템 소유리스트
-        {
-            new EquipItem(allEquipItem[0]),
-            new EquipItem(allEquipItem[0]),
-            new EquipItem(allEquipItem[1]),
-            new EquipItem (allEquipItem[2]),
-            new EquipItem(allEquipItem[3])
-        };// 아이템목록 객체 만들기
+        public List<EquipItem> equipItemList = new List<EquipItem>(); //아이템 소유리스트;// 아이템목록 객체 만들기
         public List<EquipItem> isEquippedList = new List<EquipItem>(); //아이템 장착리스트
         public List<UsableItem> UsableItemInventory = new List<UsableItem>(); // 소비 아이템 리스트
         public JobType Job { get; set; }
@@ -208,7 +201,7 @@ namespace ReverseDungeonSparta
                 return;
             }
         }
-        public static EquipItem RandomRewardList()
+        public static EquipItem RandomRewardItem()
         {
             // 새로운 보상아이템정보를 리스트화 하고
             List<EquipItemInfo> rewardItemListInfo = new List<EquipItemInfo>();
@@ -230,6 +223,19 @@ namespace ReverseDungeonSparta
 
             return rewardItem;
         }
+
+        //플레이어의 보상 아이템을 List형식으로 변환해서 주는 메서드
+        public static List<EquipItem> RandomRewardList(int count)
+        {
+            List<EquipItem> rewardItemList = new List<EquipItem>();
+            for (int i = 0; i < count; i++)
+            {
+                rewardItemList.Add(RandomRewardItem());
+            }
+
+            return rewardItemList;
+        }
+
         // 소비 아이템 추가
         public void AddItemToInventory(UsableItem item, int count)
         {

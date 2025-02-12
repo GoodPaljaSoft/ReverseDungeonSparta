@@ -366,6 +366,10 @@ public class BattleManager
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
+        int rewardCount = 1 + (dungeonLevel / 4);
+
+        List<EquipItem> rewardItemList = Player.RandomRewardList(rewardCount);
+
         menuItems = new List<(string, Action, Action?)>
         {
             ("", GameManager.Instance.EnterBattleMenu, null),
@@ -382,9 +386,13 @@ public class BattleManager
         Console.WriteLine($"-EXP  {10}");//***
         Console.WriteLine($"-Gold {500}");
         Console.WriteLine($"");
-        Console.WriteLine($"[흭득 아이템 출력 필요]");
-        Console.WriteLine($"[...]");
-        Console.WriteLine($"[...]");
+        Console.WriteLine($"[흭득 아이템]");
+        foreach( var item in rewardItemList)
+        {
+            Console.WriteLine($"{item.Name}");
+            player.equipItemList.Add(item);
+        }
+
 
         isDungeonEnd = true;    //던전 종료
         player.ResetAllBuff(); //버프 초기화
