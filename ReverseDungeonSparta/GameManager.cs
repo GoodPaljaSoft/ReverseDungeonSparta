@@ -46,7 +46,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
-            BattleManagerInstance = new BattleManager(player, dungeonClearLevel);
+            BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
@@ -54,7 +54,7 @@ namespace ReverseDungeonSparta
             DataBase.IntroTextInit();
 
             //애니메이션 텍스트 메서드 테스트
-            IntroScene();
+            //IntroScene();
 
         }
         public void PlayerStatusMenu()
@@ -332,8 +332,8 @@ namespace ReverseDungeonSparta
         
         public void EnterBattleMenu()
         {
-            dungeonClearLevel++;
-            BattleManagerInstance = new BattleManager(player, dungeonClearLevel);
+            DungeonClearLevel++;
+            BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.EnterTheBattle();
@@ -410,7 +410,7 @@ namespace ReverseDungeonSparta
             }
 
             //클리어한 스테이지까지 true로 변경
-            for (int i = 0; i < dungeonClearLevel; i++)
+            for (int i = 0; i < DungeonClearLevel; i++)
             {
                 clearCheck[i] = true;
             }

@@ -191,6 +191,8 @@ namespace ReverseDungeonSparta
                         Console.WriteLine("더 이상 강화할 등급이 없습니다.");
                         return null;
                 }
+
+
                 //업그레이드 확률을 랜덤으로 설정
                 Random random = new Random();
                 // 업그레이드퍼센트를 0 ~ 100퍼센트로 만들기 위한 NextDoulbe메서드 사용
@@ -199,17 +201,37 @@ namespace ReverseDungeonSparta
                 // 업그레이드 등급확률이 랜덤확률값보다 높을 떄 조합이 성공되도록
                 if (randomValue <= upgradePercent)
                 {
-                    //아이템 등급의 enum값을 이용하여 nextgrade로 만들기
-                    EquipItemGrade nextgrade = (EquipItemGrade)((int)main.Grade + 1);
+                    // 아이템 총 갯수 저장
+                    int itemCount = allEquipItem.Length;             // 18 
 
-                    EquipItem upgradeItem = new EquipItem();
-                    Console.Clear();
-                    Console.WriteLine("[조합 결과]");
-                    Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
-                    Thread.Sleep(1000);
-                    ReturnToInventory();
+                    // 총 갯수를 통해 랜덤으로 뽑하낼 숫자의 최대값을 정함
+                    int randomMax = itemCount / 3;                   // 6 
 
-                    List<EquipItem> tempEquipList = new List<EquipItem>();
+                    int ramdomIndex = random.Next(1, randomMax + 1); // 1~6 랜덤으로 뽑힘
+
+                    //랜덤으로 1~6을 받아온다.
+                    // 1~6 * 3 == 3의 배수 (0)
+                    // -2: -1//
+
+                    EquipItem upgradeItem;
+
+                    if (main.Grade == EquipItemGrade.Normal)
+                    {
+                        //1,4,7,10,13,16
+
+                        upgradeItem = new EquipItem(allEquipItem[ramdomIndex - 2]);
+
+                    }
+
+                    else if (main.Grade == EquipItemGrade.Uncommon)
+                    {
+                        //2,5,8,11,14,17
+
+
+                    }
+
+                    //이 부분을 고쳐야 함
+                    //List<EquipItem> tempEquipList = new List<EquipItem>();
                     for (int i = 0; i < equipItemList.Count; i++)
                     {
 
@@ -221,6 +243,13 @@ namespace ReverseDungeonSparta
                             tempEquipList.Add(equipItemList[i]);
                         }
                     }
+
+                    Console.Clear();
+                    Console.WriteLine("[조합 결과]");
+                    Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
+                    Thread.Sleep(1000);
+                    ReturnToInventory();
+
                     int rand = random.Next(0, tempEquipList.Count);
                     upgradeItem = tempEquipList[rand];
                     equipItemList.Remove(main);
@@ -231,6 +260,7 @@ namespace ReverseDungeonSparta
                 }
                 else
                 {
+                    //실패
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
