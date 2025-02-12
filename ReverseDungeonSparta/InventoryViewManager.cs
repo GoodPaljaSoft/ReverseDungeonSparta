@@ -92,19 +92,19 @@ namespace ReverseDungeonSparta
             bool isSelected = equipItem.IsSelected;
             StringBuilder sb = new StringBuilder();
             sb.Append(isSelected ? " [V] ".PadRight(5) : " [-] ".PadRight(5));
-            sb.Append(Util.SortPadRightItemList(equipItem.Name, 24));
-            sb.Append(Util.SortPadRightItemList($"| {TranslateString(equipItem.Type.ToString())} ", 8));
+            sb.Append(Util.SortPadRight(equipItem.Name, 24));
+            sb.Append(Util.SortPadRight($"| {TranslateString(equipItem.Type.ToString())} ", 8));
             for (int i = 0; i < optionArray.Length; i++)
             {
 
                 if (optionArray[i] != 0)
                 {
-                    sb.Append(Util.SortPadRightItemList($"| {TranslateString(nameArray[i])} +{optionArray[i]} ", 13));
-                    sb.Append(Util.SortPadRightItemList($"|", 2));
+                    sb.Append(Util.SortPadRight($"| {TranslateString(nameArray[i])} +{optionArray[i]} ", 13));
+                    sb.Append(Util.SortPadRight($"|", 2));
                     if (count == 0)
                     {
                         sb.Append($"{equipItem.Information}\n");
-                        sb.Append(Util.SortPadRightItemList($"", 41));
+                        sb.Append(Util.SortPadRight($"", 41));
                     }
                     count++;
                 }

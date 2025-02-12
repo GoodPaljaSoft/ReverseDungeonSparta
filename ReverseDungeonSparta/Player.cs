@@ -79,6 +79,9 @@ namespace ReverseDungeonSparta
             {
                 EquipItem item = equipItemList[itemIndex]; //테스트를 위한 equipItemList //실제isOwnedItemList
                 bool isEquipped = item.IsEquiped;
+
+
+
                 if (isEquipped == false) //아이템 장착되지 않았다면
                 {
                     bool isTypeEquipped = false; //같은 타입의 아이템을 장착했는지 확인하기 위함
@@ -90,15 +93,16 @@ namespace ReverseDungeonSparta
                             break;
                         }
                     }
+
+
                     if (!isTypeEquipped) //같은 타입의 아이템이 없으므로
                     {
                         item.IsEquiped = true;
                         isEquippedList.Add(item);
                         //int prevMaxHP = TotalMaxHP; //원래 있던 최대 체력을 MaxHP로
-                        HP = TotalMaxHP; 
+                        HP = TotalMaxHP;
                         //int prevMaxMP = MaxMP; //원래 있던 최대 마나을 MaxMP로
                         MP = TotalMaxMP;
-                        
                     }
                     else
                     {
@@ -113,7 +117,13 @@ namespace ReverseDungeonSparta
                         {
                             isEquippedList.Remove(equippedItem); // 장착아이템리스트에서 제거
                             item.IsEquiped = false; // 장착 상태를 false로 변경
-                            // 장착해제시 체력 마나 
+                                                    // 장착해제시 체력 마나 
+
+                            //int prevMaxHP = TotalMaxHP; //원래 있던 최대 체력을 MaxHP로
+                            HP = TotalMaxHP;
+                            //int prevMaxMP = MaxMP; //원래 있던 최대 마나을 MaxMP로
+                            MP = TotalMaxMP;
+
                             break;
                         }
                     }
@@ -128,7 +138,7 @@ namespace ReverseDungeonSparta
         public static void ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
         {
             //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
-            if (main.Type == offering.Type && main.Grade == offering.Grade && main.Name!="")
+            if (main.Type == offering.Type && main.Grade == offering.Grade && main.Name != "")
             {
                 float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
                 switch (main.Grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
@@ -165,11 +175,11 @@ namespace ReverseDungeonSparta
                         //allEquipItem의 인덱스 중에서 %3하면 1인걸 찾아와야 함
                     }
                     else
-                    {                     
+                    {
                         upgradeItem = new EquipItem(allEquipItem[randomIndex - 1]);
                         //allEquipItem의 인덱스 중에서 %3하면 2인걸 찾아와야 함
                     }
-                
+
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
