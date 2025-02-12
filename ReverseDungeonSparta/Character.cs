@@ -206,11 +206,23 @@ namespace ReverseDungeonSparta
         //해당 클래스의 객체가 타겟을 때렸을 때 사용하는 메서드
         public virtual void Attacking(List<Character> targets, Skill skill)
         {
+            ViewManager.PrintText(0, 10, "");
+
             //데미지 계산식
             double margin = TotalAttack * 0.1f;
             margin = Math.Ceiling(margin);
+            int damage = 0;
 
-            int damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
+
+            damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
+
+
+            if (skill != null && skill.Type == SkillType.Magic)
+            {
+                margin = TotalIntelligence * 0.1f;
+                damage = new Random().Next(TotalIntelligence - (int)margin, TotalIntelligence + (int)margin);
+            }
+
 
             SkillType skillType = SkillType.Physical;
 
@@ -291,8 +303,8 @@ namespace ReverseDungeonSparta
                 if (ComputeManager.TryChance(target.TotalCritical))
                 {
                     ViewManager.PrintText($"{this.Name}에게 치명적인 일격!!!");
-                    damage *= 2;
                     Util.CheckKeyInputEnter();
+                    damage *= 2;
                 }
             }
         }
@@ -351,8 +363,8 @@ namespace ReverseDungeonSparta
                 }
 
             }
-            ViewManager.PrintText(0, cursorY, "");
             Util.CheckKeyInputEnter();
+            ViewManager.PrintText(0, cursorY, "");
         }
 
         //캐릭터클래스를 플레이어로 바꿔주는 메서드

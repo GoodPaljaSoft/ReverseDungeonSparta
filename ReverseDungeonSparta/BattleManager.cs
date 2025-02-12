@@ -187,28 +187,8 @@ public class BattleManager
     //플레이어가 몬스터를 공격한 이후에 실행할 메서드
     public void PlayerAttackMonster(List<Monster> monsters)
     {
+        ViewManager3.PlayerAttackMonsterTxt(player, monsters, battleOrderList, dungeonMaxFloor - dungeonLevel);
         List<int> beforeMonstehpr = monsters.Select(x => x.HP).ToList();
-        string str = (playerSelectSkill == null ? "공격!" : $"{playerSelectSkill.Name}스킬 사용!");
-
-        ViewManager3.PlayerAttackMonsterTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
-        Console.WriteLine("");
-        Console.WriteLine("");
-        Console.WriteLine($"{player.Name} 의 {str}");
-        foreach (Monster monster in monsters)
-        {
-            int beforeMonsterHP = monster.HP;
-            //player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
-            RemoveOrderListCharacter(monster);
-            //Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
-        }
-        Console.WriteLine("");
-        for (int i = 0; i < beforeMonstehpr.Count; i++)
-        {
-            Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
-            Console.WriteLine($"HP {(beforeMonstehpr[i] == 0 ? "Dead" : beforeMonstehpr[i])} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
-            Console.WriteLine("");
-        }
-        Console.WriteLine("");
 
         List<Character> characters = monsters.Select(x => (Character)x).ToList();
 
@@ -292,20 +272,9 @@ public class BattleManager
 
         ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel, monster);
 
-        Util.CheckKeyInputEnter();
-
         monster.MonsterAttack(player, monsterList);
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
-
-        while (true)
-        {
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                break;
-            }
-        }
 
         if (player.HP <= 0)
         {

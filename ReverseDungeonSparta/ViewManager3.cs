@@ -238,8 +238,7 @@ namespace ReverseDungeonSparta
             PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
-            ViewManager.PrintText(0, 27, "-> 사용하기");
-            ViewManager.PrintText(0, 29, "[C] 취소");
+            ViewManager.PrintText(0, 29, "-> 다음");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
 
