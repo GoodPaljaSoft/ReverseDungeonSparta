@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static ReverseDungeonSparta.ViewManager;
@@ -42,12 +43,12 @@ namespace ReverseDungeonSparta
         }
 
 
-        //인멘토리 메뉴에서 소지품 확인에 들어가면 출력할 메서드
-        public static void InventoryUseItemTxt()
+        //인멘토리 메뉴에서 소지품 사용에 들어가면 출력할 메서드
+        public static void InventoryUseItemTxt(Player player)
         {
-
             Console.Clear();
             PrintTitleTxt("소지품 확인 - 소비 아이템 사용");
+            ViewManager3.PrintPlayerStatus(player);
             ViewManager.PrintText(0, 28, "   아이템 사용");
             ViewManager.PrintText("[C]나가기");
         }

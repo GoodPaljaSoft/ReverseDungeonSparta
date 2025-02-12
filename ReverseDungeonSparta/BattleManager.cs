@@ -194,9 +194,9 @@ public class BattleManager
         foreach (Monster monster in monsters)
         {
             int beforeMonsterHP = monster.HP;
-            player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
+            //player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
             RemoveOrderListCharacter(monster);
-            Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+            //Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         }
         Console.WriteLine("");
         for (int i = 0; i < beforeMonstehpr.Count; i++)

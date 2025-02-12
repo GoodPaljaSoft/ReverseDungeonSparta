@@ -154,6 +154,9 @@ namespace ReverseDungeonSparta
         public void OnDamage(Character target, int damage, Skill skill)
         {
             Util.CheckKeyInputEnter();
+            SkillType skillType = SkillType.Physical;
+            if (skill != null) {skillType = skill.Type;}
+            
 
             if (skill != null && skill.ApplyType == ApplyType.Team)
             {
