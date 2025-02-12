@@ -4,9 +4,9 @@ namespace ReverseDungeonSparta
 {
     public enum EquipItemGrade
     {
-        Normal, //0
-        Uncommon, //1
-        Rare, //2
+        Normal,
+        Uncommon,
+        Rare,
     }
     public enum EquipItemType
     {

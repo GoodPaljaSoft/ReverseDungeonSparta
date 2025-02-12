@@ -325,7 +325,7 @@ namespace ReverseDungeonSparta
         //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
-            
+
 
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
