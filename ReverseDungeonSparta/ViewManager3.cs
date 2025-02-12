@@ -287,7 +287,7 @@ namespace ReverseDungeonSparta
                                                                 .Select(x => ($"{x.Name}             \n   : {x.Info}\n", (Action)null, (Action)null))
                                                                 .ToList();
 
-            ScrollViewTxt(skillList, ref selectedIndex, (0, 12));
+            ScrollViewTxt(skillList, ref selectedIndex, (0, 12), false);
         }
 
         //메인 메뉴 창에서 택스트 출력하는 메소드
@@ -301,7 +301,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        public static void ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor)
+        public static void ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter)
         {
             int maxVisibleOption = 5;
             int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
@@ -341,8 +341,11 @@ namespace ReverseDungeonSparta
                     Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
                     Console.WriteLine($"↓ ({menuList.Count - endIndex} more)");
                 }
+                ConsoleKeyInfo keyInfo;
 
-                ConsoleKeyInfo keyInfo = Util.CheckKeyInputExceptionEnter(selectedIndex, menuList.Count - 1);
+                //엔터키를 입력 받을지 무시할지에 대한 체크
+                if (isEnter) keyInfo = Util.CheckKeyInput(selectedIndex, menuList.Count - 1);
+                else keyInfo = Util.CheckKeyInputExceptionEnter(selectedIndex, menuList.Count - 1);
 
                 switch (keyInfo.Key)
                 {
@@ -356,7 +359,7 @@ namespace ReverseDungeonSparta
                                 startIndex--;
                                 endIndex--;
                             }
-                            AudioManager.PlayMoveMenuSE(0);
+                            //AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -371,7 +374,7 @@ namespace ReverseDungeonSparta
                                 endIndex++;
                             }
 
-                            AudioManager.PlayMoveMenuSE(0);
+                            //AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 

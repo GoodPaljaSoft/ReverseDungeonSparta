@@ -78,10 +78,11 @@ namespace ReverseDungeonSparta
             menuItems = new List<(string, Action, Action)>
             {
                 ("", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", UseItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", UseItemMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
-            Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex, (0, 26));
+            ViewManager3.ScrollViewTxt(menuItems, ref selectedIndex, (0, 27), true);
+
+            GameMenu();
         }
         #endregion 
         #region 소지품 확인 - 장비
@@ -89,31 +90,33 @@ namespace ReverseDungeonSparta
         {
             //ViewManager.PrintList(player.equipItemList);
             //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
-            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
+            InventoryViewManager.InventoryEquippedItemMenuTxt();
 
             menuItems = new List<(string, Action, Action)>
             {
                 ("", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
-            Util.GetUserInput(menuItems, EquipmentMenu, ref selectedIndex, (0, 26));
 
-            ViewManager3.ScrollViewTxt(menuItems, ref selectedIndex, (0, 5));
+            ViewManager3.ScrollViewTxt(menuItems, ref selectedIndex, (0, 27), true);
 
+            InventoryMenu();
         }
         #endregion 
         #region 소지품 확인 - 장비 장착
         public void EquipItemMenu()
         {
-            Console.Clear();
-            Console.WriteLine("소지품 확인  - 장비 장착");
-            // player.IsEquipItem(EquipItem item);  내일 다시 구현해야함. ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
-            menuItems = new List<(string, Action, Action)>
-            {
-                ("나가기", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0))
-            };
-            Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
+            InventoryViewManager.InventoryEquippedItemTxt();
+            //1번째 액션에 플레이어가 아이템을 장착하는 Action 구현하면 됨
+            List<(string, Action, Action)> itemScrollView = player.equipItemList
+                                            .OrderByDescending(x => x.IsEquiped)
+                                            .ThenBy(x => (int)x.Type)                                   //해당 아래 액션//
+                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)null, (Action)null))
+                                            .ToList();
+
+            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true);
+
+            EquipmentMenu();
         }
         #endregion
         #region 소지품 확인 - 장비 합성 씬

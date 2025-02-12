@@ -10,32 +10,38 @@ namespace ReverseDungeonSparta
 {
     public static class InventoryViewManager
     {
+        //인벤토리 메인메뉴에 진입하면 출력할 메서드
         public static void EnterInventoryMenuTxt()
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인", 12);
             ViewManager.PrintText(0, 27, "   장비 아이템");
             ViewManager.PrintText("   소지 아이템");
-            ViewManager.PrintText("   나가기");
+            ViewManager.PrintText("[C]나가기");
         }
 
-        public static void InventoryEquippedMenuTxt(List<EquipItem> itemList, ref int selectedIndex, (int, int) cursor)
+
+        //인벤토리 소지품 메뉴에 들어가면 출력할 메서드
+        public static void InventoryEquippedItemMenuTxt()
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인 - 장비", 12);
             ViewManager.PrintText(0, 27, "   장비 장착");
             ViewManager.PrintText("   장비 합성");
             ViewManager.PrintText("[C]나가기");
-
-            List<(string, Action, Action)> itemScrollView = itemList
-                                                        .OrderByDescending(x => x.IsEquiped)
-                                                        .ThenBy(x => (int)x.Type)
-                                                        .Select(x => (InventorySortList(x) + "\n", (Action)null, (Action)null))
-                                                        .ToList();
-
-            ScrollViewTxt(itemScrollView, ref selectedIndex, cursor);
         }
 
+
+        //소지품 메뉴에서 아이템 장착에 들어가면 출력할 메서드
+        public static void InventoryEquippedItemTxt()
+        {
+            Console.Clear();
+            PrintTitleTxt("소지품 확인 - 장비", 12);
+            ViewManager.PrintText(0, 29, "[C]나가기");
+        }
+
+
+        //인벤토리를 정렬할 때 사용할 메서드
         public static string InventorySortList(EquipItem equipItem)
         {
 
@@ -64,6 +70,9 @@ namespace ReverseDungeonSparta
             }
             return sb.ToString();
         }
+
+
+        //아이템의 타입 별로 string을 반환하는 메서드
         public static string TranslateString(string enumType)
         {
             switch (enumType)
