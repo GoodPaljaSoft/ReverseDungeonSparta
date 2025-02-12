@@ -133,7 +133,7 @@ namespace ReverseDungeonSparta
         public static void ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
         {
             //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
-            if (main.Type == offering.Type && main.Grade == offering.Grade && main.Name != "")
+            if (main.Type == offering.Type && main.Grade == offering.Grade && main.Name != "" && main != offering)
             {
                 float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
                 switch (main.Grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
@@ -147,6 +147,8 @@ namespace ReverseDungeonSparta
                     default:
                         Console.Clear();
                         Console.WriteLine("더 이상 강화할 등급이 없습니다.");
+                        Thread.Sleep(1000);
+                        GameManager.Instance.UpgradeDeSelect();
                         return;
                 }
                 //업그레이드 확률을 랜덤으로 설정
@@ -164,12 +166,12 @@ namespace ReverseDungeonSparta
                     EquipItem upgradeItem;
                     if (main.Grade == EquipItemGrade.Normal)
                     {
-                        upgradeItem = new EquipItem(allEquipItem[randomIndex - 2]);
+                        upgradeItem = new EquipItem(allEquipItem[randomIndex * 3 - 2]);
                         //allEquipItem의 인덱스 중에서 %3하면 1인걸 찾아와야 함
                     }
                     else
                     {
-                        upgradeItem = new EquipItem(allEquipItem[randomIndex - 1]);
+                        upgradeItem = new EquipItem(allEquipItem[randomIndex * 3 - 1]);
                         //allEquipItem의 인덱스 중에서 %3하면 2인걸 찾아와야 함
                     }
 
@@ -178,6 +180,7 @@ namespace ReverseDungeonSparta
                     Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
                     Thread.Sleep(2000);
                     equipItemList.Add(upgradeItem);
+                    GameManager.Instance.UpgradeDeSelect();
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
                     return;
@@ -188,6 +191,7 @@ namespace ReverseDungeonSparta
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
                     Thread.Sleep(2000);
+                    GameManager.Instance.UpgradeDeSelect();
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
                     return;
@@ -197,6 +201,7 @@ namespace ReverseDungeonSparta
             {
                 Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
                 Thread.Sleep(1000);
+                GameManager.Instance.UpgradeDeSelect();
                 return;
             }
         }

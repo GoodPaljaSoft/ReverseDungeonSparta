@@ -62,7 +62,9 @@ namespace ReverseDungeonSparta
 
             //애니메이션 텍스트 메서드 테스트
             IntroScene();
-
+            EndingChoice();
+            Ending1();
+            Ending2();
         }
 
 
@@ -129,7 +131,7 @@ namespace ReverseDungeonSparta
 
             return isExit;
         }
-      
+
         #endregion
 
 
@@ -139,29 +141,41 @@ namespace ReverseDungeonSparta
         //장비 합성 메뉴
         public void ItemUpgradeMenu()
         {
-            bool isBreak=false;
-            int itemIndex=0;
             Console.Clear();
-            ViewManager.DrawLine("소지품 확인 - 장비 합성","합성할 장비 2가지를 선택해 주세요");
+            ViewManager.DrawLine("소지품 확인 - 장비 합성", "합성할 장비 2가지를 선택해 주세요");
             Console.WriteLine("[아이템 조합]");
             Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
             ViewManager.PrintText(0, 29, "[C]나가기");
-            List<EquipItem> ItemList = player.equipItemList;
-            List<(string, Action, Action?)> itemScrollView = ItemList
-                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x), (Action)(()=>UpgradeSelect(x)), (Action)null))
+
+            while (true)
+            {
+                if (ViewEquippedSelectedList() == true) break;
+            }
+            UpgradeDeSelect();
+        }
+        public bool ViewEquippedSelectedList()
+        {
+            bool isBreak = false;
+            int itemIndex = 0;
+            player.SortEquippedItemList();
+            //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
+            List<(string, Action, Action?)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n", (Action)(() => UpgradeSelect(x)), (Action)null))
                                             .ToList();
+            Console.Clear();
+            ViewManager.DrawLine("소지품 확인 - 장비 합성", "합성할 장비 2가지를 선택해 주세요");
+            Console.WriteLine("[아이템 조합]");
+            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
+            ViewManager.PrintText(0, 29, "[C]나가기");
             ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
-            if (isBreak) { UpgradeDeSelect(); return; }         
-            Console.WriteLine($"첫번째 아이템{main.Name}이 선택되었습니다.");
-            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
-            if (isBreak) { UpgradeDeSelect(); return; }
-            Player.ItemUpgrade(main, offering, ItemList);           
+
+            return isBreak;
         }
 
-
-        //업그레이드 장비 선택
-        private void UpgradeDeSelect()
+        public void UpgradeDeSelect()
         {
+            main.IsSelected = false;
+            offering.IsSelected = false;
             main = new EquipItem();
             offering = new EquipItem();
         }
@@ -169,11 +183,22 @@ namespace ReverseDungeonSparta
 
         private void UpgradeSelect(EquipItem equipItem)
         {
-            if (main.Name == "") main = equipItem;
-            else offering = equipItem;
+            if (main.Name == "")
+            {
+                main = equipItem;
+                main.IsSelected = true;
+                Console.WriteLine($"첫번째 아이템{main.Name}이 선택되었습니다.");
+            }
+            else
+            {
+                offering = equipItem;
+                offering.IsSelected = true;
+                Player.ItemUpgrade(main, offering, player.equipItemList);
+                UpgradeDeSelect();
+            }
         }
         #endregion
-        
+
         // 소비 아이템 선택 메뉴
         public void UseItemMenu()
         {
@@ -355,22 +380,56 @@ namespace ReverseDungeonSparta
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
 
-            //스테이지 레벨 반영 시험 코드
-            DungeonClearLevel++;
-
 
         }
 
 
         public void IntroScene()
         {
-            ViewManager.PrintLongTextAnimation(DataBase.introText);
+
+            //ViewManager.PrintLongTextAnimation(DataBase.introText);
 
             player.Name = Console.ReadLine();
             DataBase.playerName = player.Name;
 
+            DataBase.introText2 = ViewManager.ChangePlayerName(DataBase.introText2);
+            DataBase.endingText[0] = ViewManager.ChangePlayerName(DataBase.endingText[0]);
+            DataBase.endingText[1] = ViewManager.ChangePlayerName(DataBase.endingText[1]);
+            DataBase.endingText[2] = ViewManager.ChangePlayerName(DataBase.endingText[2]);
+
+            ViewManager.colorWord.Add(player.Name, ConsoleColor.Cyan);
+            ViewManager.colorWord.Add($"[{player.Name}]", ConsoleColor.Cyan);
+
+
+
             ViewManager.PrintLongTextAnimation(DataBase.introText2);
 
+            Console.ReadKey();
+        }
+
+        public void GameOver()
+        {
+
+        }
+
+        public void EndingChoice()
+        {
+            Console.Clear();
+            ViewManager.PrintLongTextAnimation(DataBase.endingText[0]);
+            Console.ReadKey();
+        }
+
+        public void Ending1()
+        {
+            Console.Clear();
+            ViewManager.PrintLongTextAnimation(DataBase.endingText[1]);
+            Console.ReadKey();
+        }
+
+        public void Ending2()
+        {
+            Console.Clear();
+            ViewManager.PrintLongTextAnimation(DataBase.endingText[2]);
             Console.ReadKey();
         }
 
