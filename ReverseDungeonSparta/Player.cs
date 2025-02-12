@@ -296,6 +296,7 @@ namespace ReverseDungeonSparta
 
         public void PlayerLevelUp()
         {
+            Level += 1;
             Attack += 2;
             Defence += 2;
             MaxHP += 5;

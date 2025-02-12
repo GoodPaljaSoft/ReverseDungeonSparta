@@ -349,6 +349,9 @@ namespace ReverseDungeonSparta
             int beforeEXP = player.NowEXP;
             int beforeMaxEXP = player.MaxEXP;
 
+            player.NowEXP = 0;
+            player.MaxEXP = (int)(player.MaxHP * 1.2);
+
             player.PlayerLevelUp();
 
             Console.Clear();
@@ -363,8 +366,6 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText($"공격력: {beforeAttak} -> {player.TotalAttack}");
             ViewManager.PrintText($"방어력: {beforeDefense} -> {player.TotalDefence}");
 
-            player.NowEXP = 0;
-            player.MaxEXP = (int)(player.MaxHP * 1.2);
 
             Util.CheckKeyInputEnter();
         }
@@ -392,6 +393,8 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 11, $"{player.Name}은(는) 아이템 {item.Name}을(를) 사용했습니다!");
             ViewManager.PrintText($"");
             ViewManager.PrintText(0, 29,"-> 다음");
+
+            Util.CheckKeyInputEnter();
         }
 
 
