@@ -1,4 +1,5 @@
 ﻿
+using System.Linq;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -186,11 +187,22 @@ namespace ReverseDungeonSparta
 
             for(int i=0; i< textList.Count; i++)
             {
-                textList[i] = textList[i].Replace("[이름]", DataBase.playerName);
+                //플레이어가 입력한 이름 반영
+                textList[i] = textList[i].Replace("~이름~", DataBase.playerName);
+
+                //"모험가"가 포함되어 있으면
+                if(textList[i].Contains("[모험가]"))
+                {
+
+                }
+                    //textList[i] = textList[i].Replace("[모험가]", ColorText("[모험가]", ConsoleColor.Yellow));
+
 
                 Console.Write(textList[i]);
                 Thread.Sleep(1000);
             }
+
+
 
 
 
