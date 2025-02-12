@@ -9,6 +9,7 @@ using ReverseDungeonSparta;
 
 public class TurnManager
 {
+
     public List<Character> Characters { get; private set; }
 
     //속도를 기준으로 객체의 턴을 저장해서 플레이어를 기준으로 플레나올 때까지의 캐릭터를 전부 보낼 때 사용

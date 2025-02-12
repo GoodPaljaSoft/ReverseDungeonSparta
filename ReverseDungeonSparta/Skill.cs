@@ -22,6 +22,7 @@ namespace ReverseDungeonSparta
             ConsumptionMP = skillInfo.consumptionMP;
         }
 
+
         public string Name { get; set; }                //스킬 이름
         public double Value { get; set; }               //스킬 효과 배수 또는 값
         public int ConsumptionMP { get; set; }          //소모 마나

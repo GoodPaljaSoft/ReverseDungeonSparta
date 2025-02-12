@@ -21,6 +21,7 @@ public class BattleManager
     public int dungeonLevel = 0;
     public int dungeonMaxFloor = 20;    //던전의 최대 층 수
 
+
     //배틀 매니저 생성자
     public BattleManager(Player player, int floor)
     {
