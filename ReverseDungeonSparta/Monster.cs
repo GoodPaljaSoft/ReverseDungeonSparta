@@ -74,12 +74,10 @@ public class Monster : Character
     };
 
 
-    public void MonsterAttack(Character target,List<Monster> monsters)
+    public void Attacking(Character target,List<Monster> monsters ,out int damage, out (Skill, Character) skill)
     {
         Random random = new Random();
-        List<Character> player = new List<Character>();
-        player.Add(target);
-        Skill skill = null;
+        skill = (null, null);
         int rand = random.Next(0, 1);
         double attackDamage = (double)Attack;
         if(rand == 0)
@@ -90,30 +88,37 @@ public class Monster : Character
                 SkillList = Util.ShuffleList(SkillList);
                 if (SkillList[0].ConsumptionMP <= MP)
                 {
-                    skill = SkillList[0];
-                    attackDamage *= skill.Value;
+                    skill.Item1 = SkillList[0];
+                    attackDamage *= skill.Item1.Value;
                 }
             }
         }
 
-        if (skill != null)
+        //데미지 계산식
+        double margin = attackDamage * 0.1d;
+        margin = Math.Ceiling(margin);
+
+        damage = new Random().Next((int)(attackDamage - margin), (int)(attackDamage + margin));
+
+        if (skill.Item1 != null)
         {
-            if(skill.ApplyType == ApplyType.Enemy)
+            if(skill.Item1.ApplyType == ApplyType.Enemy)
             {
-                Attacking(player, skill);
+                //플레이어 공격
+                target.OnDamage(this, damage, skill.Item1);
             }
-            else if (skill.ApplyType == ApplyType.Team)
+            else if (skill.Item1.ApplyType == ApplyType.Team)
             {
-                List<Character> characters = new List<Character>();
                 //팀에게 사용
                 rand = random.Next(0, monsters.Count);
-                characters.Add(monsters[rand]);
-                Attacking(characters, skill);
+                skill.Item2 = monsters[rand];
+                skill.Item2.AddBuff((Character)this, skill.Item1);
             }
         }
         else
         {
-            Attacking(player, skill);
+            //플레이어 공격(기본 공격)
+            target.OnDamage(this, damage, skill.Item1);
         }
     }
 
