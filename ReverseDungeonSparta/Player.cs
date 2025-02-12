@@ -147,8 +147,6 @@ namespace ReverseDungeonSparta
                         Console.WriteLine("더 이상 강화할 등급이 없습니다.");
                         return;
                 }
-
-
                 //업그레이드 확률을 랜덤으로 설정
                 Random random = new Random();
                 // 업그레이드퍼센트를 0 ~ 100퍼센트로 만들기 위한 NextDoulbe메서드 사용
@@ -184,7 +182,6 @@ namespace ReverseDungeonSparta
                 }
                 else
                 {
-                    //실패
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");

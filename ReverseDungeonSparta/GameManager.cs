@@ -57,12 +57,10 @@ namespace ReverseDungeonSparta
 
             //인트로 데이터베이스 초기화
             DataBase.IntroTextInit();
+            ViewManager.ViewInit();
 
             //애니메이션 텍스트 메서드 테스트
-            //IntroScene();
-
-            //아이템 장착 테스트
-            //player.equipItemList[0].IsEquiped = true;
+            IntroScene();
 
         }
 
@@ -71,6 +69,7 @@ namespace ReverseDungeonSparta
         {
             ViewManager3.PlayerStatusTxt(player, ref selectedIndex);
             GameMenu();
+
         }
 
 
@@ -196,6 +195,11 @@ namespace ReverseDungeonSparta
             return isExit;
         }
 
+        // 소비 창에서 플레이어 스탯 보기
+        public static void UsableStatusView(Player player)
+        {
+            ViewManager3.PrintPlayerStatus(player);
+        }
 
         private static void ShowRecoveryMessage()
         {
@@ -361,6 +365,13 @@ namespace ReverseDungeonSparta
         public void IntroScene()
         {
             ViewManager.PrintLongTextAnimation(DataBase.introText);
+
+            player.Name = Console.ReadLine();
+            DataBase.playerName = player.Name;
+
+            ViewManager.PrintLongTextAnimation(DataBase.introText2);
+
+            Console.ReadKey();
         }
 
 
@@ -373,7 +384,7 @@ namespace ReverseDungeonSparta
             }
 
             //클리어한 스테이지까지 true로 변경
-            for (int i = 0; i < dungeonClearLevel; i++)
+            for (int i = 0; i < DungeonClearLevel; i++)
             {
                 clearCheck[i] = true;
             }
