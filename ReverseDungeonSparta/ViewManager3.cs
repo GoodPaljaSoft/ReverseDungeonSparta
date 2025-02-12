@@ -176,7 +176,7 @@ namespace ReverseDungeonSparta
 
 
         //몬스터의 공격 턴일 때 출력할 메소드
-        public static void MonsterAttackTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
+        public static void MonsterAttackTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor, Monster monster)
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", floor);
@@ -184,6 +184,8 @@ namespace ReverseDungeonSparta
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"{monster.Name}의 차례입니다!");
         }
 
 

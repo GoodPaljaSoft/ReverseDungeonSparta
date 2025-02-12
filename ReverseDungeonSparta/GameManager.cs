@@ -19,7 +19,7 @@ namespace ReverseDungeonSparta
 
         Player player = new Player();
         public Player Player => player;
-        BattleManager BattleManagerInstance { get; set; }
+        public BattleManager BattleManagerInstance { get; set; }
 
         public int selectedIndex = 0;
 

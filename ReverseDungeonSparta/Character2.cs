@@ -125,19 +125,19 @@ namespace ReverseDungeonSparta
 
             SkillType skillType = SkillType.Physical;
 
+
+            ViewManager.PrintText("");
+
             if (skill != null)
             {
                 skillType = skill.Type;
                 ViewManager.PrintText($"{this.Name}의 스킬 사용!");
+                MP -= skill.ConsumptionMP;
                 foreach (Character onTarget in targets)
                 {
                     string pullName = this.Name == onTarget.Name ? "자신" : $"{onTarget.Name}";
-                    ViewManager.PrintText($"{this.Name}은 {onTarget.Name}에게 {skill.Name}을(를) 사용했다!");
+                    ViewManager.PrintText($"{this.Name}은(는) {onTarget.Name}에게 {skill.Name}을(를) 사용했다!");
                 }
-                ViewManager.PrintText("");
-                ViewManager.PrintText($"     [{skill.Name}]");
-                ViewManager.PrintText($"     : {skill.Info}");
-                ViewManager.PrintText("");
             }
             else
             {
@@ -148,23 +148,38 @@ namespace ReverseDungeonSparta
                 }
             }
 
+            Util.CheckKeyInputEnter();
+
+            List<int> criticalDamage = new List<int>();
             foreach (Character onTarget in targets)
             {
-                onTarget.OnDamage(this, damage, skill);
+                onTarget.OnDamage1(this, ref damage, skill);
+                criticalDamage.Add(damage);
             }
+
+            for (int i = 0; i < criticalDamage.Count; i++)
+            {
+                targets[i].OnDamage2(this, criticalDamage[i], skill);
+
+                Monster monster = targets[i] as Monster;
+
+                if (monster != null && monster.IsDie == true)
+                    GameManager.Instance.BattleManagerInstance.RemoveOrderListCharacter(monster);
+            }
+            GameManager.Instance.BattleManagerInstance.CheckPlayerWin();
         }
 
 
         // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드
-        public void OnDamage(Character target, int damage, Skill skill)
+        public void OnDamage1(Character target, ref int damage, Skill skill)
         {
-            Util.CheckKeyInputEnter();
             SkillType skillType = SkillType.Physical;
             if (skill != null) { skillType = skill.Type; }
 
             if (skill != null && skill.ApplyType == ApplyType.Team)
             {
                 int beforeHP = this.HP;
+                int beforeMP = this.MP;
                 int beforeATK = this.TotalAttack;
                 int beforeDEF = this.TotalDefence;
                 int beforeCritical = this.TotalCritical;
@@ -173,24 +188,52 @@ namespace ReverseDungeonSparta
                 AddBuff(target, skill);
                 ViewManager.PrintText($"{this.Name}의 스테이터스 변화");
                 ViewManager.PrintText($"");
-                ViewManager.PrintText($"{beforeHP} -> {this.HP}");
-                ViewManager.PrintText($"{beforeATK} -> {this.TotalAttack}");
-                ViewManager.PrintText($"{beforeDEF} -> {this.TotalDefence}");
-                ViewManager.PrintText($"{beforeCritical}% -> {this.TotalCritical}%");
-                ViewManager.PrintText($"{beforeEvasion}% -> {this.Evasion}%");
+                ViewManager.PrintText($"체  력: {beforeHP} -> {this.HP}");
+                ViewManager.PrintText($"마  나: {beforeMP} -> {this.MP}");
+                ViewManager.PrintText($"공격력: {beforeATK} -> {this.TotalAttack}");
+                ViewManager.PrintText($"방어력: {beforeDEF} -> {this.TotalDefence}");
+                ViewManager.PrintText($"치명타: {beforeCritical}% -> {this.TotalCritical}%");
+                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {this.Evasion}%");
                 ViewManager.PrintText($"");
             }
             else
             {
-                ViewManager.PrintText("");
                 //치명타가 발생한 경우
                 if (ComputeManager.TryChance(target.TotalCritical))
                 {
-                    ViewManager.PrintText("치명적인 일격!!!");
+                    ViewManager.PrintText($"{this.Name}에게 치명적인 일격!!!");
                     damage *= 2;
                     Util.CheckKeyInputEnter();
                 }
+            }
+        }
 
+
+        public void OnDamage2(Character target, int damage, Skill skill)
+        {
+            ViewManager.PrintText("");
+            int cursorY = Console.CursorTop;
+            string empty = new string(' ', 100);
+            ViewManager.PrintText(0, cursorY, empty);
+            ViewManager.PrintText(empty);
+            ViewManager.PrintText(0, cursorY, "");
+
+
+            SkillType skillType = SkillType.Physical;
+            ApplyType applyType = ApplyType.Enemy;
+            if (skill != null)
+            {
+                skillType = skill.Type;
+                applyType = skill.ApplyType;
+            }
+
+            if (this is Monster && HP == 0)
+            {
+                ViewManager.PrintText($"{this.Name}에게 아무 일도 일어나지 않았다.");
+                ViewManager.PrintText($"{this.Name}은(는) 이미 쓰러져있었다.");
+            }
+            else if (applyType == ApplyType.Enemy)
+            {
                 //데미지에서 방어력을 제외한 데미지로 취급,
                 if (skillType == SkillType.Physical)
                 {
@@ -210,14 +253,17 @@ namespace ReverseDungeonSparta
                     int beforeHP = HP;
                     HP -= damage;
 
-                    ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입었습니다! ({beforeHP} -> {(HP == 0 ? "Dead" : HP)}");
+                    ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입었습니다! ({beforeHP} -> {(HP == 0 ? "Dead" : HP)})");
 
-                    if(HP == 0)
+                    if (HP == 0)
                     {
                         ViewManager.PrintText($"{this.Name}은(는) 쓰러졌습니다.");
                     }
                 }
+
             }
+            ViewManager.PrintText(0, cursorY, "");
+            Util.CheckKeyInputEnter();
         }
 
 

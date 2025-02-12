@@ -139,6 +139,8 @@ public class BattleManager
         menuItems = new List<(string, Action, Action)>
             {
                 ("", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
             };
 
@@ -190,16 +192,7 @@ public class BattleManager
 
         List<Character> characters = monsters.Select(x => (Character)x).ToList();
 
-
-        //player.Attacking(characters, playerSelectSkill);
-
-        //RemoveOrderListCharacter(monster);
-
-        //switch (keyInfo.Key)
-        //{
-        //    case ConsoleKey.Enter: //플레이어가 승리했는지 확인
-        //        CheckPlayerWin(); break;
-        //}
+        player.Attacking(characters, playerSelectSkill);
     }
 
 
@@ -277,59 +270,11 @@ public class BattleManager
 
         int beforeplayerHP = player.HP;
 
-        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
-
-        ViewManager.PrintText(0, 11, $"{monster.Name}의 차례입니다!");
-        ViewManager.PrintText("");
-        Util.CheckKeyInputEnter();
-        monster.Attacking(player, monsterList, out int damage, out (Skill, Character) skill);
-
-        if (skill.Item1 != null && skill.Item2 != null)
-        {
-            Monster pullMonster = skill.Item2.GetMonster();
-            ViewManager.PrintText($"{monster.Name}의 스킬 사용!");
-            string pullName = monster.Name == skill.Item2.Name ? "자신" : $"{skill.Item2.Name}";
-            ViewManager.PrintText($"{monster.Name}은 {pullName}에게 {skill.Item1.Name}을(를) 사용했다!");
-            ViewManager.PrintText("");
-            ViewManager.PrintText($"     [{skill.Item1.Name}]");
-            ViewManager.PrintText($"     : {skill.Item1.Info}");
-            ViewManager.PrintText("");
-        }
-        else
-        {
-            ViewManager.PrintText($"{monster.Name}의 공격!");
-            ViewManager.PrintText($"{monster.Name}은(는) 플레이어에게 공격을 시도했다!");
-        }
-
+        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel, monster);
 
         Util.CheckKeyInputEnter();
-        if(skill.Item1 != null && skill.Item1.ApplyType == ApplyType.Team)
-        {
-            int beforeHP = skill.Item2.HP;
-            int beforeATK = skill.Item2.TotalAttack;
-            int beforeDEF = skill.Item2.TotalDefence;
-            int beforeCritical = skill.Item2.TotalCritical;
-            int beforeEvasion = skill.Item2.Evasion;
 
-            ViewManager.PrintText($"{skill.Item2.Name}은(는) {skill.Item1.Name}에 의해 능력치가 상승했다!");
-            ViewManager.PrintText($"");
-            ViewManager.PrintText($"HP: " + "{beforeHP} -> {skill.Item2.HP}");
-            ViewManager.PrintText($"ATK: {beforeATK} -> {skill.Item2.TotalAttack}");
-            ViewManager.PrintText($"DEF: {beforeDEF} -> {skill.Item2.TotalDefence}");
-            ViewManager.PrintText($"치명타: {beforeCritical} -> {skill.Item2.TotalCritical}");
-            ViewManager.PrintText($"회  피{beforeEvasion} -> {skill.Item2.Evasion}");
-            ViewManager.PrintText($"");
-        }
-        else
-        {
-            //공격 실행
-
-
-
-
-        }
-
-        
+        monster.MonsterAttack(player, monsterList);
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
 
