@@ -81,6 +81,8 @@ namespace ReverseDungeonSparta
         }
         #endregion
 
+
+        //테스트 코드
         public void InitEquipItems()
         {
             // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
