@@ -40,9 +40,9 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 3, $"{player.Name} (마왕)");
             ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
             ViewManager.PrintText("");
-            ViewManager.PrintText($"HP : {player.HP}/{player.MaxHP}");
+            ViewManager.PrintText($"HP : {player.HP}/{player.TotalMaxHP}");
             ViewManager.PrintText(14, 6, $"ATK : {player.TotalAttack}");
-            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.MaxMP}");
+            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.TotalMaxMP}");
             ViewManager.PrintText(14, 7, $"DEF : {player.TotalDefence}");
             ViewManager.PrintText(0, 8, "");
             ViewManager.DrawLine();
@@ -55,15 +55,15 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 3, $"{player.Name} (마왕)");
             ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
             ViewManager.PrintText("");
-            ViewManager.PrintText($"HP : {player.HP}/{player.MaxHP}");
+            ViewManager.PrintText($"HP : {player.HP}/{player.TotalMaxHP}");
             ViewManager.PrintText(25, 6, $"공격력 : {player.TotalAttack}");
             ViewManager.PrintText(50, 6, $"회피율 : {player.TotalEvasion}");
-            ViewManager.PrintText(75, 6, $"행운 : {player.Luck}");
+            ViewManager.PrintText(75, 6, $"행운 : {player.TotalLuck}");
             ViewManager.PrintText(100, 6, $"속도 : {player.Speed}");
-            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.MaxMP}");
+            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.TotalMaxMP}");
             ViewManager.PrintText(25, 7, $"방어력 : {player.TotalDefence}");
             ViewManager.PrintText(50, 7, $"치명타 : {player.TotalCritical}");
-            ViewManager.PrintText(75, 7, $"지능 : {player.Intelligence}");
+            ViewManager.PrintText(75, 7, $"지능 : {player.TotalIntelligence}");
             ViewManager.PrintText(100, 7, $"골드 : {player.Gold}");
             ViewManager.PrintText(0, 8, "");
             ViewManager.DrawLine();
@@ -176,7 +176,7 @@ namespace ReverseDungeonSparta
 
 
         //몬스터의 공격 턴일 때 출력할 메소드
-        public static void MonsterAttackTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
+        public static void MonsterAttackTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor, Monster monster)
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", floor);
@@ -184,6 +184,8 @@ namespace ReverseDungeonSparta
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"{monster.Name}의 차례입니다!");
         }
 
 
@@ -292,7 +294,7 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 29, "[C]나가기");
 
             //스킬 출력
-            List<(string, Action, Action)> skillList = player.SkillList
+            List<(string, Action, Action?)> skillList = player.SkillList
                                                                 .Select(x => ($"{x.Name}             \n   : {x.Info}\n", (Action)null, (Action)null))
                                                                 .ToList();
 
@@ -310,7 +312,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        public static void ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter)
+        public static void ScrollViewTxt(List<(string, Action, Action?)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter)
         {
             int maxVisibleOption = 5;
             int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
@@ -487,7 +489,7 @@ namespace ReverseDungeonSparta
                     case ConsoleKey.Enter:
                         if (menuList[selectedIndex].Item2 != null)
                         {
-                           itemIndex = selectedIndex;
+                            itemIndex = selectedIndex;
                             menuList[itemIndex].Item2();
                         }
                         return false;
@@ -498,6 +500,100 @@ namespace ReverseDungeonSparta
                 }
             }
             return false;
+        }
+        public static void ScrollViewTxt(List<(string, Action, Action?)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, out bool isBreak)
+        {
+            int maxVisibleOption = 5;
+            int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
+            int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시
+
+            isBreak = false;
+            while (isBreak == false)
+            {
+                ViewManager.PrintText(cursor.Item1, cursor.Item2, "");
+                // 현재 선택지 표시
+                if (menuList.Count < maxVisibleOption)
+                {
+                    for (int i = 0; i < menuList.Count; i++)
+                    {
+                        string str = "";
+                        if (i == selectedIndex)
+                            str = ($"-> {menuList[i].Item1}");
+                        else
+                            str = ($"   {menuList[i].Item1}");
+                        Console.WriteLine(str);
+                    }
+                }
+                else
+                {
+                    // 위로 숨겨진 선택지 개수
+                    Console.WriteLine($"↑ ({startIndex} more)");
+                    for (int i = startIndex; i < endIndex; i++)
+                    {
+                        string str = "";
+                        if (i == selectedIndex)
+                            str = ($"-> {menuList[i].Item1}");
+                        else
+                            str = ($"   {menuList[i].Item1}");
+                        Console.WriteLine(str);
+                    }
+                    // 아래로 숨겨진 선택지 개수 표시
+                    Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                    Console.WriteLine($"↓ ({menuList.Count - endIndex} more)");
+                }
+                ConsoleKeyInfo keyInfo;
+
+                //엔터키를 입력 받을지 무시할지에 대한 체크
+                if (isEnter) keyInfo = Util.CheckKeyInput(selectedIndex, menuList.Count - 1);
+                else keyInfo = Util.CheckKeyInputExceptionEnter(selectedIndex, menuList.Count - 1);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow: // 위 화살표를 눌렀을 때
+                        if (selectedIndex > 0)
+                        {
+                            selectedIndex--;
+                            // 선택지가 3번째 줄 이상이면 이동만, 아니면 리스트 스크롤
+                            if (selectedIndex < startIndex)
+                            {
+                                startIndex--;
+                                endIndex--;
+                            }
+                            //AudioManager.PlayMoveMenuSE(0);
+                        }
+                        break;
+
+                    case ConsoleKey.DownArrow: // 아래 화살표를 눌렀을 때
+                        if (selectedIndex < menuList.Count - 1)
+                        {
+                            selectedIndex++;
+                            // 선택지가 뒤에서 3번째 줄 이하이면 이동만, 아니면 리스트 스크롤
+                            if (selectedIndex >= endIndex)
+                            {
+                                startIndex++;
+                                endIndex++;
+                            }
+
+                            //AudioManager.PlayMoveMenuSE(0);
+                        }
+                        break;
+
+                    case ConsoleKey.Enter:
+                        int tempIndex = selectedIndex;
+                        if (menuList[tempIndex].Item2 != null)
+                        {
+                            selectedIndex = 0;
+                            menuList[tempIndex].Item2();
+                        }
+                        return;
+
+                    case ConsoleKey.C:
+                        isBreak = true;
+                        selectedIndex = 0;
+                        return;
+                }
+                if (isBreak) break;
+            }
         }
     }
 }

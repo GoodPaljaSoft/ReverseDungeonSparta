@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -15,11 +16,14 @@ namespace ReverseDungeonSparta
     {
         public static GameManager Instance { get; } = new GameManager();
 
-        List<(string, Action, Action)> menuItems;
+        List<(string, Action, Action?)> menuItems;
 
         Player player = new Player();
         public Player Player => player;
-        BattleManager BattleManagerInstance { get; set; }
+        public BattleManager BattleManagerInstance { get; set; }
+
+        private EquipItem main= new();
+        private EquipItem offering = new();
 
         public int selectedIndex = 0;
 
@@ -81,7 +85,7 @@ namespace ReverseDungeonSparta
             //아이템 출력 임시 코드
             //ViewManager.PrintList(player.equipItemList);
 
-            menuItems = new List<(string, Action, Action)>
+            menuItems = new List<(string, Action, Action?)>
             {
                 ("", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0)),
@@ -116,31 +120,51 @@ namespace ReverseDungeonSparta
             int itemIndex = 0;
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
-            List<(string, Action, Action)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
+            List<(string, Action, Action?)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.EquipEquipItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
 
             return isExit;
         }
+      
         #endregion
 
 
         #region 소지품 확인 - 장비 합성 씬
         public void ItemUpgradeMenu()
         {
+            bool isBreak=false;
+            int itemIndex=0;
             Console.Clear();
-            Console.WriteLine("소지품 확인  - 장비합성");
-            
-            //player.TryEquipItemUpgrade(player.equipItemList);
-            menuItems = new List<(string, Action, Action)>
-            {
-                ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
-            };
-            Util.GetUserInput(menuItems, ItemUpgradeMenu, ref selectedIndex);
+            ViewManager.DrawLine("소지품 확인 - 장비 합성","합성할 장비 2가지를 선택해 주세요");
+            Console.WriteLine("[아이템 조합]");
+            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
+            ViewManager.PrintText(0, 29, "[C]나가기");
+            List<EquipItem> ItemList = player.equipItemList;
+            List<(string, Action, Action?)> itemScrollView = ItemList
+                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x), (Action)(()=>UpgradeSelect(x)), (Action)null))
+                                            .ToList();
+            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
+            if (isBreak) { UpgradeDeSelect(); return; }         
+            Console.WriteLine($"첫번째 아이템{main.Name}이 선택되었습니다.");
+            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
+            if (isBreak) { UpgradeDeSelect(); return; }
+            Player.ItemUpgrade(main, offering, ItemList);           
+        }
+        private void UpgradeDeSelect()
+        {
+            main = new EquipItem();
+            offering = new EquipItem();
+        }
+        private void UpgradeSelect(EquipItem equipItem)
+        {
+            if (main.Name == "") main = equipItem;
+            else offering = equipItem;
         }
         #endregion
+        
         // 소비 아이템 선택 메뉴
         public void UseItemMenu()
         {
@@ -287,7 +311,7 @@ namespace ReverseDungeonSparta
             ViewManager.TitleMenuTxt();
             ViewManager.PrintTitle();
 
-            menuItems = new List<(string, Action, Action)>
+            menuItems = new List<(string, Action, Action?)>
             {
                 ("", GameMenu, null),
                 ("", GameMenu, null),
@@ -311,8 +335,8 @@ namespace ReverseDungeonSparta
             //선택지로 출력할 텍스트와 진입할 메소드를 menuItems의 요소로 집어 넣어줍니다.
             //매개변수로 무언가를 집어넣어야하는 메소드일 경우 다음과 같이 사용 () =>  메소드명(매개변수들)
             //리스트 3번째에 입력 받는 오디오는 null로 선언해도 정상작동 됩니다.
-            //새로운 (string, Action, Action) 입력하기 전 반점(,) 필수
-            menuItems = new List<(string, Action, Action)>
+            //새로운 (string, Action, Action?) 입력하기 전 반점(,) 필수
+            menuItems = new List<(string, Action, Action?)>
             {
                 //상태 확인, 소지품 확인, 내려가기, 휴식하기, 저장하기, 게임종료
                 ("", PlayerStatusMenu, () => AudioManager.PlayMoveMenuSE(0)),

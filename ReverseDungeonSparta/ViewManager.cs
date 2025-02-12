@@ -217,6 +217,14 @@ namespace ReverseDungeonSparta
             {
                 foreach(string key in colorKeyword)
                 {
+
+                }
+                
+
+
+
+                foreach(string key in colorKeyword)
+                {
                     if(!textList[i].Contains(key))
                     {
                         //Console.Write(textList[i]);
