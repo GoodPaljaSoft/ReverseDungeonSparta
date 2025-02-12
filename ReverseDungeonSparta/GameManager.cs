@@ -134,6 +134,9 @@ namespace ReverseDungeonSparta
 
 
         #region 소지품 확인 - 장비 합성 씬
+
+
+        //장비 합성 메뉴
         public void ItemUpgradeMenu()
         {
             bool isBreak=false;
@@ -154,11 +157,16 @@ namespace ReverseDungeonSparta
             if (isBreak) { UpgradeDeSelect(); return; }
             Player.ItemUpgrade(main, offering, ItemList);           
         }
+
+
+        //업그레이드 장비 선택
         private void UpgradeDeSelect()
         {
             main = new EquipItem();
             offering = new EquipItem();
         }
+
+
         private void UpgradeSelect(EquipItem equipItem)
         {
             if (main.Name == "") main = equipItem;
@@ -200,13 +208,6 @@ namespace ReverseDungeonSparta
         public static void UsableStatusView(Player player)
         {
             ViewManager3.PrintPlayerStatus(player);
-        }
-
-        private static void ShowRecoveryMessage()
-        {
-            Console.WriteLine("엔터 키를 눌러 계속 진행하세요...");
-            Console.ReadLine();
-            Console.Clear();
         }
 
 
@@ -326,8 +327,6 @@ namespace ReverseDungeonSparta
         //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
-
-
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
             ViewManager.PrintCurrentFloors(20 - DungeonClearLevel);

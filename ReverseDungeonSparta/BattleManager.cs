@@ -339,14 +339,14 @@ public class BattleManager
         Console.WriteLine($"-Gold {500}");
         Console.WriteLine($"");
         Console.WriteLine($"[흭득 아이템]");
+
         foreach( var item in rewardItemList)
         {
             Console.WriteLine($"{item.Name}");
             player.equipItemList.Add(item);
         }
 
-
-        isDungeonEnd = true;    //던전 종료
+        isDungeonEnd = true;   //던전 종료
         player.ResetAllBuff(); //버프 초기화
         Util.GetUserInput(menuItems, PlayerWin, ref selectedIndex, (0, 27));
         AudioManager.PlayMoveMenuSE(0);
