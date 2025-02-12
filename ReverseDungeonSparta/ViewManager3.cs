@@ -75,6 +75,7 @@ namespace ReverseDungeonSparta
         //내려가기 창에 들어가면 출력할 메소드
         public static void PrintEnterDungeonText(Player player, int floor)
         {
+            AudioManager.PlayWalkSE(0);
             Console.Clear();
             PrintTitleTxt("내려가기", floor);
             PrintPlayerBattleStatus(player);
@@ -83,14 +84,15 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText("");
             for (int i = 0; i < 14; i++)
             {
+                if(i == 1) AudioManager.StopBGM();
                 ViewManager.PrintText("▼");
-                Thread.Sleep(150);
+                Thread.Sleep(160);
             }
             ViewManager.PrintText("");
-            Thread.Sleep(300);
+            Thread.Sleep(200);
             ViewManager.PrintText("플레이어가 모험가 무리와 마주쳤습니다!");
-            Thread.Sleep(300);
             ViewManager.PrintText(0, 29, "-> 다음으로");
+            AudioManager.PlayBattleBGM();
         }
 
 
@@ -415,7 +417,6 @@ namespace ReverseDungeonSparta
             PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
-            ViewManager.PrintText(0, 29, "-> 다음");
             ViewManager.PrintText(0, 11, $"{player.Name}은(는) 자리에서 도망쳤습니다!");
         }
 

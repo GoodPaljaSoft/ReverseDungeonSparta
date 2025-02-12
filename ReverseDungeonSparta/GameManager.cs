@@ -334,7 +334,6 @@ namespace ReverseDungeonSparta
         {
             DungeonClearLevel++;
             BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
-            AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.EnterTheBattle();
         }

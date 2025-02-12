@@ -45,7 +45,7 @@ public class BattleManager
 
         foreach (Monster monster in monsterList)
         {
-            monster.SkillList = Skill.AddMonsterSkill(monster, (dungeonMaxFloor - dungeonLevel)/3);
+            monster.SkillList = Skill.AddMonsterSkill(monster, dungeonLevel/3);
         }
     }
 
@@ -56,6 +56,9 @@ public class BattleManager
     {
         ViewManager3.PlayerEscapeDungeonTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
 
+        ViewManager.PrintText("");
+        ViewManager.PrintText("도망치는 중...");
+        ViewManager.PrintText("");
         ViewManager.PrintText("");
 
         int rand = new Random().Next(0, 2);
@@ -78,16 +81,26 @@ public class BattleManager
             {
                 dungeonLevel = 15;
             }
+            AudioManager.StopBGM();
+            AudioManager.PlayWalkSE(200);
+            Thread.Sleep(3000);
             ViewManager.PrintText($"{player.Name}은(는) 성공적으로 적을 따돌렸습니다!");
             ViewManager.PrintText($"적에게 도망치는 도중 모든 사용 아이템을 잃어버렸습니다...");
             player.UsableItemInventory = new List<UsableItem>();
+            ViewManager.PrintText(0, 29, "-> 다음");
             Util.CheckKeyInputEnter();
             GameManager.Instance.DungeonClearLevel = dungeonLevel;
+            AudioManager.PlayMenuBGM();
             GameManager.Instance.GameMenu();
         }
         else//실패
         {
+            AudioManager.StopBGM();
+            AudioManager.PlayWalkSE(200);
+            Thread.Sleep(3000);
             ViewManager.PrintText($"{player.Name}은(는) 적에게 따라잡혔습니다!");
+            ViewManager.PrintText(0, 29, "-> 다음");
+            AudioManager.PlayBattleBGM();
             Util.CheckKeyInputEnter();
         }
     }
