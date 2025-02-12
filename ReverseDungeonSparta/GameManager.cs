@@ -61,8 +61,10 @@ namespace ReverseDungeonSparta
             ViewManager.ViewInit();
 
             //애니메이션 텍스트 메서드 테스트
-            //IntroScene();
-
+            IntroScene();
+            //EndingChoice();
+            //Ending1();
+            //Ending2();
         }
 
 
@@ -378,9 +380,6 @@ namespace ReverseDungeonSparta
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
 
-            //스테이지 레벨 반영 시험 코드
-            DungeonClearLevel++;
-
 
         }
 
@@ -394,6 +393,31 @@ namespace ReverseDungeonSparta
 
             ViewManager.PrintLongTextAnimation(DataBase.introText2);
 
+            Console.ReadKey();
+        }
+
+        public void GameOver()
+        {
+
+        }
+
+        public void EndingChoice()
+        {
+            ViewManager.PrintLongTextAnimation(DataBase.endingText[0]);
+            Console.ReadKey();
+        }
+
+        public void Ending1()
+        {
+            Console.Clear();
+            ViewManager.PrintLongTextAnimation(DataBase.endingText[1]);
+            Console.ReadKey();
+        }
+
+        public void Ending2()
+        {
+            Console.Clear();
+            ViewManager.PrintLongTextAnimation(DataBase.endingText[2]);
             Console.ReadKey();
         }
 
