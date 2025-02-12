@@ -9,11 +9,15 @@ namespace ReverseDungeonSparta
     }
     public class Player : Character
     {
-        public List<EquipItem> equipItemList = new List<EquipItem>(); // 아이템목록 객체 만들기
-        public List<EquipItem> isOwnedItemList = new List<EquipItem>();
+        public List<EquipItem> equipItemList = new List<EquipItem>()
+        {
+            new EquipItem(allEquipItem[0]),
+            new EquipItem(allEquipItem[0]),
+            new EquipItem(allEquipItem[1]),
+        };// 아이템목록 객체 만들기
         public List<EquipItem> isEquippedList = new List<EquipItem>();
         public List<UsableItem> UsableItemInventory = new List<UsableItem>(); // 소비 아이템 리스트
-        public JobType Job { get; set; } 
+        public JobType Job { get; set; }
         public int Level { get; set; }
         public int Gold { get; set; }
         public int AdditionalAttack { get; set; }   // 장비 공격력
@@ -43,7 +47,6 @@ namespace ReverseDungeonSparta
 
             Critical = 5;
             Evasion = 5;
-            InitEquipItems();
 
             //int additionalAttack = AdditionalAttack; //필요없다면 지우기
             //int additionalDefence = AdditionalDefence;
@@ -81,6 +84,8 @@ namespace ReverseDungeonSparta
         }
         #endregion
 
+
+        //테스트 코드
         public void InitEquipItems()
         {
             // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
@@ -91,26 +96,26 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public void IsEquipItem(ref int itemIndex) //아이템 장착 로직 구현
+        public void EquipEquipItem(ref int itemIndex) //아이템 장착 로직 구현
         {
             if (itemIndex >= 0 && itemIndex < equipItemList.Count)
             {
                 EquipItem item = equipItemList[itemIndex]; //테스트를 위한 equipItemList //실제isOwnedItemList
-                bool isEquipped = item.IsEquiped; 
+                bool isEquipped = item.IsEquiped;
                 if (isEquipped == false) //아이템 장착되지 않았다면
                 {
                     bool isTypeEquipped = false; //같은 타입의 아이템을 장착했는지 확인하기 위함
-                    foreach(var equippedItem in isEquippedList)
+                    foreach (var equippedItem in isEquippedList)
                     {
-                        if(equippedItem.Type == item.Type)
+                        if (equippedItem.Type == item.Type)
                         {
                             isTypeEquipped = true;  //이미 장착되어있으므로 패스
                             break;
                         }
                     }
-                    if(!isTypeEquipped) //같은 타입의 아이템이 없으므로
+                    if (!isTypeEquipped) //같은 타입의 아이템이 없으므로
                     {
-                        item.IsEquiped = true; 
+                        item.IsEquiped = true;
                         isEquippedList.Add(item);
                         // ApplyItemStat();
                     }
@@ -138,7 +143,7 @@ namespace ReverseDungeonSparta
             {
                 Console.WriteLine("소유한 아이템이 아닙니다.");
             }
-            
+
         }
         public bool CheckPlayerCanSkill(int selectSkillNum)
         {
@@ -163,14 +168,10 @@ namespace ReverseDungeonSparta
             Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
             int number2 = Util.GetUserIntInput(1, equipItemList.Count) - 1;//매개변수 숫자로 넣지 말아주세요
             EquipItem offering = equipItemList[number2];
-            EquipItem? newitem = ItemUpgrade(main, offering, equipItemList); //equipItemList는 테스트용
-                                                                             //실제 isOwnedItemList
-            if (newitem != null)
-            {
-                equipItemList.Add(newitem);
-            }
+            ItemUpgrade(main, offering, equipItemList); 
+
         }
-        public static EquipItem ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
+        public static void ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
         {
             //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
             if (main.Type == offering.Type && main.Grade == offering.Grade)
@@ -187,8 +188,10 @@ namespace ReverseDungeonSparta
                     default:
                         Console.Clear();
                         Console.WriteLine("더 이상 강화할 등급이 없습니다.");
-                        return null;
+                        return;
                 }
+
+
                 //업그레이드 확률을 랜덤으로 설정
                 Random random = new Random();
                 // 업그레이드퍼센트를 0 ~ 100퍼센트로 만들기 위한 NextDoulbe메서드 사용
@@ -197,53 +200,50 @@ namespace ReverseDungeonSparta
                 // 업그레이드 등급확률이 랜덤확률값보다 높을 떄 조합이 성공되도록
                 if (randomValue <= upgradePercent)
                 {
-                    //아이템 등급의 enum값을 이용하여 nextgrade로 만들기
-                    EquipItemGrade nextgrade = (EquipItemGrade)((int)main.Grade + 1);
+                    int itemCount = allEquipItem.Length;
 
-                    EquipItem upgradeItem = new EquipItem();
+                    int randomMax = itemCount / 3;
+                    int randomIndex = random.Next(0, randomMax + 1);
+                    EquipItem upgradeItem;
+                    if (main.Grade == EquipItemGrade.Normal)
+                    {
+                        upgradeItem = new EquipItem(allEquipItem[randomIndex - 2]);
+                        //allEquipItem의 인덱스 중에서 %3하면 1인걸 찾아와야 함
+                    }
+
+                    else  // (main.Grade == EquipItemGrade.Uncommon)
+                    {
+                        //2,5,8,11,14,17
+
+                        upgradeItem = new EquipItem(allEquipItem[randomIndex - 1]);
+                        //allEquipItem의 인덱스 중에서 %3하면 2인걸 찾아와야 함
+                    }
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine($"조합 성공! 새로운 아이템 : {upgradeItem.Name}, {upgradeItem.Type}, {upgradeItem.Grade}");
                     Thread.Sleep(1000);
-                    ReturnToInventory();
-
-                    List<EquipItem> tempEquipList = new List<EquipItem>();
-                    for (int i = 0; i < equipItemList.Count; i++)
-                    {
-
-                        //장착 가능한 아이템 리스트를 모두 검사를 돌린다.
-                        //검사를 돌려서 받은 아이템 등급보다 한 등급 높은 아이템들을 모두 임시 리스트에 받아온다.
-                        //받아온 리스트에서 랜덤으로 하나를 고른다.
-                        if (equipItemList[i].Grade == offering.Grade + 1)
-                        {
-                            tempEquipList.Add(equipItemList[i]);
-                        }
-                    }
-                    int rand = random.Next(0, tempEquipList.Count);
-                    upgradeItem = tempEquipList[rand];
+                    equipItemList.Add(upgradeItem);
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
-                    return upgradeItem;// return 다음 애들은 호출이 안됩니다.
-                    //equipItemList.Remove(main);
-                    //equipItemList.Remove(offering);
+                    return;
                 }
                 else
                 {
+                    //실패
                     Console.Clear();
                     Console.WriteLine("[조합 결과]");
                     Console.WriteLine("조합 실패! 조합한 아이템이 소멸됩니다...");
                     Thread.Sleep(1000);
-                    ReturnToInventory();
                     equipItemList.Remove(main);
                     equipItemList.Remove(offering);
-                    return null;
+                    return;
                 }
             }
             else // 아이템타입이나 등급이 다르다면 나올 수 있는 출력
             {
                 Console.WriteLine("같은 타입과 같은 등급의 아이템만 조합할 수 있습니다.");
                 Thread.Sleep(1000);
-                return null;
+                return;
             }
         }
         public static EquipItem RandomRewardList()

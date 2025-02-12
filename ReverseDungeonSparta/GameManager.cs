@@ -112,7 +112,7 @@ namespace ReverseDungeonSparta
             player.SortItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
+                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.EquipEquipItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
             ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
@@ -123,9 +123,28 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 - 장비 합성 씬
         public void ItemUpgradeMenu()
         {
+            List<EquipItem> equipItemList = player.equipItemList;
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-            player.TryEquipItemUpgrade(player.equipItemList);
+
+            // 소지품 리스트 출력
+            for (int i = 0; i < player.equipItemList.Count; i++)
+            {
+                EquipItem item = player.equipItemList[i];
+                Console.WriteLine($"{i + 1}. {item.Name} - {item.Type} - {item.Grade}");
+            }
+
+            // 업그레이드 시도
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 조합]");
+            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
+            int number1 = Util.GetUserIntInput(1, equipItemList.Count) - 1;
+            EquipItem main = equipItemList[number1];
+            Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
+            int number2 = Util.GetUserIntInput(1, equipItemList.Count) - 1;
+            EquipItem offering = equipItemList[number2];
+            Player.ItemUpgrade(main, offering, equipItemList);
+
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
