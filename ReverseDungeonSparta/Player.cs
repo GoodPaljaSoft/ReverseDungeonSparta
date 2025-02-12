@@ -9,13 +9,15 @@ namespace ReverseDungeonSparta
     }
     public class Player : Character
     {
-        public List<EquipItem> equipItemList = new List<EquipItem>()
+        public List<EquipItem> equipItemList = new List<EquipItem>() //아이템 소유리스트
         {
             new EquipItem(allEquipItem[0]),
             new EquipItem(allEquipItem[0]),
             new EquipItem(allEquipItem[1]),
+            new EquipItem (allEquipItem[2]),
+            new EquipItem(allEquipItem[3])
         };// 아이템목록 객체 만들기
-        public List<EquipItem> isEquippedList = new List<EquipItem>();
+        public List<EquipItem> isEquippedList = new List<EquipItem>(); //아이템 장착리스트
         public List<UsableItem> UsableItemInventory = new List<UsableItem>(); // 소비 아이템 리스트
         public JobType Job { get; set; }
         public int Level { get; set; }
@@ -92,7 +94,11 @@ namespace ReverseDungeonSparta
                     {
                         item.IsEquiped = true;
                         isEquippedList.Add(item);
-                        // ApplyItemStat();
+                        //int prevMaxHP = TotalMaxHP; //원래 있던 최대 체력을 MaxHP로
+                        HP = TotalMaxHP; 
+                        //int prevMaxMP = MaxMP; //원래 있던 최대 마나을 MaxMP로
+                        MP = TotalMaxMP;
+                        
                     }
                     else
                     {
@@ -107,8 +113,7 @@ namespace ReverseDungeonSparta
                         {
                             isEquippedList.Remove(equippedItem); // 장착아이템리스트에서 제거
                             item.IsEquiped = false; // 장착 상태를 false로 변경
-
-                            // ApplyItemStat();
+                            // 장착해제시 체력 마나 
                             break;
                         }
                     }

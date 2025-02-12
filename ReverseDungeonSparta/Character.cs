@@ -16,9 +16,43 @@ namespace ReverseDungeonSparta
         public int Critical { get; set; }//치명타확률
         public int Evasion { get; set; }//회피력
         public int Intelligence { get; set; }//지능 마법 스킬에 연관
-        public int TotalMaxHP { get; set; }
-        public int TotalMaxMP { get; set; }
-            
+        public int TotalMaxHP
+        {
+            get
+            {
+                int valueMaxHP = 0;
+                Player player = GetPlayer();
+                if (player != null)
+                {
+                    List<EquipItem> isEquippedList = player.isEquippedList;
+                    foreach (var equipItem in isEquippedList)
+                    {
+                        valueMaxHP += equipItem.AddMaxHp;
+                    }
+                }
+                return MaxHP + valueMaxHP;
+            }
+            private set { }
+        }
+        public int TotalMaxMP
+        {
+            get
+            {
+                int valueMaxMp = 0;
+                Player player = GetPlayer();
+                if (player != null)
+                {
+                    List<EquipItem> isEquippedList = player.isEquippedList;
+                    foreach (var equipItem in isEquippedList)
+                    {
+                        valueMaxMp += equipItem.AddMaxMp;
+                    }
+                }
+                return MaxMP + valueMaxMp;
+            }
+            private set { }
+        }
+
         public int TotalLuck //행운(치명타 확률, 회피율에 연관)
         {
             get
@@ -27,8 +61,8 @@ namespace ReverseDungeonSparta
                 Player player = GetPlayer();
                 if (player != null)
                 {
-                    List<EquipItem> equipItemList = player.equipItemList;
-                    foreach (var equipItem in equipItemList)
+                    List<EquipItem> isEquippedList = player.isEquippedList;
+                    foreach (var equipItem in isEquippedList)
                     {
                         valueLuk += equipItem.AddLuck;
                     }
@@ -46,8 +80,8 @@ namespace ReverseDungeonSparta
                 Player player = GetPlayer();
                 if (player != null)
                 {
-                    List<EquipItem> equipItemList = player.equipItemList;
-                    foreach (var equipItem in equipItemList)
+                    List<EquipItem> isEquippedList = player.isEquippedList; //장착리스트
+                    foreach (var equipItem in isEquippedList)
                     {
                         valueInt += equipItem.AddIntelligence;
                     }
@@ -69,8 +103,8 @@ namespace ReverseDungeonSparta
                 Player player = GetPlayer();
                 if (player != null)
                 {
-                    List<EquipItem> equipItemList = player.equipItemList;
-                    foreach(var equipItem in equipItemList)
+                    List<EquipItem> isEquippedList = player.isEquippedList;
+                    foreach(var equipItem in isEquippedList)
                     {
                         valueDef += equipItem.AddDefence;
                     }
@@ -91,8 +125,8 @@ namespace ReverseDungeonSparta
                 Player player = GetPlayer();
                 if (player != null)
                 {
-                    List<EquipItem> equipItems = player.equipItemList;
-                    foreach (var equipItem in equipItems)
+                    List<EquipItem> isEquippedList = player.isEquippedList;
+                    foreach (var equipItem in isEquippedList)
                     {
                         valueAtk += equipItem.AddAttack;
                     }
@@ -142,31 +176,11 @@ namespace ReverseDungeonSparta
                     Monster monster = GetMonster();
                     if (monster != null) monster.IsDead();
                 }
-                else if (_hp > MaxHP) _hp = MaxHP;
+                else if (_hp > TotalMaxHP) _hp = TotalMaxHP;
             }
         }               //체력
-        public int MaxHP  //최대 체력
-        {
-            get
-            {
-                if (TotalMaxHP == 0)
-                {
-                    TotalMaxHP = 100;
-
-                    Player player = GetPlayer();
-                    if (player != null)
-                    {
-                        List<EquipItem> equipItemList = player.equipItemList;
-                        foreach (var equipItem in equipItemList)
-                        {
-                            TotalMaxHP += equipItem.AddMaxHp;
-                        }
-                    }
-                }
-                return TotalMaxHP;
-            }
-            set { }
-        }
+        public int MaxHP { get; set; } //최대 체력
+       
         public int MP 
         { get 
             { return _mp; } 
@@ -174,31 +188,11 @@ namespace ReverseDungeonSparta
             {
                 _mp = value;
                 if(_mp <= 0) _mp = 0;
-                else if (_mp > MaxMP) _mp = MaxMP;
+                else if (_mp > TotalMaxMP) _mp = TotalMaxMP;
             } 
         }               //마나
-        public int MaxMP //최대 마다
-        {
-            get
-            {
-                if (TotalMaxMP == 0)
-                {
-                    TotalMaxMP = 100;
+        public int MaxMP { get; set; }//최대 마다
 
-                    Player player = GetPlayer();
-                    if (player != null)
-                    {
-                        List<EquipItem> equipItemList = player.equipItemList;
-                        foreach (var equipItem in equipItemList)
-                        {
-                            TotalMaxMP += equipItem.AddMaxMp;
-                        }
-                    }
-                }
-                return TotalMaxMP;
-            }
-            set { }
-        }
         public int Speed { get; set; }  //속도
         public List<Skill> SkillList { get; set; }  //가지고 있는 스킬
 
