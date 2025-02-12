@@ -306,6 +306,10 @@ namespace ReverseDungeonSparta
                     Util.CheckKeyInputEnter();
                     criticalDamage = damage * 2;
                 }
+                else
+                {
+                    criticalDamage = damage;
+                }
             }
         }
 
