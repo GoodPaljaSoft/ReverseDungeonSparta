@@ -109,6 +109,7 @@ namespace ReverseDungeonSparta
             int turnCount = skill.BufferTurn;
             Character character = (Character)this;
 
+
             //스킬을 사용한 캐릭터가 버프가 올라가는 본인일 경우 턴 카운터를 하나 올려서 적용함.
             if (useCharacter == (Character)this)
             {
