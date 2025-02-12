@@ -28,7 +28,7 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText("[C]나가기");
 
             List<(string, Action, Action)> itemScrollView = itemList
-                                                        .Select(x => (InventorySortList(x), (Action)null, (Action)null))
+                                                        .Select(x => (InventorySortList(x) + "\n", (Action)null, (Action)null))
                                                         .ToList();
 
             ScrollViewTxt(itemScrollView, ref selectedIndex, cursor);
@@ -36,19 +36,28 @@ namespace ReverseDungeonSparta
 
         public static string InventorySortList(EquipItem equipItem)
         {
+
+            int count = 0;
             int[] optionArray = { equipItem.AddLuck, equipItem.AddDefence, equipItem.AddAttack, equipItem.AddIntelligence, equipItem.AddMaxHp, equipItem.AddMaxMp };
             string[] nameArray = { "AddLuck", "AddDefence", "AddAttack", "AddIntelligence", "AddMaxHp", "AddMaxMp" };
             StringBuilder sb = new StringBuilder();
             bool isEquipped = equipItem.IsEquiped;
             sb.Append(isEquipped ? " [E] ".PadRight(5) : " [-] ".PadRight(5));
-            sb.Append(equipItem.Name.PadRight(20));
-            sb.Append($"| {TranslateString(equipItem.Type.ToString())}");
-            sb.Append($"{equipItem.Information}\n");
+            sb.Append(Util.SortPadRightItemList(equipItem.Name, 24));
+            sb.Append(Util.SortPadRightItemList($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
             for(int i = 0; i<optionArray.Length; i++)
             {
+
                 if (optionArray[i] != 0)
                 {
-                    sb.Append($"|{TranslateString(nameArray[i])} +{optionArray[i]}".PadLeft(50));
+                    sb.Append(Util.SortPadRightItemList($"| {TranslateString(nameArray[i])} +{optionArray[i]} ",13 ));
+                    sb.Append(Util.SortPadRightItemList($"|", 2));
+                    if (count == 0)
+                    {
+                        sb.Append($"{equipItem.Information}\n");
+                        sb.Append(Util.SortPadRightItemList($"", 41));
+                    }
+                    count++;
                 } 
             }
             return sb.ToString();

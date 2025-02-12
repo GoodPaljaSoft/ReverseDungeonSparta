@@ -255,5 +255,13 @@ namespace ReverseDungeonSparta
             }
             return keyInfo;
         }
+
+
+        //해당 텍스트에 한글이 얼마나 들어있는지 확인하고 정렬의 수를 조절하는 메서드 /사용 예정
+        public static string SortPadRightItemList(string input, int defaultLength)
+        {
+            int countKOR = input.Count(x => x >= 0xAC00 && x <= 0xD7A3);
+            return input.PadRight(defaultLength - countKOR, ' ');
+        }
     }
 }
