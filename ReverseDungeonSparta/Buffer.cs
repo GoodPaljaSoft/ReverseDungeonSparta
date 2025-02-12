@@ -92,6 +92,7 @@ namespace ReverseDungeonSparta
                 if (HealingBuff.Count > 0)
                 {
                     Character character = this as Character;
+                    AudioManager.PlayHealingSE(200);
                     character.CheckHealingList(false);
                 }
             }
@@ -125,6 +126,7 @@ namespace ReverseDungeonSparta
             {
                 HealingBuff.Add(((int)value, turnCount));
                 character.CheckHealingList(true);
+                AudioManager.PlayHealingSE(200);
             }
             else if (buffType == BuffType.LuckBuff)
             {

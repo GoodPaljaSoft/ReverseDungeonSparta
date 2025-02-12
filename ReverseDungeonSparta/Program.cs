@@ -1,4 +1,6 @@
-﻿namespace ReverseDungeonSparta
+﻿using System.Runtime.InteropServices;
+
+namespace ReverseDungeonSparta
 {
     internal class Program
     {

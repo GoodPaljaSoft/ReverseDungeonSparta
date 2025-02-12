@@ -15,8 +15,8 @@ namespace ReverseDungeonSparta
         static IWavePlayer SE_Player;
         static AudioFileReader SE_Reader;
 
-        static float bgmVolume = 0.05f;
-        static float seVolme = 0.05f;
+        static float bgmVolume = 0.2f;
+        static float seVolme = 0.1f;
 
         static bool isBGM_Player = false;
         static bool isPlayerDie = false;
@@ -30,14 +30,17 @@ namespace ReverseDungeonSparta
         static string pathPlayerDieBGM = pathMusicFolder + "PlayerDieBGM.mp3";          //플레이어 사망 시 배경 음악
 
         static string pathMoveMenuSE = pathMusicFolder + "MenuMove.mp3";                //메뉴가 나타날 때마다 나오는 기본 효과음
+        static string pathItemUpgradeSE = pathMusicFolder + "ItemUpgrade.mp3";                //플레이어가 아이템 조합 할 때 효과음
+        static string pathUseUseItemSE = pathMusicFolder + "PlayerUseUseItem.mp3";                //플레이어가 사용 아이템 사용할 때 효과음
+        static string pathOnDamageSE = pathMusicFolder + "OnDamage.mp3";                //플레이어가 사용 아이템 사용할 때 효과음
         static string pathItemEquippedSE = pathMusicFolder + "ItemEquipped.mp3";        //아이템 장착 및 해제시 나오는 효과음
         static string pathDungeonClearSE = pathMusicFolder + "DungeonClear.mp3";        //던전 클리어 시 나오는 효과음
         static string pathDungeonFailedSE = pathMusicFolder + "DungeonFailed.mp3";      //던전 실패 시 나오는 효과음
         static string pathLevelUpSE = pathMusicFolder + "PlayerLevelUp.mp3";            //플레이어의 레벨이 오를 경우 나오는 효과음
         static string pathPlayerDieSE = pathMusicFolder + "PlayerDie.mp3";              //플레이어 사망 시 나오는 효과음
         static string pathAttackSlashSE = pathMusicFolder + "AttackSlash.mp3";          //베는 공격을 했을 때 나오는 효과음
-        static string pathAttackArrowSE = pathMusicFolder + "AttackArrow.mp3";           //화살이 날라가는 효과음
-        static string pathAttackClubSE = pathMusicFolder + "AttackClub.mp3";             //몽둥이로 때리는 효과음
+        static string pathAttackArrowSE = pathMusicFolder + "AttackArrow.wav";           //화살이 날라가는 효과음
+        static string pathAttackClubSE = pathMusicFolder + "AttackClub.wav";             //몽둥이로 때리는 효과음
         static string pathAttackFireSE = pathMusicFolder + "AttackFire.mp3";             //화염 마법을 쓰는 효과음
         static string pathHealingSE = pathMusicFolder + "Healing.mp3";                   //힐링 효과음
         #endregion
@@ -51,6 +54,21 @@ namespace ReverseDungeonSparta
             await Task.Delay(delayTime);
             SettingSE(pathMoveMenuSE);
         }       //메뉴 이동 효과음
+        public static async void PlayItemUpgradeSE(int delayTime)
+        {
+            await Task.Delay(delayTime);
+            SettingSE(pathItemUpgradeSE);
+        }       //아이템 강화 효과음
+        public static async void PlayOnDamageSE(int delayTime)
+        {
+            await Task.Delay(delayTime);
+            SettingSE(pathOnDamageSE);
+        }       //피격 데미지
+        public static async void PlayerUseUseItemSE(int delayTime)
+        {
+            await Task.Delay(delayTime);
+            SettingSE(pathUseUseItemSE);
+        }       //플레이어가 사용 아이템 사용 시 효과음
         public static async void PlayItemEquippedSE(int delayTime)
         {
             await Task.Delay(delayTime);

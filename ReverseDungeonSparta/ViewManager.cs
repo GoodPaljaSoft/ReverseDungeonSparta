@@ -458,10 +458,9 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTower();
-            PrintText(3, 24, "   상태확인");
+            PrintText(3, 25, "   상태확인");
             PrintText("   소지품 확인");
             PrintText("   내려가기");
-            PrintText("   휴식하기");
             PrintText("   저장하기");
             PrintText("   게임종료");
         }

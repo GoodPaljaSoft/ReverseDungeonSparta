@@ -54,23 +54,42 @@ public class BattleManager
     //도망갈 경우 실행할 메서드
     public void PlayerEscapeBattle()
     {
-        if (dungeonLevel <= 5)
+        ViewManager3.PlayerEscapeDungeonTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
+
+        ViewManager.PrintText("");
+
+        int rand = new Random().Next(0, 2);
+
+        if(rand == 0)//도망 성공
         {
-            dungeonLevel = 0;
+            if (dungeonLevel <= 5)
+            {
+                dungeonLevel = 0;
+            }
+            else if (dungeonLevel <= 10)
+            {
+                dungeonLevel = 5;
+            }
+            else if (dungeonLevel <= 15)
+            {
+                dungeonLevel = 10;
+            }
+            else if (dungeonLevel <= 20)
+            {
+                dungeonLevel = 15;
+            }
+            ViewManager.PrintText($"{player.Name}은(는) 성공적으로 적을 따돌렸습니다!");
+            ViewManager.PrintText($"적에게 도망치는 도중 모든 사용 아이템을 잃어버렸습니다...");
+            player.UsableItemInventory = new List<UsableItem>();
+            Util.CheckKeyInputEnter();
+            GameManager.Instance.DungeonClearLevel = dungeonLevel;
+            GameManager.Instance.GameMenu();
         }
-        else if (dungeonLevel <= 10)
+        else//실패
         {
-            dungeonLevel = 5;
+            ViewManager.PrintText($"{player.Name}은(는) 적에게 따라잡혔습니다!");
+            Util.CheckKeyInputEnter();
         }
-        else if (dungeonLevel <= 15)
-        {
-            dungeonLevel = 10;
-        }
-        else if (dungeonLevel <= 20)
-        {
-            dungeonLevel = 15;
-        }
-        GameManager.Instance.DungeonClearLevel = dungeonLevel;
     }
 
 
@@ -159,8 +178,8 @@ public class BattleManager
         ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList, 20 - dungeonLevel);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
-        List<(string, Action, Action?)> skillList = player.SkillList
-                                .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
+        List<(string, Action, Action)> skillList = player.SkillList
+                                .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)(() => AudioManager.PlayMoveMenuSE(0))))
                                 .ToList();
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
@@ -290,7 +309,7 @@ public class BattleManager
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
-        if(dungeonLevel == 20)
+        if(dungeonLevel == 19)
         {
             GameManager.Instance.EndingChoice();
 
@@ -493,7 +512,7 @@ public class BattleManager
             {
                 case ConsoleKey.C:
                     selectedMonsterIndex = null;
-                    //AudioManager.PlayMoveMenuSE(0);
+                    AudioManager.PlayMoveMenuSE(0);
                     playerSelectSkill = null;
                     StartPlayerBattle();
                     break;

@@ -32,15 +32,15 @@ namespace ReverseDungeonSparta
 
             Luck = 100;
             Defence = 5;
-            Attack = 100;
+            Attack = 300;
             Intelligence = 5;
 
-            MaxHP = 100;
+            MaxHP = 300;
             HP = MaxHP;
             MaxMP = 100;
             MP = MaxMP;
             MaxEXP = 10;
-            Speed = 8;
+            Speed = 20;
 
             Critical = 5;
             Evasion = 5;
@@ -350,6 +350,7 @@ namespace ReverseDungeonSparta
             Defence += 2;
             MaxHP += 5;
             HP += 5;
+            Speed += 2;
 
         }
 

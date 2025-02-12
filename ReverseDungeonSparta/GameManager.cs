@@ -52,6 +52,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
+            DungeonClearLevel = 18;
             BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
@@ -59,7 +60,6 @@ namespace ReverseDungeonSparta
             //인트로 데이터베이스 초기화
             DataBase.IntroTextInit();
             ViewManager.ViewInit();
-
             ////애니메이션 텍스트 메서드 테스트
             //IntroScene();
             //EndingChoice();
@@ -123,8 +123,10 @@ namespace ReverseDungeonSparta
             int itemIndex = 0;
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
-            List<(string, Action, Action?)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.EquipEquipItem(ref itemIndex)), (Action)null))
+            List<(string, Action, Action)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n",
+                                            (Action)(() => player.EquipEquipItem(ref itemIndex)),
+                                            (Action)(() => AudioManager.PlayItemEquippedSE(0))))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
@@ -159,8 +161,10 @@ namespace ReverseDungeonSparta
             int itemIndex = 0;
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
-            List<(string, Action, Action?)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n", (Action)(() => UpgradeSelect(x)), (Action)null))
+            List<(string, Action, Action)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n",
+                                            (Action)(() => UpgradeSelect(x)),
+                                            (Action)(() => AudioManager.PlayItemUpgradeSE(0))))
                                             .ToList();
             Console.Clear();
             ViewManager.DrawLine("소지품 확인 - 장비 합성", "합성할 장비 2가지를 선택해 주세요");
@@ -221,7 +225,9 @@ namespace ReverseDungeonSparta
             int itemIndex = 0;
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> usableItemList = player.UsableItemInventory
-                                            .Select(x => (InventoryViewManager.SortUseItemList(x) + "\n", (Action)(() => UseSelectedItem(ref itemIndex)), (Action)null))
+                                            .Select(x => (InventoryViewManager.SortUseItemList(x) + "\n",
+                                            (Action)(() => UseSelectedItem(ref itemIndex)),
+                                            (Action)(()=>AudioManager.PlayerUseUseItemSE(0))))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(usableItemList, ref selectedIndex, (0, 10), true, ref itemIndex);
@@ -248,6 +254,7 @@ namespace ReverseDungeonSparta
 
                 if (itemUsed)
                 {
+                    AudioManager.PlayerUseUseItemSE(200);
                     selectedItem.Count--; // 사용하면 보유 수 차감
                     Console.WriteLine("");
                     Console.WriteLine($"[{selectedItem.Name}] 아이템을 사용했습니다!");
@@ -340,9 +347,9 @@ namespace ReverseDungeonSparta
 
             menuItems = new List<(string, Action, Action?)>
             {
-                ("", GameMenu, null),
-                ("", GameMenu, null),
-                ("", GameMenu, null)
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
 
             Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
@@ -352,6 +359,7 @@ namespace ReverseDungeonSparta
         //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
+            player.HP = player.TotalMaxHP;
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
             ViewManager.PrintCurrentFloors(20 - DungeonClearLevel);
@@ -368,7 +376,6 @@ namespace ReverseDungeonSparta
                 ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
                 //("아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름], [출력할 오디오 메소드])
                 //("조합", sum, null)
@@ -378,7 +385,7 @@ namespace ReverseDungeonSparta
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
+            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 24));
 
 
         }

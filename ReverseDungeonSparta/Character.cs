@@ -205,7 +205,7 @@ namespace ReverseDungeonSparta
         //해당 클래스의 객체가 타겟을 때렸을 때 사용하는 메서드
         public virtual void Attacking(List<Character> targets, Skill skill)
         {
-            ViewManager.PrintText(0, 10, "");
+            ViewManager.PrintText(0, 12, "");
 
             //데미지 계산식
             double margin = TotalAttack * 0.1f;
@@ -220,6 +220,11 @@ namespace ReverseDungeonSparta
             {
                 margin = TotalIntelligence * 0.1f;
                 damage = new Random().Next(TotalIntelligence - (int)margin, TotalIntelligence + (int)margin);
+                AudioManager.PlaypathAttackFireSE(400);
+            }
+            else
+            {
+                AudioManager.PlayAttackClubSE(400);
             }
 
 
@@ -247,6 +252,8 @@ namespace ReverseDungeonSparta
                     ViewManager.PrintText($"{this.Name}은(는) {onTarget.Name}에게 공격을 시도했다!");
                 }
             }
+
+
 
             Util.CheckKeyInputEnter();
 
@@ -287,6 +294,7 @@ namespace ReverseDungeonSparta
                 int beforeEvasion = this.Evasion;
 
                 AddBuff(target, skill);
+                AudioManager.PlayHealingSE(200);
                 ViewManager.PrintText($"{this.Name}의 스테이터스 변화");
                 ViewManager.PrintText($"");
                 ViewManager.PrintText($"체  력: {beforeHP} -> {this.HP}");
@@ -303,6 +311,7 @@ namespace ReverseDungeonSparta
                 if (ComputeManager.TryChance(target.TotalCritical))
                 {
                     ViewManager.PrintText($"{this.Name}에게 치명적인 일격!!!");
+                    AudioManager.PlayAttackSlashSE(400);
                     Util.CheckKeyInputEnter();
                     criticalDamage = damage * 2;
                 }
@@ -353,6 +362,7 @@ namespace ReverseDungeonSparta
                 {
                     ViewManager.PrintText("회피 성공!");
                     ViewManager.PrintText($"{Name}은(는) {target.Name}의 공격을 피했습니다!");
+                    AudioManager.PlayAttackArrowSE(400);
                 }
                 else
                 {
@@ -360,6 +370,7 @@ namespace ReverseDungeonSparta
                     HP -= damage;
 
                     ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입었습니다! ({beforeHP} -> {(HP == 0 ? "Dead" : HP)})");
+                    AudioManager.PlayOnDamageSE(400);
 
                     if (HP == 0)
                     {

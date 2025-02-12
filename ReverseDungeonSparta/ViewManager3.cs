@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPOI.SS.Formula.Functions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -104,7 +105,9 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
             ViewManager.PrintText("");
+            ViewManager.PrintText("");
             ViewManager.PrintText($"{player.Name}의 차례입니다!");
+            ViewManager.PrintText("");
             ViewManager.PrintText(0, 26, "   공격하기");
             ViewManager.PrintText("   스킬 사용");
             ViewManager.PrintText("   아이템 사용");
@@ -185,7 +188,10 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 29, "-> 다음으로");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
             ViewManager.PrintText("");
+            ViewManager.PrintText("");
             ViewManager.PrintText($"{monster.Name}의 차례입니다!");
+            ViewManager.PrintText("");
+            Util.CheckKeyInputEnter();
         }
 
 
@@ -320,8 +326,8 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 29, "[C]나가기");
 
             //스킬 출력
-            List<(string, Action, Action?)> skillList = player.SkillList
-                                                                .Select(x => ($"{x.Name}             \n   : {x.Info}\n", (Action)null, (Action)null))
+            List<(string, Action?, Action?)> skillList = player.SkillList
+                                                                .Select(x => ($"{x.Name}             \n   : {x.Info}\n", (Action?)null, (Action?)null))
                                                                 .ToList();
 
             ScrollViewTxt(skillList, ref selectedIndex, (0, 12), false);
@@ -399,6 +405,18 @@ namespace ReverseDungeonSparta
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 28, "[Enter]사용");
             ViewManager.PrintText("[C]취소");
+        }
+
+        
+        //플레이어가 도망가기를 시도할 때 출력할 텍스트
+        public static void PlayerEscapeDungeonTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", floor);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 29, "-> 다음");
+            ViewManager.PrintText(0, 11, $"{player.Name}은(는) 자리에서 도망쳤습니다!");
         }
 
 
@@ -479,7 +497,7 @@ namespace ReverseDungeonSparta
                                 startIndex--;
                                 endIndex--;
                             }
-                            //AudioManager.PlayMoveMenuSE(0);
+                            AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -494,7 +512,7 @@ namespace ReverseDungeonSparta
                                 endIndex++;
                             }
 
-                            //AudioManager.PlayMoveMenuSE(0);
+                            AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -508,6 +526,7 @@ namespace ReverseDungeonSparta
                         return;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         isBreak = true;
                         selectedIndex = 0;
                         return;
@@ -515,7 +534,7 @@ namespace ReverseDungeonSparta
                 if (isBreak) break;
             }
         }
-        public static bool ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
+        public static bool ScrollViewTxt(List<(string, Action?, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
         {
             itemIndex++;
             int maxVisibleOption = 5;
@@ -574,7 +593,7 @@ namespace ReverseDungeonSparta
                                 startIndex--;
                                 endIndex--;
                             }
-                            //AudioManager.PlayMoveMenuSE(0);
+                            AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -589,7 +608,7 @@ namespace ReverseDungeonSparta
                                 endIndex++;
                             }
 
-                            //AudioManager.PlayMoveMenuSE(0);
+                            AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -602,6 +621,7 @@ namespace ReverseDungeonSparta
                         return false;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         selectedIndex = 0;
                         return true;
                 }
@@ -666,7 +686,7 @@ namespace ReverseDungeonSparta
                                 startIndex--;
                                 endIndex--;
                             }
-                            //AudioManager.PlayMoveMenuSE(0);
+                            AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -681,7 +701,7 @@ namespace ReverseDungeonSparta
                                 endIndex++;
                             }
 
-                            //AudioManager.PlayMoveMenuSE(0);
+                            AudioManager.PlayMoveMenuSE(0);
                         }
                         break;
 
@@ -695,6 +715,7 @@ namespace ReverseDungeonSparta
                         return;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         isBreak = true;
                         selectedIndex = 0;
                         return;
