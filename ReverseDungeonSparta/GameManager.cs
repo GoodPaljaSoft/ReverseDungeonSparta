@@ -62,9 +62,9 @@ namespace ReverseDungeonSparta
 
             //애니메이션 텍스트 메서드 테스트
             IntroScene();
-            //EndingChoice();
-            //Ending1();
-            //Ending2();
+            EndingChoice();
+            Ending1();
+            Ending2();
         }
 
 
@@ -390,10 +390,21 @@ namespace ReverseDungeonSparta
 
         public void IntroScene()
         {
-            ViewManager.PrintLongTextAnimation(DataBase.introText);
+
+            //ViewManager.PrintLongTextAnimation(DataBase.introText);
 
             player.Name = Console.ReadLine();
             DataBase.playerName = player.Name;
+
+            DataBase.introText2 = ViewManager.ChangePlayerName(DataBase.introText2);
+            DataBase.endingText[0] = ViewManager.ChangePlayerName(DataBase.endingText[0]);
+            DataBase.endingText[1] = ViewManager.ChangePlayerName(DataBase.endingText[1]);
+            DataBase.endingText[2] = ViewManager.ChangePlayerName(DataBase.endingText[2]);
+
+            ViewManager.colorWord.Add(player.Name, ConsoleColor.Cyan);
+            ViewManager.colorWord.Add($"[{player.Name}]", ConsoleColor.Cyan);
+
+
 
             ViewManager.PrintLongTextAnimation(DataBase.introText2);
 
@@ -407,6 +418,7 @@ namespace ReverseDungeonSparta
 
         public void EndingChoice()
         {
+            Console.Clear();
             ViewManager.PrintLongTextAnimation(DataBase.endingText[0]);
             Console.ReadKey();
         }

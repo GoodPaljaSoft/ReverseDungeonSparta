@@ -11,6 +11,7 @@ namespace ReverseDungeonSparta
 
     static class ViewManager
     {
+        //colorWord: 컬러 출력을 하고 싶은 단어를 키워드로 저장한 딕셔너리 (값은 컬러)
         public static Dictionary<string, ConsoleColor> colorWord = new Dictionary<string, ConsoleColor>();
 
         //화면 넓이 받아오기
@@ -34,6 +35,9 @@ namespace ReverseDungeonSparta
 
             colorWord.Add("[END 1]", ConsoleColor.Cyan);
             colorWord.Add("[END 2]", ConsoleColor.Cyan);
+
+            colorWord.Add("[1]", ConsoleColor.Cyan);
+            colorWord.Add("[2]", ConsoleColor.Cyan);
         }
 
 
@@ -200,69 +204,55 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public static void ChangePlayerName(string playerName)
+
+
+  
+        public static void PrintLongTextAnimation(string text)
         {
+            string[] str = null;
 
+            //colorWord의 키 값들을 받아옴
+            ICollection<string> colorKeyword = colorWord.Keys;
 
-        }
-
-        //string 타입 List를 받아와 한 문장씩 출력해준다.
-        
-        //public static void PrintLongTextAnimation(List<string> textList)
-        //{
-        //    string[] str;
-
-        //    //키 값들을 받아옴
-        //    ICollection<string> colorKeyword = colorWord.Keys;
-
-        //    for (int i = 0; i < textList.Count; i++)
-        //    {
-        //        foreach(string key in colorKeyword)
-        //        {
-        //            if(!textList[i].Contains(key))
-        //            {
-        //                //Console.Write(textList[i]);
-        //            }
-        //            else
-        //            {
-        //                str = textList[i].Split('%');
-
-        //                for (int j = 0; j < str.Length; j++)
-        //                {
-        //                    if (colorWord.TryGetValue(str[j], out ConsoleColor textColor))
-        //                    {
-        //                        Console.ForegroundColor = textColor;
-        //                        Console.Write(str[j]);
-        //                        Console.ResetColor();
-        //                    }
-        //                    else
-        //                    {
-        //                        Console.Write(str[j]);
-        //                    }
-        //                }
-
-        //                break;
-        //            }
-
-
-        //        }
-
-        //    }
-        //}
-
-
-        public static void PrintLongTextAnimation(List<string> textList)
-        {
-            foreach (var str in textList)
+            //받은 text에 키 값이 포함되어 있는지 확인해줌
+            foreach (string key in colorKeyword)
             {
-                Console.Write(str);
-                Thread.Sleep(1000);
+                //만약 있다면 %을 기준으로 텍스트를 나눠준다
+                if(text.Contains(key))
+                {
+                    str = text.Split('%');
+                }
+            }
+
+            //컬러로 출력할 것들이 없었다면 텍스트를 그대로 출력
+            if (str == null) Console.Write(text);
+            else
+            {
+                for (int i = 0; i < str.Length; i++)
+                {
+                    //TryGetValue: 
+                    if (colorWord.TryGetValue(str[i], out ConsoleColor textColor))
+                    {
+                        Console.ForegroundColor = textColor;
+                        Console.Write(str[i]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.Write(str[i]);
+                    }
+                }
             }
         }
 
-
-
-
+        public static void PrintLongTextAnimation(List<string> textList)
+        {
+            foreach(string str in textList)
+            {
+                PrintLongTextAnimation(str);
+                Thread.Sleep(1000);
+            }
+        }
 
         public static void PrintList(List<EquipItem> items)
         {
@@ -306,6 +296,63 @@ namespace ReverseDungeonSparta
             PrintText($"MP : {player.MP}/{player.MaxMP}");
             PrintText("");
             DrawLine();
+        }
+
+        //플레이어 이름 변경 갱신 메서드
+        public static List<string> ChangePlayerName(List<string> textList)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var line in textList)
+            {
+                sb.AppendLine(line);  // 줄바꿈 포함하여 추가
+            }
+
+            sb.Replace("~이름~", DataBase.playerName);
+
+            sb.Replace("이가", AddPostposition(DataBase.playerName, "이가"));
+            sb.Replace("은는", AddPostposition(DataBase.playerName, "은는"));
+            sb.Replace("을를", AddPostposition(DataBase.playerName, "을를"));
+            sb.Replace("과와", AddPostposition(DataBase.playerName, "과와"));
+
+
+            return sb.ToString().Split("&").ToList();
+        }
+
+
+        // 한글 조사 (은/는, 이/가) 자동 선택 함수
+        public static string AddPostposition(string word, string postpositionType)
+        {
+            if (string.IsNullOrEmpty(word))
+                return word;
+
+            char lastChar = word[word.Length - 1];
+
+            // 한글 유니코드 범위 체크
+            if (lastChar >= 0xAC00 && lastChar <= 0xD7A3)
+            {
+                int unicodeIndex = lastChar - 0xAC00;
+                int jongseongIndex = unicodeIndex % 28; // 종성 확인
+
+                bool hasJongseong = jongseongIndex != 0; // 종성이 있으면 true
+
+                switch (postpositionType)
+                {
+                    case "은는":
+                        return hasJongseong ? "은" : "는";
+                    case "이가":
+                        return hasJongseong ? "이" : "";
+                    case "을를":
+                        return hasJongseong ? "을" : "를";
+                    case "과와":
+                        return hasJongseong ? "과" : "와";
+                    default:
+                        throw new ArgumentException("올바른 조사 유형이 아닙니다. (예: '은는', '이가', '을를', '과와')");
+                }
+            }
+
+            // 한글이 아닐 경우 기본 조사 적용
+            return postpositionType == "은는" ? "는" : "가";
         }
 
 
