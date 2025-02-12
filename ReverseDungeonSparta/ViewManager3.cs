@@ -78,7 +78,7 @@ namespace ReverseDungeonSparta
             PrintTitleTxt("내려가기", floor);
             PrintPlayerBattleStatus(player);
             ViewManager.PrintText("");
-            ViewManager.PrintText($"{floor - 1}층으로 내려갑니다...");
+            ViewManager.PrintText($"{floor}층으로 내려갑니다...");
             ViewManager.PrintText("");
             for (int i = 0; i < 14; i++)
             {
