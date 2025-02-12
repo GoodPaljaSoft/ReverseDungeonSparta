@@ -111,7 +111,7 @@ namespace ReverseDungeonSparta
             List<(string, Action, Action)> itemScrollView = player.equipItemList
                                             .OrderByDescending(x => x.IsEquiped)
                                             .ThenBy(x => (int)x.Type)                                   //해당 아래 액션//
-                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)null, (Action)null))
+                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", () => (Action)player.IsEquipItem(selectedIndex) , (Action)null))
                                             .ToList();
 
             ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true);
@@ -124,7 +124,6 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
             player.TryEquipItemUpgrade(player.equipItemList);
             menuItems = new List<(string, Action, Action)>
             {
