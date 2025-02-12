@@ -118,7 +118,7 @@ namespace ReverseDungeonSparta
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
+                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.EquipEquipItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);

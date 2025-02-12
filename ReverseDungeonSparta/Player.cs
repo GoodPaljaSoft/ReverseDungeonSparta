@@ -91,7 +91,7 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public void IsEquipItem(ref int itemIndex) //아이템 장착 로직 구현
+        public void EquipEquipItem(ref int itemIndex) //아이템 장착 로직 구현
         {
             if (itemIndex >= 0 && itemIndex < equipItemList.Count)
             {
