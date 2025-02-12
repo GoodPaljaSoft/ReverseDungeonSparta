@@ -41,6 +41,10 @@ namespace ReverseDungeonSparta
         }
 
 
+        //인멘토리 메뉴에서 소지품 확인에 들어가면 출력할 메서드
+
+
+
         //인벤토리를 정렬할 때 사용할 메서드
         public static string InventorySortList(EquipItem equipItem)
         {

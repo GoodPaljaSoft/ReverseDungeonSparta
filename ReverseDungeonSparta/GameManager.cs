@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
 {
@@ -106,19 +108,30 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 - 장비 장착
         public void EquipItemMenu()
         {
-            int itemIndex = 0;
             InventoryViewManager.InventoryEquippedItemTxt();
 
+            while (true)
+            {
+                if (Test() == true) break;
+            }
+
+            EquipmentMenu();
+        }
+
+        public bool Test()
+        {
+            int itemIndex = 0;
             player.SortItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> itemScrollView = player.equipItemList
                                             .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
-            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
+            bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
 
-            EquipmentMenu();
+            return isExit;
         }
+
         #endregion
         #region 소지품 확인 - 장비 합성 씬
         public void ItemUpgradeMenu()

@@ -397,7 +397,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        public static void ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
+        public static bool ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
         {
             itemIndex = 0;
             int maxVisibleOption = 5;
@@ -484,15 +484,14 @@ namespace ReverseDungeonSparta
                             itemIndex = tempIndex + startIndex;
                             menuList[itemIndex].Item2();
                         }
-                        return;
+                        return false;
 
                     case ConsoleKey.C:
-                        isBreak = true;
                         selectedIndex = 0;
-                        return;
+                        return true;
                 }
-                if (isBreak) break;
             }
+            return false;
         }
     }
 }
