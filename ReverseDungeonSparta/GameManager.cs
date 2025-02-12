@@ -127,77 +127,16 @@ namespace ReverseDungeonSparta
             Util.GetUserInput(menuItems, ItemUpgradeMenu, ref selectedIndex);
         }
         #endregion
-
-
-        // 소비 아이템 목록
+        // 소비 아이템 선택 메뉴
         public static void UseItemMenu()
-        {
-                Console.Clear();
-                Console.WriteLine("소지품 확인 - 소비");
-                Console.WriteLine("");
-
-                Player player = GameManager.Instance.Player; // Player 객체 가져오기
-
-                 // 소비 아이템 목록 출력
-                if (player.UsableItemInventory.Count > 0)
-                {
-                    for (int i = 0; i < player.UsableItemInventory.Count; i++)
-                    {
-                        UsableItem item = player.UsableItemInventory[i];
-                        string recoveryInfo = "";
-
-                        if (item.Hp > 0)
-                        {
-                            recoveryInfo += $"HP +{item.Hp}";
-                        }
-
-                        if (item.Mp > 0)
-                        {
-                            if (recoveryInfo != "") // HP 정보가 있으면 공백 추가
-                            {
-                                recoveryInfo += " ";
-                            }
-                            recoveryInfo += $"MP +{item.Mp}";
-                        }
-                        Console.WriteLine($"{i + 1}. {item.Name} | {recoveryInfo} | {item.Information} | 보유 수 : {item.Count}개");
-                    }
-                    Console.WriteLine("");
-                }
-                else
-                {
-                    Console.WriteLine("가지고 있는 소비 아이템이 없습니다.");
-                }
-                Console.WriteLine("");
-                Console.WriteLine("[1] 아이템 사용");
-                Console.WriteLine("[0] 나가기");
-                Console.WriteLine("");
-
-                int result = Util.GetUserIntInput(0, 1);
-
-                switch (result)
-                {
-                    case 0:
-                        GameManager.Instance.InventoryMenu();
-                        break;
-                    case 1:
-                        SelectUsableItem();
-                        break;
-                    default:
-                        Console.WriteLine("예상치 못한 입력입니다."); // 혹시 모를 예외 처리
-                        break;
-                }
-
-        }
-        // 소비 아이템 선택
-        public static void SelectUsableItem()
         {
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("소지품 확인 - 소비 아이템 사용");
-                Console.WriteLine("");
-
                 Player player = GameManager.Instance.Player; // Player 객체 가져오기
+                Console.Clear();
+                ViewManager3.PrintTitleTxt("소지품 확인 - 소비 아이템 사용", 12);
+                UsableStatusView(player);
+
 
                 List<(string, Action, Action)> inventoryItems = new List<(string, Action, Action)>();
                 for (int i = 0; i < player.UsableItemInventory.Count; i++)
@@ -233,6 +172,12 @@ namespace ReverseDungeonSparta
                     () => AudioManager.PlayMoveMenuSE(0))); // 나가기 옵션
                 Util.GetUserInput(inventoryItems, UseItemMenu, ref GameManager.Instance.selectedIndex); // 사용자 입력 받기
             }
+        }
+
+        // 소비 창에서 플레이어 스탯 보기
+        public static void UsableStatusView(Player player)
+        {
+            ViewManager3.PrintPlayerStatus(player);
         }
 
         private static void ShowRecoveryMessage()
