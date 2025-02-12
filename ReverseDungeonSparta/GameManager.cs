@@ -51,7 +51,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
-            BattleManagerInstance = new BattleManager(player, dungeonClearLevel);
+            BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
@@ -294,8 +294,8 @@ namespace ReverseDungeonSparta
         //플레이어가 메인 메뉴에서 던전에 입장할 때 실행할 메서드
         public void EnterBattleMenu()
         {
-            dungeonClearLevel++;
-            BattleManagerInstance = new BattleManager(player, dungeonClearLevel);
+            DungeonClearLevel++;
+            BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.EnterTheBattle();
