@@ -209,6 +209,7 @@ namespace ReverseDungeonSparta
         public static void PrintLongTextAnimation(List<string> textList)
         {
             string[] str;
+            bool isColorTextHere = false;
 
             //키 값들을 받아옴
             ICollection<string> colorKeyword = colorWord.Keys;
@@ -217,9 +218,12 @@ namespace ReverseDungeonSparta
             {
                 foreach(string key in colorKeyword)
                 {
-
+                    if (textList[i].Contains(key))
+                        isColorTextHere = true;
+                    else
+                        isColorTextHere = false;
                 }
-                
+
 
 
 

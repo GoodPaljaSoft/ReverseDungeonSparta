@@ -60,7 +60,7 @@ namespace ReverseDungeonSparta
             ViewManager.ViewInit();
 
             //애니메이션 텍스트 메서드 테스트
-            IntroScene();
+            //IntroScene();
 
         }
 
