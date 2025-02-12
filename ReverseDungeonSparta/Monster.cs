@@ -11,10 +11,10 @@ public class Monster : Character
 
 
 
-    public Monster(MonsterInfo monsterInfo)
+    public Monster(MonsterInfo monsterInfo, int dungeonLevel)
     {
         Name = monsterInfo.name;
-        Level = random.Next(1, 5); //*** 레벨 추후에 난이도 조절에 조정 필요
+        Level = random.Next(dungeonLevel + 1, dungeonLevel + 4); //*** 레벨 추후에 난이도 조절에 조정 필요
         Type = monsterInfo.type;
         MaxHP = monsterInfo.hp + (2 * Level);
         Attack = monsterInfo.atk + (2 * Level);
@@ -150,19 +150,19 @@ public class Monster : Character
 
 
     //랜덤으로 반환된 몬스터를 몬스터리스트에 정리해서 반환
-    public static List<Monster> GetMonsterList(int frontCount, int backCount)
+    public static List<Monster> GetMonsterList(int frontCount, int backCount, int dungeonLevel)
     {
 
         List<Monster> monsterList = new List<Monster>();
 
         for (int i = 0; i < frontCount; i++)
         {
-            monsterList.Add(InstanceFrontMonster());
+            monsterList.Add(InstanceFrontMonster(dungeonLevel));
         }
 
         for (int i = 0; i < backCount; i++)
         {
-            monsterList.Add(InstanceBackMonster());
+            monsterList.Add(InstanceBackMonster(dungeonLevel));
         }
 
         return monsterList;
@@ -170,7 +170,7 @@ public class Monster : Character
 
 
     //랜덤으로 전열 몬스터 하나를 반환
-    public static Monster InstanceFrontMonster()
+    public static Monster InstanceFrontMonster(int dungeonLevel)
     {
         List<MonsterInfo> frontAllMonsterInfo = new List<MonsterInfo>();
 
@@ -187,12 +187,12 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = frontAllMonsterInfo[rand];
 
-        return new Monster(monsterInfo);
+        return new Monster(monsterInfo, dungeonLevel);
     }
 
 
     //랜덤으로 후열 몬스터 하나를 반환
-    public static Monster InstanceBackMonster()
+    public static Monster InstanceBackMonster(int dungeonLevel)
     {
         List<MonsterInfo> backAllMonsterInfo = new List<MonsterInfo>();
 
@@ -213,7 +213,7 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = backAllMonsterInfo[rand];
 
-        return new Monster(monsterInfo);
+        return new Monster(monsterInfo, dungeonLevel);
     }
 
     //몬스터의 정보를 저장할 구조체

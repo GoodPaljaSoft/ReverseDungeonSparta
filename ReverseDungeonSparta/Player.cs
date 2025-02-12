@@ -38,7 +38,7 @@ namespace ReverseDungeonSparta
             HP = MaxHP;
             MaxMP = 100;
             MP = MaxMP;
-
+            MaxEXP = 10;
             Speed = 8;
 
             Critical = 5;
@@ -293,6 +293,15 @@ namespace ReverseDungeonSparta
                                     .OrderBy(x => x.Name)
                                     .ToList();
         }
+
+        public void PlayerLevelUp()
+        {
+            Attack += 2;
+            Defence += 2;
+            MaxHP += 5;
+            HP += 5;
+        }
+
     }
 
 }

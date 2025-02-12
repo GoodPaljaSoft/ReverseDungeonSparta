@@ -238,7 +238,7 @@ namespace ReverseDungeonSparta
             PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
-            ViewManager.PrintText(0, 29, "-> 다음");
+            ViewManager.PrintText(0, 29, "   다음");
             ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
         }
 
@@ -328,6 +328,7 @@ namespace ReverseDungeonSparta
             ScrollViewTxt(skillList, ref selectedIndex, (0, 12), false);
         }
 
+
         //메인 메뉴 창에서 택스트 출력하는 메소드
         public static void MainMenuTxt()
         {
@@ -336,6 +337,37 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(100, 24, "   상태 보기");
             ViewManager.PrintText("   전투 시작");
             ViewManager.PrintText("   인벤토리");
+        }
+
+
+        //플레이어가 레벨 업을 했을 때 출력할 텍스트
+        public static void PlayerLevelUpTxt(Player player)
+        {
+            int beforeHP = player.HP;
+            int beforeMaxHP = player.TotalMaxHP;
+            int beforeAttak = player.TotalAttack;
+            int beforeDefense = player.TotalDefence;
+            int beforeEXP = player.NowEXP;
+            int beforeMaxEXP = player.MaxEXP;
+
+            player.PlayerLevelUp();
+
+            Console.Clear();
+            PrintTitleTxt("상태보기");
+            PrintPlayerStatus(player);
+            ViewManager.PrintText(0, 29, "-> 다음");
+            ViewManager.PrintText(0, 10,"축하합니다!!!");
+            ViewManager.PrintText("레벨이 상승했습니다");
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"경험치: [{beforeEXP}/{beforeMaxEXP}] -> [{player.NowEXP}/{player.MaxEXP}]");
+            ViewManager.PrintText($"체  력: [{beforeHP}/{beforeMaxHP}] -> [{player.HP}/{player.TotalMaxHP}]");
+            ViewManager.PrintText($"공격력: {beforeAttak} -> {player.TotalAttack}");
+            ViewManager.PrintText($"방어력: {beforeDefense} -> {player.TotalDefence}");
+
+            player.NowEXP = 0;
+            player.MaxEXP = (int)(player.MaxHP * 1.2);
+
+            Util.CheckKeyInputEnter();
         }
 
 
@@ -433,8 +465,6 @@ namespace ReverseDungeonSparta
                 if (isBreak) break;
             }
         }
-
-
         public static bool ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
         {
             itemIndex = 0;
@@ -622,5 +652,10 @@ namespace ReverseDungeonSparta
                 if (isBreak) break;
             }
         }
+
+
+
+
+
     }
 }

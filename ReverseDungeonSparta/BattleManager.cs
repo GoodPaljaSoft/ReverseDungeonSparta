@@ -28,10 +28,11 @@ public class BattleManager
         //***
         //추후 층 수를 기반으로 난이도 조절
         dungeonLevel = floor;
+
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
-        int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
-        int backRand = random.Next(3, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
-        monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
+        int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
+        int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
+        monsterList = Monster.GetMonsterList(frontRand, backRand, dungeonLevel);   //값으로 나온 만큼 몬스터 생성
         this.player = player;
         oldPlayerHP = player.HP;
 
@@ -289,6 +290,8 @@ public class BattleManager
     {
         int rewardCount = 1 + (dungeonLevel / 4);
 
+        int rewardEXP = new Random().Next(0, 5) + (dungeonLevel * (2 + (new Random().Next(0, 3))));
+
         List<EquipItem> rewardItemList = Player.RandomRewardList(rewardCount);
 
         menuItems = new List<(string, Action, Action?)>
@@ -304,16 +307,20 @@ public class BattleManager
         Console.WriteLine("");
         Console.WriteLine($"[흭득 보상]");
         Console.WriteLine($"");
-        Console.WriteLine($"-EXP  {10}");//***
-        Console.WriteLine($"-Gold {500}");
+        Console.WriteLine($"-EXP  ({rewardEXP}) -> [{player.NowEXP}/{player.MaxEXP}]");//***
         Console.WriteLine($"");
         Console.WriteLine($"[흭득 아이템]");
+
+        player.NowEXP += rewardEXP;
 
         foreach( var item in rewardItemList)
         {
             Console.WriteLine($"{item.Name}");
             player.equipItemList.Add(item);
         }
+
+        
+        if(player.MaxEXP <= player.NowEXP)ViewManager3.PlayerLevelUpTxt(player);
 
         isDungeonEnd = true;   //던전 종료
         player.ResetAllBuff(); //버프 초기화

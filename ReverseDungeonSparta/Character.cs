@@ -271,7 +271,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드
+        // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드1
         public void OnDamage1(Character target, ref int damage, Skill skill)
         {
             SkillType skillType = SkillType.Physical;
@@ -310,6 +310,7 @@ namespace ReverseDungeonSparta
         }
 
 
+        // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드2
         public void OnDamage2(Character target, int damage, Skill skill)
         {
             ViewManager.PrintText("");
@@ -366,6 +367,7 @@ namespace ReverseDungeonSparta
             Util.CheckKeyInputEnter();
             ViewManager.PrintText(0, cursorY, "");
         }
+
 
         //캐릭터클래스를 플레이어로 바꿔주는 메서드
         public Player GetPlayer()
