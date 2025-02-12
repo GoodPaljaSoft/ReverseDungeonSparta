@@ -157,7 +157,11 @@ namespace ReverseDungeonSparta
             List<(string, Action, Action?)> itemScrollView = player.equipItemList
                                             .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n", (Action)(() => UpgradeSelect(x)), (Action)null))
                                             .ToList();
-
+            Console.Clear();
+            ViewManager.DrawLine("소지품 확인 - 장비 합성", "합성할 장비 2가지를 선택해 주세요");
+            Console.WriteLine("[아이템 조합]");
+            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
+            ViewManager.PrintText(0, 29, "[C]나가기");
             ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
 
             return isBreak;
