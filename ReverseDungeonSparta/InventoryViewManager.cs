@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static ReverseDungeonSparta.ViewManager;
@@ -14,9 +15,10 @@ namespace ReverseDungeonSparta
         public static void EnterInventoryMenuTxt()
         {
             Console.Clear();
-            PrintTitleTxt("소지품 확인", 12);
-            ViewManager.PrintText(0, 27, "   장비 아이템");
-            ViewManager.PrintText("   소지 아이템");
+            PrintTitleTxt("소지품 확인");
+            ViewManager.PrintText(0, 26, "   장비 장착");
+            ViewManager.PrintText("   장비 합성");
+            ViewManager.PrintText("   아이템 사용");
             ViewManager.PrintText("[C]나가기");
         }
 
@@ -25,7 +27,7 @@ namespace ReverseDungeonSparta
         public static void InventoryEquippedItemMenuTxt()
         {
             Console.Clear();
-            PrintTitleTxt("소지품 확인 - 장비", 12);
+            PrintTitleTxt("소지품 확인 - 장비");
             ViewManager.PrintText(0, 27, "   장비 장착");
             ViewManager.PrintText("   장비 합성");
             ViewManager.PrintText("[C]나가기");
@@ -36,13 +38,26 @@ namespace ReverseDungeonSparta
         public static void InventoryEquippedItemTxt()
         {
             Console.Clear();
-            PrintTitleTxt("소지품 확인 - 장비", 12);
+            PrintTitleTxt("소지품 확인 - 장비");
             ViewManager.PrintText(0, 29, "[C]나가기");
         }
 
 
+        //인멘토리 메뉴에서 소지품 사용에 들어가면 출력할 메서드
+        public static void InventoryUseItemTxt(Player player)
+        {
+            Console.Clear();
+            PrintTitleTxt("소지품 확인 - 소비 아이템 사용");
+            ViewManager3.PrintPlayerStatus(player);
+            ViewManager.PrintText(0, 26, "[Enter]아이템 사용");
+            ViewManager.PrintText("");
+            ViewManager.PrintText("");
+            ViewManager.PrintText("[C]나가기");
+        }
+
+
         //인벤토리를 정렬할 때 사용할 메서드
-        public static string InventorySortList(EquipItem equipItem)
+        public static string SortEquippedItemList(EquipItem equipItem)
         {
             int count = 0;
             int[] optionArray = { equipItem.AddLuck, equipItem.AddDefence, equipItem.AddAttack, equipItem.AddIntelligence, equipItem.AddMaxHp, equipItem.AddMaxMp };
@@ -50,19 +65,19 @@ namespace ReverseDungeonSparta
             bool isEquipped = equipItem.IsEquiped;
             StringBuilder sb = new StringBuilder();
             sb.Append(isEquipped ? " [E] ".PadRight(5) : " [-] ".PadRight(5));
-            sb.Append(Util.SortPadRightItemList(equipItem.Name, 24));
-            sb.Append(Util.SortPadRightItemList($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
+            sb.Append(Util.SortPadRight(equipItem.Name, 24));
+            sb.Append(Util.SortPadRight($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
             for(int i = 0; i<optionArray.Length; i++)
             {
 
                 if (optionArray[i] != 0)
                 {
-                    sb.Append(Util.SortPadRightItemList($"| {TranslateString(nameArray[i])} +{optionArray[i]} ",13 ));
-                    sb.Append(Util.SortPadRightItemList($"|", 2));
+                    sb.Append(Util.SortPadRight($"| {TranslateString(nameArray[i])} +{optionArray[i]} ",13 ));
+                    sb.Append(Util.SortPadRight($"|", 2));
                     if (count == 0)
                     {
                         sb.Append($"{equipItem.Information}\n");
-                        sb.Append(Util.SortPadRightItemList($"", 41));
+                        sb.Append(Util.SortPadRight($"", 41));
                     }
                     count++;
                 } 
@@ -129,6 +144,21 @@ namespace ReverseDungeonSparta
                 default:
                     return "TranslateError";
             }
+        }
+
+
+        //소비 아이템의 정보를 정렬할 때 사용할 메서드
+        public static string SortUseItemList(UsableItem usableItem)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"{usableItem.Name.SortPadRight(10)} | ");
+            if (usableItem.Hp > 0) sb.Append($"HP +{usableItem.Hp}".SortPadRight(10) + " | ");
+            if (usableItem.Mp > 0) sb.Append($"MP +{usableItem.Mp}".SortPadRight(10) + " | ");
+            sb.Append($"{usableItem.Information.SortPadRight(20)}" + " | 보유 수 : ");
+            sb.Append($"{usableItem.Count}개");
+
+            return sb.ToString();
         }
     }
     

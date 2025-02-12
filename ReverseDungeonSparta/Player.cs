@@ -60,31 +60,6 @@ namespace ReverseDungeonSparta
                     break;
             }
         }
-        #region 아이템 능력치 저장
-        public void ApplyItemStat()
-        {
-            Attack = 100;  // 일단 기본값으로 초기화
-            Defence = 5;
-            Luck = 5;
-            Intelligence = 5;
-            MaxHP = 100;
-            HP = MaxHP;
-            MP = 100;
-            MP = MaxMP;
-
-            foreach (var equipItem in equipItemList)
-            {
-                Attack += equipItem.AddAttack;
-                Defence += equipItem.AddDefence;
-                Luck += equipItem.AddAttack;
-                Intelligence += equipItem.AddAttack;
-                MaxHP += equipItem.AddMaxHp;
-                MaxMP += equipItem.AddMaxMp;
-            }
-        }
-        #endregion
-
-
         //테스트 코드
         public void InitEquipItems()
         {
@@ -143,32 +118,6 @@ namespace ReverseDungeonSparta
             {
                 Console.WriteLine("소유한 아이템이 아닙니다.");
             }
-
-        }
-        public bool CheckPlayerCanSkill(int selectSkillNum)
-        {
-            bool result = false;
-            selectSkillNum--;
-
-            //플레이어 마나가 요구 마나보다 이상일 경우
-            if (SkillList[selectSkillNum].ConsumptionMP <= this.MP)
-            {
-                result = true;
-            }
-
-            return result;
-        }
-        public void TryEquipItemUpgrade(List<EquipItem> equipItemList)
-        {
-            Console.WriteLine("");
-            Console.WriteLine("[아이템 조합]");
-            Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
-            int number1 = Util.GetUserIntInput(1, equipItemList.Count) - 1;//매개변수 숫자로 넣지 말아주세요
-            EquipItem main = equipItemList[number1];
-            Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
-            int number2 = Util.GetUserIntInput(1, equipItemList.Count) - 1;//매개변수 숫자로 넣지 말아주세요
-            EquipItem offering = equipItemList[number2];
-            ItemUpgrade(main, offering, equipItemList); 
 
         }
         public static void ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
@@ -308,12 +257,21 @@ namespace ReverseDungeonSparta
         }
 
 
-        //플레이어의 아이템 리스트를 정렬해주는 메소드
-        public void SortItemList()
+        //플레이어의 장비 아이템 리스트를 정렬해주는 메소드
+        public void SortEquippedItemList()
         {
             equipItemList = equipItemList
                                     .OrderByDescending(x => x.IsEquiped)
                                     .ThenBy(x => (int)x.Type)
+                                    .ToList();
+        }
+
+
+        //플레이어의 소비 아이템 리스트를 정렬해주는 메소드
+        public void SortUseItemList()
+        {
+            UsableItemInventory = UsableItemInventory
+                                    .OrderBy(x => x.Name)
                                     .ToList();
         }
     }

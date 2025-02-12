@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -19,7 +20,15 @@ namespace ReverseDungeonSparta
         public static void PrintTitleTxt(string title, int floor)
         {
             ViewManager.PrintText(0, 1, title);
-            ViewManager.PrintText(90, 1, $"현재 위치: 스파르타 던전 {floor}층");
+            ViewManager.PrintText(ViewManager.width - 30, 1, $"현재 위치: 스파르타 던전 {floor}층");
+            Console.WriteLine("");
+            ViewManager.DrawLine();
+        }
+
+        //제목을 출력할 타이틀 텍스트
+        public static void PrintTitleTxt(string title)
+        {
+            ViewManager.PrintText(0, 1, title);
             Console.WriteLine("");
             ViewManager.DrawLine();
         }
@@ -62,10 +71,10 @@ namespace ReverseDungeonSparta
 
 
         //내려가기 창에 들어가면 출력할 메소드
-        public static void PrintEnterDungeonText(Player player)
+        public static void PrintEnterDungeonText(Player player, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("내려가기", 11);
+            PrintTitleTxt("내려가기", floor);
             PrintPlayerBattleStatus(player);
             ViewManager.PrintText("");
             ViewManager.PrintText("??층으로 내려갑니다...");
@@ -84,10 +93,10 @@ namespace ReverseDungeonSparta
 
 
         //플레이어 턴일 때 출력할 메소드
-        public static void PrintPlayerTurnText(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void PrintPlayerTurnText(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             ViewManager.PrintText("");
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
@@ -167,10 +176,10 @@ namespace ReverseDungeonSparta
 
 
         //몬스터의 공격 턴일 때 출력할 메소드
-        public static void MonsterAttackTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void MonsterAttackTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
@@ -179,10 +188,10 @@ namespace ReverseDungeonSparta
 
 
         //스킬을 선택하는 창에서 출력할 메소드
-        public static void SelectedSkillTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void SelectedSkillTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
@@ -193,10 +202,10 @@ namespace ReverseDungeonSparta
 
 
         //플레이어가 몬스터를 선택할 때 출력할 메소드
-        public static void PlayerSelectedMonsterTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void PlayerSelectedMonsterTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
@@ -207,10 +216,10 @@ namespace ReverseDungeonSparta
 
 
         //플레리어가 버프 스킬을 사용할 때 사용 여부를 묻는 메소드
-        public static void PlayerUseBuffSkillTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void PlayerUseBuffSkillTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 27, "-> 사용하기");
@@ -220,10 +229,10 @@ namespace ReverseDungeonSparta
 
 
         //플레이어가 몬스터를 때릴 때 출력할 텍스트
-        public static void PlayerAttackMonsterTxt(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void PlayerAttackMonsterTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 27, "-> 사용하기");
@@ -233,10 +242,10 @@ namespace ReverseDungeonSparta
 
 
         //플레이어가 버프를 사용할 때 출력할 텍스트
-        public static void PlayerUseBuff(Player player, List<Monster> monsters, List<Character> battleOrderList)
+        public static void PlayerUseBuff(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 발생", 12);
+            PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음");
@@ -245,10 +254,10 @@ namespace ReverseDungeonSparta
 
 
         //플레이어가 전투에서 승리했을 때 출력할 텍스트
-        public static void PlayerWinText(Player player, List<Monster> monsters)
+        public static void PlayerWinText(Player player, List<Monster> monsters, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 결과", 12);
+            PrintTitleTxt("전투 결과", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 28, $"   이어서 내려가기({12}층)");
@@ -259,10 +268,10 @@ namespace ReverseDungeonSparta
 
 
         //플레이어가 패배했을 때 출력할 텍스트
-        public static void PlayerDeafText(Player player, List<Monster> monsters)
+        public static void PlayerDeafText(Player player, List<Monster> monsters, int floor)
         {
             Console.Clear();
-            PrintTitleTxt("전투 결과", 12);
+            PrintTitleTxt("전투 결과", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, $"   돌아가기");
@@ -275,7 +284,7 @@ namespace ReverseDungeonSparta
         public static void PlayerStatusTxt(Player player, ref int selectedIndex)
         {
             Console.Clear();
-            PrintTitleTxt("상태보기", 12);
+            PrintTitleTxt("상태보기");
             PrintPlayerStatus(player);
             ViewManager.PrintText("");
             ViewManager.PrintText("    보유스킬");
@@ -397,7 +406,7 @@ namespace ReverseDungeonSparta
         }
 
 
-        public static void ScrollViewTxt(List<(string, Action, Action?)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
+        public static bool ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
         {
             itemIndex = 0;
             int maxVisibleOption = 5;
@@ -484,15 +493,14 @@ namespace ReverseDungeonSparta
                             itemIndex = tempIndex + startIndex;
                             menuList[itemIndex].Item2();
                         }
-                        return;
+                        return false;
 
                     case ConsoleKey.C:
-                        isBreak = true;
                         selectedIndex = 0;
-                        return;
+                        return true;
                 }
-                if (isBreak) break;
             }
+            return false;
         }
         public static void ScrollViewTxt(List<(string, Action, Action?)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, out bool isBreak)
         {

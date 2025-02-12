@@ -1,6 +1,7 @@
 ﻿using ReverseDungeonSparta;
 using System.Text;
 using System.Threading;
+using System.Transactions;
 
 
 public class BattleManager
@@ -17,13 +18,15 @@ public class BattleManager
     int selectedIndex = 0;          //화살표의 위치를 저장할 int변수
     int[] selectedMonsterIndex;
     int listCount = 0;              //battleOrderList의 Lengh를 업데이트 할 때 사용
+    public int dungeonLevel = 0;
+    public int dungeonMaxFloor = 20;    //던전의 최대 층 수
 
     //배틀 매니저 생성자
     public BattleManager(Player player, int floor)
     {
         //***
         //추후 층 수를 기반으로 난이도 조절
-
+        dungeonLevel = floor;
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
         int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
         int backRand = random.Next(3, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
@@ -45,6 +48,28 @@ public class BattleManager
     }
 
 
+    public void PlayerEscapeBattle()
+    {
+        if (dungeonLevel <= 5)
+        {
+            dungeonLevel = 0;
+        }
+        else if (dungeonLevel <= 10)
+        {
+            dungeonLevel = 5;
+        }
+        else if (dungeonLevel <= 15)
+        {
+            dungeonLevel = 10;
+        }
+        else if (dungeonLevel <= 20)
+        {
+            dungeonLevel = 15;
+        }
+        GameManager.Instance.DungeonClearLevel = dungeonLevel;
+    }
+
+
     //순서 리스트에서 해당 캐릭터를 빼고, 뺀 수만큼 listCount를 줄여주는 메서드
     public void RemoveOrderListCharacter(Character character)
     {
@@ -56,7 +81,7 @@ public class BattleManager
     public void EnterTheBattle()
     {
         Console.Clear();
-        ViewManager3.PrintEnterDungeonText(player);
+        ViewManager3.PrintEnterDungeonText(player, dungeonMaxFloor - dungeonLevel);
         Util.CheckKeyInputEnter();
         StartBattle();
     }
@@ -109,7 +134,7 @@ public class BattleManager
     //플레이어의 턴이 시작 되었을 때 시작할 메서드
     public void StartPlayerBattle()
     {
-        ViewManager3.PrintPlayerTurnText(player, monsterList, battleOrderList);
+        ViewManager3.PrintPlayerTurnText(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
 
         menuItems = new List<(string, Action, Action?)>
             {
@@ -125,7 +150,7 @@ public class BattleManager
     //플레이어가 스킬 사용을 누른 후 스킬의 번호를 선택하는 메소드
     public void PlayerSelectSkillNum()
     {
-        ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList);
+        ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList, 20 - dungeonLevel);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
         List<(string, Action, Action?)> skillList = player.SkillList
@@ -162,16 +187,16 @@ public class BattleManager
         List<int> beforeMonstehpr = monsters.Select(x => x.HP).ToList();
         string str = (playerSelectSkill == null ? "공격!" : $"{playerSelectSkill.Name}스킬 사용!");
 
-        ViewManager3.PlayerAttackMonsterTxt(player, monsterList, battleOrderList);
+        ViewManager3.PlayerAttackMonsterTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
         Console.WriteLine("");
         Console.WriteLine("");
         Console.WriteLine($"{player.Name} 의 {str}");
         foreach (Monster monster in monsters)
         {
             int beforeMonsterHP = monster.HP;
-            player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
+            //player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
             RemoveOrderListCharacter(monster);
-            Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+            //Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
         }
         Console.WriteLine("");
         for (int i = 0; i < beforeMonstehpr.Count; i++)
@@ -201,7 +226,7 @@ public class BattleManager
         int beforeEvasion = player.Evasion;
 
         //출력
-        ViewManager3.PlayerUseBuff(player, monsterList, battleOrderList);
+        ViewManager3.PlayerUseBuff(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
         Console.WriteLine("");
         Console.WriteLine("");
         Console.WriteLine("");
@@ -265,7 +290,7 @@ public class BattleManager
 
         int beforeplayerHP = player.HP;
 
-        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList);
+        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
 
         ViewManager.PrintText(0, 11, $"{monster.Name}의 차례입니다!");
         ViewManager.PrintText("");
@@ -301,11 +326,11 @@ public class BattleManager
 
             ViewManager.PrintText($"{skill.Item2.Name}은(는) {skill.Item1.Name}에 의해 능력치가 상승했다!");
             ViewManager.PrintText($"");
-            ViewManager.PrintText($"{beforeHP} -> {skill.Item2.HP}");
-            ViewManager.PrintText($"{beforeATK} -> {skill.Item2.TotalAttack}");
-            ViewManager.PrintText($"{beforeDEF} -> {skill.Item2.TotalDefence}");
-            ViewManager.PrintText($"{beforeCritical} -> {skill.Item2.TotalCritical}");
-            ViewManager.PrintText($"{beforeEvasion} -> {skill.Item2.Evasion}");
+            ViewManager.PrintText($"HP: " + "{beforeHP} -> {skill.Item2.HP}");
+            ViewManager.PrintText($"ATK: {beforeATK} -> {skill.Item2.TotalAttack}");
+            ViewManager.PrintText($"DEF: {beforeDEF} -> {skill.Item2.TotalDefence}");
+            ViewManager.PrintText($"치명타: {beforeCritical} -> {skill.Item2.TotalCritical}");
+            ViewManager.PrintText($"회  피{beforeEvasion} -> {skill.Item2.Evasion}");
             ViewManager.PrintText($"");
         }
         else
@@ -348,7 +373,7 @@ public class BattleManager
         };
 
         //승리
-        ViewManager3.PlayerWinText(player, monsterList);
+        ViewManager3.PlayerWinText(player, monsterList, dungeonMaxFloor - dungeonLevel);
 
 
         Console.WriteLine("");
@@ -374,7 +399,7 @@ public class BattleManager
     public void PlayerDefeat()
     {
         //패배
-        ViewManager3.PlayerDeafText(player, monsterList);
+        ViewManager3.PlayerDeafText(player, monsterList, dungeonMaxFloor - dungeonLevel);
 
         Util.CheckKeyInputEnter();
         isDungeonEnd = true;
@@ -486,7 +511,7 @@ public class BattleManager
         if (playerSelectSkill != null && playerSelectSkill.ApplyType == ApplyType.Team)
         {
             //플레이어가 지정하는 부분을 상대 몬스터가 아닌 자기 자신이 되도록 함.
-            ViewManager3.PlayerUseBuffSkillTxt(player, monsterList, battleOrderList);
+            ViewManager3.PlayerUseBuffSkillTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
             ViewManager.PrintText(3, 12, $"스킬 : {playerSelectSkill.Name}");
             ViewManager.PrintText($"     : {playerSelectSkill.Info}");
 
