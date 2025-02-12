@@ -106,15 +106,16 @@ namespace ReverseDungeonSparta
         #region 소지품 확인 - 장비 장착
         public void EquipItemMenu()
         {
+            int itemIndex = 0;
             InventoryViewManager.InventoryEquippedItemTxt();
-            //1번째 액션에 플레이어가 아이템을 장착하는 Action 구현하면 됨
+
+            player.SortItemList();
+            //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> itemScrollView = player.equipItemList
-                                            .OrderByDescending(x => x.IsEquiped)
-                                            .ThenBy(x => (int)x.Type)                                   //해당 아래 액션//
-                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)null, (Action)null))
+                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
-            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true);
+            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
 
             EquipmentMenu();
         }
@@ -124,7 +125,6 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
             player.TryEquipItemUpgrade(player.equipItemList);
             menuItems = new List<(string, Action, Action)>
             {

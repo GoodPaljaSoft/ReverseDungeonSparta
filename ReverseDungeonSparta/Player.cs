@@ -91,7 +91,7 @@ namespace ReverseDungeonSparta
             }
         }
 
-        public void IsEquipItem(int itemIndex) //아이템 장착 로직 구현
+        public void IsEquipItem(ref int itemIndex) //아이템 장착 로직 구현
         {
             if (itemIndex >= 0 && itemIndex < equipItemList.Count)
             {
@@ -307,6 +307,16 @@ namespace ReverseDungeonSparta
             AddItemToInventory(LowMpPotion, 5);
             AddItemToInventory(MidMpPotion, 5);
             AddItemToInventory(HighMpPotion, 5);
+        }
+
+
+        //플레이어의 아이템 리스트를 정렬해주는 메소드
+        public void SortItemList()
+        {
+            equipItemList = equipItemList
+                                    .OrderByDescending(x => x.IsEquiped)
+                                    .ThenBy(x => (int)x.Type)
+                                    .ToList();
         }
     }
 
