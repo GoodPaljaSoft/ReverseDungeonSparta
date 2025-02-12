@@ -487,10 +487,7 @@ namespace ReverseDungeonSparta
                     case ConsoleKey.Enter:
                         if (menuList[selectedIndex].Item2 != null)
                         {
-                            int tempIndex = 0;
-                            tempIndex = selectedIndex;
-                            if (selectedIndex > 4) tempIndex = 4;
-                            itemIndex = tempIndex + startIndex;
+                           itemIndex = selectedIndex;
                             menuList[itemIndex].Item2();
                         }
                         return false;

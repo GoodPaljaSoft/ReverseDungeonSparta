@@ -185,34 +185,21 @@ public class BattleManager
     public void PlayerAttackMonster(List<Monster> monsters)
     {
         List<int> beforeMonstehpr = monsters.Select(x => x.HP).ToList();
-        string str = (playerSelectSkill == null ? "공격!" : $"{playerSelectSkill.Name}스킬 사용!");
 
         ViewManager3.PlayerAttackMonsterTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
-        Console.WriteLine("");
-        Console.WriteLine("");
-        Console.WriteLine($"{player.Name} 의 {str}");
-        foreach (Monster monster in monsters)
-        {
-            int beforeMonsterHP = monster.HP;
-            //player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
-            RemoveOrderListCharacter(monster);
-            //Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
-        }
-        Console.WriteLine("");
-        for (int i = 0; i < beforeMonstehpr.Count; i++)
-        {
-            Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
-            Console.WriteLine($"HP {(beforeMonstehpr[i] == 0 ? "Dead" : beforeMonstehpr[i])} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
-            Console.WriteLine("");
-        }
-        Console.WriteLine("");
 
-        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-        switch (keyInfo.Key)
-        {
-            case ConsoleKey.Enter: //플레이어가 승리했는지 확인
-                CheckPlayerWin(); break;
-        }
+        List<Character> characters = monsters.Select(x => (Character)x).ToList();
+
+
+        //player.Attacking(characters, playerSelectSkill);
+
+        //RemoveOrderListCharacter(monster);
+
+        //switch (keyInfo.Key)
+        //{
+        //    case ConsoleKey.Enter: //플레이어가 승리했는지 확인
+        //        CheckPlayerWin(); break;
+        //}
     }
 
 
