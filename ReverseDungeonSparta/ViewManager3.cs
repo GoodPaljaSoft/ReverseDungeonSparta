@@ -256,12 +256,31 @@ namespace ReverseDungeonSparta
         //플레이어가 전투에서 승리했을 때 출력할 텍스트
         public static void PlayerWinText(Player player, List<Monster> monsters, int floor)
         {
+            int restFloor = 0;
+            if(floor > 15)
+            {
+                restFloor = 20;
+            }
+            else if (floor > 10)
+            {
+                restFloor = 15;
+            }
+            else if (floor > 5)
+            {
+                restFloor = 10;
+            }
+            else if (floor > 0)
+            {
+                restFloor = 5;
+            }
+
+
             Console.Clear();
             PrintTitleTxt("전투 결과", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
-            ViewManager.PrintText(0, 28, $"   이어서 내려가기({12}층)");
-            ViewManager.PrintText($"   거점으로 돌아가기({10}층)");//***변수 추가
+            ViewManager.PrintText(0, 28, $"   이어서 내려가기({floor - 1}층)");
+            ViewManager.PrintText($"   거점으로 돌아가기({restFloor}층)");//***변수 추가
             ViewManager.PrintText(0, 9, $"{player.Name}이(가) 모험가 {monsters.Count}명을 성공적으로 쫓아냈습니다!");
             ViewManager.PrintText("");
         }
