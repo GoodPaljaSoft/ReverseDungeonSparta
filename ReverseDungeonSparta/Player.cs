@@ -93,23 +93,45 @@ namespace ReverseDungeonSparta
 
         public void IsEquipItem(int itemIndex) //아이템 장착 로직 구현
         {
-            if (itemIndex >= 0 && itemIndex < isOwnedItemList.Count)
+            if (itemIndex >= 0 && itemIndex < equipItemList.Count)
             {
-                EquipItem item = isOwnedItemList[itemIndex];
+                EquipItem item = equipItemList[itemIndex]; //테스트를 위한 equipItemList //실제isOwnedItemList
                 bool isEquipped = item.IsEquiped; 
-                if (isEquipped == true)
+                if (isEquipped == false) //아이템 장착되지 않았다면
                 {
-                    isEquipped = false;
-                    isEquippedList.Remove(item);
-                    
-                    // ApplyItemStat();
+                    bool isTypeEquipped = false; //같은 타입의 아이템을 장착했는지 확인하기 위함
+                    foreach(var equippedItem in isEquippedList)
+                    {
+                        if(equippedItem.Type == item.Type)
+                        {
+                            isTypeEquipped = true;  //이미 장착되어있으므로 패스
+                            break;
+                        }
+                    }
+                    if(!isTypeEquipped) //같은 타입의 아이템이 없으므로
+                    {
+                        item.IsEquiped = true; 
+                        isEquippedList.Add(item);
+                        // ApplyItemStat();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"이미 {item.Type} 타입의 아이템이 장착되어 있습니다.");
+                    }
                 }
                 else
                 {
-                    isEquipped = true;
-                    // 가지고 있는 장비 아이템을 모두 가져옴
-                    // 그렇게 가져온 아이템 타입의 아이템을 for문 또는 foreach문을 통해서 isEquipped가 true상태인지 체크 
-                    Console.WriteLine("이미 장착된 아이템입니다.");
+                    foreach (var equippedItem in isEquippedList) //장착해제
+                    {
+                        if (equippedItem == item) // 장착된 아이템을 찾으면
+                        {
+                            isEquippedList.Remove(equippedItem); // 장착아이템리스트에서 제거
+                            item.IsEquiped = false; // 장착 상태를 false로 변경
+
+                            // ApplyItemStat();
+                            break;
+                        }
+                    }
                 }
             }
             else
@@ -117,21 +139,6 @@ namespace ReverseDungeonSparta
                 Console.WriteLine("소유한 아이템이 아닙니다.");
             }
             
-        }
-        public void UnEquippedItem(int itemIndex) // 아이템 해제 로직 구현
-                                                  
-        {
-            if (itemIndex >= 0 && itemIndex < isEquippedList.Count)
-            {
-                EquipItem item = isEquippedList[itemIndex];
-
-                if (item.IsEquiped)
-                {
-                    isEquippedList.Remove(item);
-                    item.IsEquiped = false;
-                    isOwnedItemList.Add(item);
-                }
-            }
         }
         public bool CheckPlayerCanSkill(int selectSkillNum)
         {
@@ -156,7 +163,8 @@ namespace ReverseDungeonSparta
             Console.WriteLine("조합을 원하시는 두번째 아이템을 입력해주세요.");
             int number2 = Util.GetUserIntInput(1, equipItemList.Count) - 1;//매개변수 숫자로 넣지 말아주세요
             EquipItem offering = equipItemList[number2];
-            EquipItem? newitem = ItemUpgrade(main, offering, equipItemList);
+            EquipItem? newitem = ItemUpgrade(main, offering, equipItemList); //equipItemList는 테스트용
+                                                                             //실제 isOwnedItemList
             if (newitem != null)
             {
                 equipItemList.Add(newitem);
@@ -238,7 +246,7 @@ namespace ReverseDungeonSparta
                 return null;
             }
         }
-        public static List<EquipItem> RandomRewardList()
+        public static EquipItem RandomRewardList()
         {
             // 새로운 보상아이템정보를 리스트화 하고
             List<EquipItemInfo> rewardItemListInfo = new List<EquipItemInfo>();
@@ -258,7 +266,7 @@ namespace ReverseDungeonSparta
             // equipItemInfo가 있는 rewardItem 객체 생성
             EquipItem rewardItem = new EquipItem(equipItemInfo);
 
-            return new List<EquipItem> { rewardItem };
+            return rewardItem;
         }
         // 소비 아이템 추가
         public void AddItemToInventory(UsableItem item, int count)

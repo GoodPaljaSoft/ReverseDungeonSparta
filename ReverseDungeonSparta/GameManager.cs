@@ -108,9 +108,11 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비 장착");
-            // player.IsEquipItem(EquipItem item);  내일 다시 구현해야함. ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+            player.IsEquipItem(selectedIndex);
+            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
             menuItems = new List<(string, Action, Action)>
             {
+                ("", () => player.IsEquipItem(selectedIndex), null),
                 ("나가기", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
             Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
@@ -121,8 +123,8 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-
-            //EquipItem.ItemUpgrade();
+            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
+            player.TryEquipItemUpgrade(player.equipItemList);
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
