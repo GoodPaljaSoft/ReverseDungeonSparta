@@ -21,7 +21,7 @@ public class BattleManager
     public int dungeonLevel = 0;
 
     //배틀 매니저 생성자
-    public BattleManager(Player player, ref int floor)
+    public BattleManager(Player player, int floor)
     {
         //***
         //추후 층 수를 기반으로 난이도 조절
