@@ -55,7 +55,7 @@ namespace ReverseDungeonSparta
             DataBase.IntroTextInit();
 
             //애니메이션 텍스트 메서드 테스트
-            IntroScene();
+            //IntroScene();
 
         }
 
@@ -346,7 +346,7 @@ namespace ReverseDungeonSparta
 
             ViewManager.PrintLongTextAnimation(DataBase.introText2);
 
-
+            Console.ReadKey();
         }
 
 

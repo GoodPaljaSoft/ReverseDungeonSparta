@@ -1,4 +1,5 @@
 ﻿
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
@@ -184,21 +185,48 @@ namespace ReverseDungeonSparta
         //string 타입 List를 받아와 한 문장씩 출력해준다.
         public static void PrintLongTextAnimation(List<string> textList)
         {
+            string[] str;
 
             for(int i=0; i< textList.Count; i++)
             {
                 //플레이어가 입력한 이름 반영
                 textList[i] = textList[i].Replace("~이름~", DataBase.playerName);
 
+
+                if (!textList[i].Contains("[모험가]")) continue;
+
+
+
+
                 //"모험가"가 포함되어 있으면
-                if(textList[i].Contains("[모험가]"))
+                if (textList[i].Contains("[모험가]"))
                 {
+                    str = textList[i].Split('%');
+
+                    for (int j = 0; j < str.Length; j++)
+                    {
+
+                        if (str[j] == "[모험가]")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(str[j]);
+                            Console.ResetColor();
+                        }
+                        else
+                        {
+                            Console.Write(str[j]);
+                        }
+
+                    }
 
                 }
-                    //textList[i] = textList[i].Replace("[모험가]", ColorText("[모험가]", ConsoleColor.Yellow));
+                else
+                {
+                    Console.Write(textList[i]);
+                }
 
 
-                Console.Write(textList[i]);
+                
                 Thread.Sleep(1000);
             }
 
