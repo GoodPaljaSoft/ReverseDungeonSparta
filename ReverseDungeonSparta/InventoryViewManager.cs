@@ -28,6 +28,8 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText("[C]나가기");
 
             List<(string, Action, Action)> itemScrollView = itemList
+                                                        .OrderByDescending(x => x.IsEquiped)
+                                                        .ThenBy(x => (int)x.Type)
                                                         .Select(x => (InventorySortList(x) + "\n", (Action)null, (Action)null))
                                                         .ToList();
 
