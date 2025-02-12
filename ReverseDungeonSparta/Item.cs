@@ -9,6 +9,7 @@ namespace ReverseDungeonSparta
 {
     public class Item
     {
+
         public string Name { get; set; }
 
         public string Information { get; set; }

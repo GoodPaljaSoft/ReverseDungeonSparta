@@ -8,6 +8,7 @@ namespace ReverseDungeonSparta
 {
 
 
+
     static class ViewManager
     {
         public static Dictionary<string, ConsoleColor> colorWord = new Dictionary<string, ConsoleColor>();
