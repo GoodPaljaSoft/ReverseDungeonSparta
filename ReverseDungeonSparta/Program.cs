@@ -2,7 +2,6 @@
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             //시작하기 전 콘솔 창 설정

@@ -8,7 +8,6 @@ public class UsableItem : Item
     public int Mp { get; set; }
     public int Count { get; set; }
 
-
     public UsableItem(UsableItemInfo u)
     {
         Name = u.name;
