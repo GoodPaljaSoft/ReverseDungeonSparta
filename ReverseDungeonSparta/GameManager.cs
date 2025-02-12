@@ -12,7 +12,6 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
 {
-
     class GameManager
     {
         public static GameManager Instance { get; } = new GameManager();

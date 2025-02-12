@@ -6,7 +6,6 @@ using System.Text;
 
 namespace ReverseDungeonSparta
 {
-
     public static class ViewManager2
     {
         private static StringBuilder previousScreen = new StringBuilder();

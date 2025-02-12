@@ -56,7 +56,6 @@ namespace ReverseDungeonSparta
         }
 
 
-
         //인벤토리를 정렬할 때 사용할 메서드
         public static string SortEquippedItemList(EquipItem equipItem)
         {

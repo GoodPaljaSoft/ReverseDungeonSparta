@@ -68,8 +68,7 @@ namespace ReverseDungeonSparta
                     }
                 }
 
-
-                return (int)(valueLuk + Luck);
+                return (int)(valueLuk);
             }
             private set { }
         }//최종 지능

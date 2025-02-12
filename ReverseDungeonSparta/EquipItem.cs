@@ -17,7 +17,6 @@ namespace ReverseDungeonSparta
         Ring,
         Necklace
     }
-
     public class EquipItem : Item
     {
         public EquipItemType Type { get; set; }
