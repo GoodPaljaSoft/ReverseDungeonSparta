@@ -8,7 +8,7 @@ public class BattleManager
 {
     List<Monster> monsterList = new List<Monster>();
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
-    List<(string, Action, Action)> menuItems;
+    List<(string, Action, Action?)> menuItems;
     Skill playerSelectSkill;
     Player player;
     Random random = new Random();
@@ -136,7 +136,7 @@ public class BattleManager
     {
         ViewManager3.PrintPlayerTurnText(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
 
-        menuItems = new List<(string, Action, Action)>
+        menuItems = new List<(string, Action, Action?)>
             {
                 ("", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
@@ -155,7 +155,7 @@ public class BattleManager
         ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList, 20 - dungeonLevel);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
-        List<(string, Action, Action)> skillList = player.SkillList
+        List<(string, Action, Action?)> skillList = player.SkillList
                                 .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
                                 .ToList();
 
@@ -187,8 +187,27 @@ public class BattleManager
     public void PlayerAttackMonster(List<Monster> monsters)
     {
         List<int> beforeMonstehpr = monsters.Select(x => x.HP).ToList();
+        string str = (playerSelectSkill == null ? "공격!" : $"{playerSelectSkill.Name}스킬 사용!");
 
         ViewManager3.PlayerAttackMonsterTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
+        Console.WriteLine("");
+        Console.WriteLine("");
+        Console.WriteLine($"{player.Name} 의 {str}");
+        foreach (Monster monster in monsters)
+        {
+            int beforeMonsterHP = monster.HP;
+            //player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
+            RemoveOrderListCharacter(monster);
+            //Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+        }
+        Console.WriteLine("");
+        for (int i = 0; i < beforeMonstehpr.Count; i++)
+        {
+            Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
+            Console.WriteLine($"HP {(beforeMonstehpr[i] == 0 ? "Dead" : beforeMonstehpr[i])} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
+            Console.WriteLine("");
+        }
+        Console.WriteLine("");
 
         List<Character> characters = monsters.Select(x => (Character)x).ToList();
 
@@ -298,7 +317,11 @@ public class BattleManager
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
-        menuItems = new List<(string, Action, Action)>
+        int rewardCount = 1 + (dungeonLevel / 4);
+
+        List<EquipItem> rewardItemList = Player.RandomRewardList(rewardCount);
+
+        menuItems = new List<(string, Action, Action?)>
         {
             ("", GameManager.Instance.EnterBattleMenu, null),
             ("", GameManager.Instance.GameMenu, AudioManager.PlayMenuBGM)
@@ -314,9 +337,13 @@ public class BattleManager
         Console.WriteLine($"-EXP  {10}");//***
         Console.WriteLine($"-Gold {500}");
         Console.WriteLine($"");
-        Console.WriteLine($"[흭득 아이템 출력 필요]");
-        Console.WriteLine($"[...]");
-        Console.WriteLine($"[...]");
+        Console.WriteLine($"[흭득 아이템]");
+        foreach( var item in rewardItemList)
+        {
+            Console.WriteLine($"{item.Name}");
+            player.equipItemList.Add(item);
+        }
+
 
         isDungeonEnd = true;    //던전 종료
         player.ResetAllBuff(); //버프 초기화
@@ -340,7 +367,7 @@ public class BattleManager
 
 
     //원하는 스킬을 선택하고 선택에 성공한다면 해당 스킬을 playerSelectSkill에 저장하는 메서드
-    public void PlayerInputSkillNum(List<(string, Action, Action)> menuList, ref int selectedIndex)
+    public void PlayerInputSkillNum(List<(string, Action, Action?)> menuList, ref int selectedIndex)
     {
         int maxVisibleOption = 5;
         int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임

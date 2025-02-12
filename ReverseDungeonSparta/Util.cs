@@ -66,7 +66,7 @@ namespace ReverseDungeonSparta
         //selectedIndex는 해당 화살표의 위치 값을 저장합니다.
         //해당 값을 전달 받고 다시 바뀐 값을 보내줘야 하기에 ref를 꼭 넣어야합니다.
 
-        public static void GetUserInput(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex)
+        public static void GetUserInput(List<(String, Action, Action?)> menuList, Action nowMenu, ref int selectedIndex)
         {
             ConsoleKeyInfo keyInfo;
             while (true)
@@ -103,7 +103,7 @@ namespace ReverseDungeonSparta
 
 
         //화살표 위치 입력가능한 인풋 stirng 필요 없음***
-        public static void GetUserInput(List<(String, Action, Action)> menuList, Action nowMenu, ref int selectedIndex, (int, int) cursor)
+        public static void GetUserInput(List<(String, Action, Action?)> menuList, Action nowMenu, ref int selectedIndex, (int, int) cursor)
         {
             ConsoleKeyInfo keyInfo;
             while (true)
