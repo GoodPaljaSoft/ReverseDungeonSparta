@@ -53,9 +53,10 @@ namespace ReverseDungeonSparta
 
             //인트로 데이터베이스 초기화
             DataBase.IntroTextInit();
+            ViewManager.ViewInit();
 
             //애니메이션 텍스트 메서드 테스트
-            //IntroScene();
+            IntroScene();
 
         }
 

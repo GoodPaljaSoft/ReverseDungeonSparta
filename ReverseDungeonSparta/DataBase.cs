@@ -10,6 +10,8 @@ namespace ReverseDungeonSparta
     {
         //장착아이템, 사용아이템, 스킬, 몬스터, 플레이어 직업, 스토리라인 등 객체정보 보관용 이 정보들로 인스턴스 생성 및 프린트 해야함
 
+        
+
         public static List<string> introText;   //이름 받기 전 까지의 출력 텍스트
         public static List<string> introText2;  //이름 받은 후의 출력 텍스트
         public static List<string> introText4;
@@ -23,6 +25,11 @@ namespace ReverseDungeonSparta
 
         public static void IntroTextInit()
         {
+
+            
+
+            
+
             introText = new List<string>
             {
                 "%스파르타 던전───%\n\n",

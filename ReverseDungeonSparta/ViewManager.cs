@@ -6,8 +6,12 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
 {
+
+
     static class ViewManager
     {
+        public static Dictionary<string, ConsoleColor> colorWord = new Dictionary<string, ConsoleColor>();
+
         //화면 넓이 받아오기
         static public int width = 120;      //콘솔 가로 크기
         static public int height = 30;      //콘솔 세로 크기
@@ -19,6 +23,19 @@ namespace ReverseDungeonSparta
         //커서 위치 받아오기
         static int top = Console.WindowTop;
         static int left = Console.WindowLeft;
+
+
+        public static void ViewInit()
+        {
+            colorWord.Add("스파르타 던전───", ConsoleColor.Red);
+            colorWord.Add("[마왕]", ConsoleColor.Green);
+            colorWord.Add("[모험가]", ConsoleColor.Red);
+
+            colorWord.Add("[END 1]", ConsoleColor.Cyan);
+            colorWord.Add("[END 2]", ConsoleColor.Cyan);
+        }
+
+
 
         // DrawLine 1
         // 한 줄을 길게 그리는 메서드
@@ -56,7 +73,7 @@ namespace ReverseDungeonSparta
         {
             PrintText(1, 1, sceneName, ConsoleColor.Red);
             int x = Console.GetCursorPosition().Left;
-            PrintText(x+10, 1, sceneInfo, ConsoleColor.Gray); //정보는 회색
+            PrintText(x + 10, 1, sceneInfo, ConsoleColor.Gray); //정보는 회색
             DrawLine(2);
         }
 
@@ -125,7 +142,7 @@ namespace ReverseDungeonSparta
             CursorY = cursorY;
             Console.SetCursorPosition(CursorX, CursorY);
             Console.Write(text);
-            
+
             if (isColor)
                 Console.ForegroundColor = ConsoleColor.White;
 
@@ -176,10 +193,16 @@ namespace ReverseDungeonSparta
                 sb.Append(str);
             }
 
-            for(int i=0; i< sb.Length; i++)
+            for (int i = 0; i < sb.Length; i++)
             {
                 Console.Write(sb[i]);
             }
+        }
+
+        public static void ChangePlayerName(string playerName)
+        {
+
+
         }
 
         //string 타입 List를 받아와 한 문장씩 출력해준다.
@@ -187,55 +210,53 @@ namespace ReverseDungeonSparta
         {
             string[] str;
 
-            for(int i=0; i< textList.Count; i++)
+            //키 값들을 받아옴
+            ICollection<string> colorKeyword = colorWord.Keys;
+
+            for (int i = 0; i < textList.Count; i++)
             {
-                //플레이어가 입력한 이름 반영
-                textList[i] = textList[i].Replace("~이름~", DataBase.playerName);
-
-
-                if (!textList[i].Contains("[모험가]")) continue;
-
-
-
-
-                //"모험가"가 포함되어 있으면
-                if (textList[i].Contains("[모험가]"))
+                foreach(string key in colorKeyword)
                 {
-                    str = textList[i].Split('%');
-
-                    for (int j = 0; j < str.Length; j++)
+                    if(!textList[i].Contains(key))
                     {
+                        //Console.Write(textList[i]);
+                    }
+                    else
+                    {
+                        str = textList[i].Split('%');
 
-                        if (str[j] == "[모험가]")
+                        for (int j = 0; j < str.Length; j++)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(str[j]);
-                            Console.ResetColor();
-                        }
-                        else
-                        {
-                            Console.Write(str[j]);
+                            if (colorWord.TryGetValue(str[j], out ConsoleColor textColor))
+                            {
+                                Console.ForegroundColor = textColor;
+                                Console.Write(str[j]);
+                                Console.ResetColor();
+                            }
+                            else
+                            {
+                                Console.Write(str[j]);
+                            }
                         }
 
+                        break;
                     }
 
-                }
-                else
-                {
-                    Console.Write(textList[i]);
+
                 }
 
-
-                
-                Thread.Sleep(1000);
             }
-
-
-
-
-
         }
 
+
+        //public static void PrintLongTextAnimation(List<string> textList)
+        //{
+        //    foreach (var str in textList)
+        //    {
+        //        Console.Write(str);
+        //        Thread.Sleep(1000);
+        //    }
+        //}
 
 
 
@@ -243,7 +264,7 @@ namespace ReverseDungeonSparta
 
         public static void PrintList(List<EquipItem> items)
         {
-            int[] x = { 3, 7 , 29, 32, 39, 41, 51, 53 };
+            int[] x = { 3, 7, 29, 32, 39, 41, 51, 53 };
             int y = 3;
             //커서는 x==1 위치에 들어감
             for (int i = 0; i < items.Count; i++)
@@ -366,7 +387,7 @@ namespace ReverseDungeonSparta
             PrintText("⠀⢀⣥⣤⣤⣾⣷⣤⣿⣯⡀", ConsoleColor.Red, GameManager.Instance.clearCheck[7]);
             PrintText("⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[8]);
             PrintText("⠀⠸⠿⠟⠛⠛⠛⠛⣿⣿⠇", ConsoleColor.Red, GameManager.Instance.clearCheck[9]);
-            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[10]);  
+            PrintText("⠀⢸⡆⠀⠀⢸⡟⢘⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[10]);
             PrintText("⠀⢸⠃⠀⠀⠘⠃⠘⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[11]);
             PrintText("⠀⣼⣶⣾⣿⣿⣿⣿⣿⣿⣧", ConsoleColor.Red, GameManager.Instance.clearCheck[12]);
             PrintText("⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿", ConsoleColor.Red, GameManager.Instance.clearCheck[13]);
@@ -377,7 +398,7 @@ namespace ReverseDungeonSparta
             PrintText("⢸⣶⣶⣾⣿⣿⣿⣿⣶⣿⣿⡇", ConsoleColor.Red, GameManager.Instance.clearCheck[18]);
             PrintText("⠈⠉⠉⠉⠉⠁⠀⠉⠉⠉⠉⠁", ConsoleColor.Red, GameManager.Instance.clearCheck[18]);
 
-            for (int i=0; i<19; i++)
+            for (int i = 0; i < 19; i++)
             {
                 PrintText(width / 2 + 6, height / 2 - 5 + i, "▼", ConsoleColor.Red, GameManager.Instance.clearCheck[i]);
             }
