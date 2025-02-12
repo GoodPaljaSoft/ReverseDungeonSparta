@@ -174,7 +174,6 @@ namespace ReverseDungeonSparta
             set
             {
                 _hp = value;
-
                 if (_hp <= 0)
                 {
                     _hp = 0;
@@ -382,6 +381,26 @@ namespace ReverseDungeonSparta
         {
             if (this is Monster) return (Monster)this;
             return null;
+        }
+
+
+        //턴 시작 시 선언되어 회복 리스트의 요소가 있는지 확인하고 힐을 실행하는 메서드
+        public void CheckHealingList(bool useNow)
+        {
+            if(HealingBuff.Count > 0)
+            {
+                foreach (var heal in HealingBuff)
+                {
+                    int beforeHP = HP;
+
+                    HP += heal.Item1;
+                    if(useNow == false)
+                    {
+                        Console.WriteLine($"{Name}은(는) {heal.Item1}의 체력을 회복했다!");
+                        Console.WriteLine($"체력 : {beforeHP}/{TotalMaxHP} -> {HP}/{TotalMaxHP}");
+                    }
+                }
+            }
         }
     }
 

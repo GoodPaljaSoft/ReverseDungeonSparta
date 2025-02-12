@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPOI.Util;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
@@ -14,7 +15,7 @@ namespace ReverseDungeonSparta
         public List<(double, int)> AttackBuff { get; set; } = new List<(double, int)>();
         public List<(double, int)> DefenceBuff { get; set; } = new List<(double, int)>();
         public List<(int, int)> LuckBuff { get; set; } = new List<(int, int)>();
-        public List<(double, int)> HealingBuff { get; set; } = new List<(double, int)>();
+        public List<(int, int)> HealingBuff { get; set; } = new List<(int, int)>();
         public List<(int, int)> IntelligenceBuff { get; set; } = new List<(int, int)>();
 
 
@@ -90,12 +91,8 @@ namespace ReverseDungeonSparta
 
                 if (HealingBuff.Count > 0)
                 {
-                    //본인 차례가 됐을 때 힐링 관련 버프가 남아있다면 해당 수치만큼 회복
                     Character character = this as Character;
-                    foreach (var x in HealingBuff)
-                    {
-                        character.HP += (int)x.Item1;
-                    }
+                    character.CheckHealingList(false);
                 }
             }
         }
@@ -126,7 +123,8 @@ namespace ReverseDungeonSparta
             }
             else if (buffType == BuffType.HealingBuff)
             {
-                HealingBuff.Add((value, turnCount));
+                HealingBuff.Add(((int)value, turnCount));
+                character.CheckHealingList(true);
             }
             else if (buffType == BuffType.LuckBuff)
             {
@@ -145,7 +143,7 @@ namespace ReverseDungeonSparta
             AttackBuff = new List<(double, int)>();
             DefenceBuff = new List<(double, int)>();
             LuckBuff = new List<(int, int)>();
-            HealingBuff = new List<(double, int)>();
+            HealingBuff = new List<(int, int)>();
         }
 
 
