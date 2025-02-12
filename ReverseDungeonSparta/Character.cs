@@ -16,16 +16,48 @@ namespace ReverseDungeonSparta
         public int Critical { get; set; }//치명타확률
         public int Evasion { get; set; }//회피력
         public int Intelligence { get; set; }//지능 마법 스킬에 연관
+        public int TotalMaxHP { get; set; }
+        public int TotalMaxMP { get; set; }
+            
+        public int TotalLuck //행운(치명타 확률, 회피율에 연관)
+        {
+            get
+            {
+                int valueLuk = 0;
+                Player player = GetPlayer();
+                if (player != null)
+                {
+                    List<EquipItem> equipItemList = player.equipItemList;
+                    foreach (var equipItem in equipItemList)
+                    {
+                        valueLuk += equipItem.AddLuck;
+                    }
+                }
+
+                return (int)(valueLuk);
+            }
+            private set { }
+        }//최종 지능
         public int TotalIntelligence
         { 
             get
             {
+                int valueInt = 0;
+                Player player = GetPlayer();
+                if (player != null)
+                {
+                    List<EquipItem> equipItemList = player.equipItemList;
+                    foreach (var equipItem in equipItemList)
+                    {
+                        valueInt += equipItem.AddIntelligence;
+                    }
+                }
                 double value = Intelligence;
                 if(IntelligenceBuff.Count > 0)
                 {
                     value += IntelligenceBuff.Select(x => x.Item1).Sum();
                 }
-                return (int)(value);
+                return (int)(value+ valueInt);
             }
             private set { }
         }//최종 지능
@@ -33,25 +65,45 @@ namespace ReverseDungeonSparta
         {
             get
             {
+                int valueDef = 0;
+                Player player = GetPlayer();
+                if (player != null)
+                {
+                    List<EquipItem> equipItemList = player.equipItemList;
+                    foreach(var equipItem in equipItemList)
+                    {
+                        valueDef += equipItem.AddDefence;
+                    }
+                }
                 double value = 1d;
                 if (DefenceBuff.Count > 0)
                 {
                     value = DefenceBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
-                return (int)(Defence * value);
+                return (int)((Defence+valueDef) * value);
             } private set { }
         }//최종 방어력
         public int TotalAttack
         {
             get
             {
+                int valueAtk = 0;
+                Player player = GetPlayer();
+                if (player != null)
+                {
+                    List<EquipItem> equipItems = player.equipItemList;
+                    foreach (var equipItem in equipItems)
+                    {
+                        valueAtk += equipItem.AddAttack;
+                    }
+                }
                 double value = 1d;
                 if (AttackBuff.Count > 0)
                 {
                     value = AttackBuff.Select(x => x.Item1).Aggregate((total, next) => total * next);
                 }
                 int result = (int)(Attack * value);
-                return (int)(Attack * value);
+                return (int)((Attack + valueAtk) * value);
             }private set {}
         }//최종 공격력
         public int TotalCritical
@@ -59,7 +111,7 @@ namespace ReverseDungeonSparta
             get
             {
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 치명타 확률
-                double value = Luck;
+                double value = TotalLuck;
                 if (LuckBuff.Count > 0)value += LuckBuff.Select(x => x.Item1).Sum();
                 if (Critical * (value / 2) > 50) return 50;
                 else return (int)(Critical * (value / 2));
@@ -70,7 +122,7 @@ namespace ReverseDungeonSparta
             get
             {
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 회피 확률
-                double value = Luck;
+                double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
                 if (Evasion * (value / 2) > 50) return 50;
                 else return (int)(Evasion * (value / 2));
@@ -93,7 +145,28 @@ namespace ReverseDungeonSparta
                 else if (_hp > MaxHP) _hp = MaxHP;
             }
         }               //체력
-        public int MaxHP { get; set; }  //최대 체력
+        public int MaxHP  //최대 체력
+        {
+            get
+            {
+                if (TotalMaxHP == 0)
+                {
+                    TotalMaxHP = 100;
+
+                    Player player = GetPlayer();
+                    if (player != null)
+                    {
+                        List<EquipItem> equipItemList = player.equipItemList;
+                        foreach (var equipItem in equipItemList)
+                        {
+                            TotalMaxHP += equipItem.AddMaxHp;
+                        }
+                    }
+                }
+                return TotalMaxHP;
+            }
+            set { }
+        }
         public int MP 
         { get 
             { return _mp; } 
@@ -104,7 +177,28 @@ namespace ReverseDungeonSparta
                 else if (_mp > MaxMP) _mp = MaxMP;
             } 
         }               //마나
-        public int MaxMP { get; set; }  //최대 마다
+        public int MaxMP //최대 마다
+        {
+            get
+            {
+                if (TotalMaxMP == 0)
+                {
+                    TotalMaxMP = 100;
+
+                    Player player = GetPlayer();
+                    if (player != null)
+                    {
+                        List<EquipItem> equipItemList = player.equipItemList;
+                        foreach (var equipItem in equipItemList)
+                        {
+                            TotalMaxMP += equipItem.AddMaxMp;
+                        }
+                    }
+                }
+                return TotalMaxMP;
+            }
+            set { }
+        }
         public int Speed { get; set; }  //속도
         public List<Skill> SkillList { get; set; }  //가지고 있는 스킬
 
