@@ -78,7 +78,7 @@ namespace ReverseDungeonSparta
             PrintTitleTxt("내려가기", floor);
             PrintPlayerBattleStatus(player);
             ViewManager.PrintText("");
-            ViewManager.PrintText("??층으로 내려갑니다...");
+            ViewManager.PrintText($"{floor - 1}층으로 내려갑니다...");
             ViewManager.PrintText("");
             for (int i = 0; i < 14; i++)
             {
@@ -102,19 +102,18 @@ namespace ReverseDungeonSparta
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
             ViewManager.PrintText("");
-            ViewManager.PrintText("플레이어의 차례입니다!");
-            ViewManager.PrintText(0, 25, "   공격");
-            ViewManager.PrintText("   스킬");
-            ViewManager.PrintText("   상황을 지켜보기");
-            ViewManager.PrintText("");
+            ViewManager.PrintText($"{player.Name}의 차례입니다!");
+            ViewManager.PrintText(0, 26, "   공격하기");
+            ViewManager.PrintText("   스킬 사용");
+            ViewManager.PrintText("   아이템 사용");
             ViewManager.PrintText("   도망가기");
         }
 
 
         //배틀 순서를 텍스트로 변환하여 반환하는 메서드
-        public static string BattleOrderTxt(List<Character> battleOrderList)
+        public static string BattleOrderTxt(List<Character> battleOrderList, Player player)
         {
             StringBuilder battleOrderListText = new StringBuilder();
             foreach (Character character in battleOrderList)
@@ -126,7 +125,7 @@ namespace ReverseDungeonSparta
                     battleOrderListText.Append($"{character.Name} > ");
                 }
             }
-            battleOrderListText.Append("플레이어 > ... ");
+            battleOrderListText.Append($"{player.Name} > ... ");
             return battleOrderListText.ToString();
         }
 
@@ -184,7 +183,7 @@ namespace ReverseDungeonSparta
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음으로");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
             ViewManager.PrintText("");
             ViewManager.PrintText($"{monster.Name}의 차례입니다!");
         }
@@ -198,7 +197,7 @@ namespace ReverseDungeonSparta
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
             ViewManager.PrintText("");
             ViewManager.PrintText("");
         }
@@ -212,7 +211,7 @@ namespace ReverseDungeonSparta
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "[C] 취소");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
             ViewManager.PrintText("");
             ViewManager.PrintText("대상을 선택해 주세요.");
         }
@@ -227,7 +226,7 @@ namespace ReverseDungeonSparta
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 27, "-> 사용하기");
             ViewManager.PrintText(0, 29, "[C] 취소");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
         }
 
 
@@ -239,7 +238,7 @@ namespace ReverseDungeonSparta
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "   다음");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
         }
 
 
@@ -251,7 +250,7 @@ namespace ReverseDungeonSparta
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 29, "-> 다음");
-            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList));
+            ViewManager.PrintText(0, 9, BattleOrderTxt(battleOrderList, player));
         }
 
 
@@ -368,6 +367,31 @@ namespace ReverseDungeonSparta
             player.MaxEXP = (int)(player.MaxHP * 1.2);
 
             Util.CheckKeyInputEnter();
+        }
+
+        
+        //플레이어가 소비 아이템을 선택할 때 출력할 텍스트
+        public static void PlayerSelectUseItemTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", floor);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 28, "[Enter]사용");
+            ViewManager.PrintText("[C]취소");
+        }
+
+
+        //플레이어가 아이템을 사용할 때 출력할 텍스트
+        public static void PlayerUseUseItemTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor, UsableItem item)
+        {
+            Console.Clear();
+            PrintTitleTxt("전투 발생", floor);
+            PrintPlayerBattleStatus(player);
+            MonsterListInfoTxt(monsters);
+            ViewManager.PrintText(0, 11, $"{player.Name}은(는) 아이템 {item.Name}을(를) 사용했습니다!");
+            ViewManager.PrintText($"");
+            ViewManager.PrintText(0, 29,"-> 다음");
         }
 
 

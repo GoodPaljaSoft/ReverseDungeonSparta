@@ -50,6 +50,8 @@ public class BattleManager
     }
 
 
+
+    //도망갈 경우 실행할 메서드
     public void PlayerEscapeBattle()
     {
         if (dungeonLevel <= 5)
@@ -142,12 +144,12 @@ public class BattleManager
             {
                 ("", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
+                ("", PlayerUseItemSelect, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", PlayerEscapeBattle, () => AudioManager.PlayMoveMenuSE(0))
             };
-
+        
         //플레이어가 공격을 선택할 수 있는 입력칸
-        Util.GetUserInput(menuItems, StartPlayerBattle, ref selectedIndex, (0, 24));
+        Util.GetUserInput(menuItems, StartPlayerBattle, ref selectedIndex, (0, 25));
     }
 
 
@@ -361,7 +363,7 @@ public class BattleManager
 
         while (true)
         {
-            ViewManager.PrintText(0, 12, "");
+            ViewManager.PrintText(0, 11, "");
 
             // 현재 선택지 표시
             if (menuList.Count < maxVisibleOption)
@@ -547,6 +549,115 @@ public class BattleManager
                 }
             }
 
+        }
+    }
+
+
+    //플레이어가 소비 아이템 선택으로 들어갔을 때 출력할 택스트
+    public void PlayerUseItemSelect()
+    {
+        player.SortUseItemList();
+        ViewManager3.PlayerSelectUseItemTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
+
+
+        //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
+        List<(string, Action, Action?)> UsableItemList = player.UsableItemInventory
+                                .Select(x => ($"{x.Name}                 \n    : {x.Information}\n", (Action)PlayerSelectMonster, (Action)null))
+                                .ToList();
+
+        //플레이어가 스킬을 선택할 수 있는 입력칸
+        PlayerInputUseItemNum(UsableItemList, ref selectedIndex);
+    }
+
+
+    //플레이어가 소비 아이템을 열었을 때 출력할 커서들
+    public void PlayerInputUseItemNum(List<(string, Action, Action?)> menuList, ref int selectedIndex)
+    {
+        int maxVisibleOption = 5;
+        int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
+        int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시
+
+
+        while (true)
+        {
+            ViewManager.PrintText(0, 11, "");
+
+            // 현재 선택지 표시
+            if (menuList.Count < maxVisibleOption)
+            {
+                for (int i = 0; i < menuList.Count; i++)
+                {
+                    string str = "";
+                    if (i == selectedIndex)
+                        str = ($"-> {menuList[i].Item1}");
+                    else
+                        str = ($"   {menuList[i].Item1}");
+                    Console.WriteLine(str);
+                }
+            }
+            else
+            {
+                // 위로 숨겨진 선택지 개수
+                Console.WriteLine($"↑ ({startIndex}개)");
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    string str = "";
+                    if (i == selectedIndex)
+                        str = ($"-> {menuList[i].Item1}");
+                    else
+                        str = ($"   {menuList[i].Item1}");
+                    Console.WriteLine(str);
+                }
+                // 아래로 숨겨진 선택지 개수 표시
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                Console.WriteLine($"↓ ({menuList.Count - endIndex}개)");
+            }
+
+            ConsoleKeyInfo keyInfo = Util.CheckKeyInput(selectedIndex, menuList.Count - 1);
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.C:
+                    AudioManager.PlayMoveMenuSE(0);
+                    selectedIndex = 0;
+                    StartPlayerBattle();
+                    break;
+
+                case ConsoleKey.UpArrow: // 위 화살표를 눌렀을 때
+                    if (selectedIndex > 0)
+                    {
+                        selectedIndex--;
+                        // 선택지가 3번째 줄 이상이면 이동만, 아니면 리스트 스크롤
+                        if (selectedIndex < startIndex)
+                        {
+                            startIndex--;
+                            endIndex--;
+                        }
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
+                    break;
+
+                case ConsoleKey.DownArrow: // 아래 화살표를 눌렀을 때
+                    if (selectedIndex < menuList.Count - 1)
+                    {
+                        selectedIndex++;
+                        // 선택지가 뒤에서 3번째 줄 이하이면 이동만, 아니면 리스트 스크롤
+                        if (selectedIndex >= endIndex)
+                        {
+                            startIndex++;
+                            endIndex++;
+                        }
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
+                    break;
+
+                case ConsoleKey.Enter:
+                    int tempIndex = selectedIndex;
+                    selectedIndex = 0;
+                    if (menuList[tempIndex].Item3 != null) menuList[tempIndex].Item3();
+                    GameManager.Instance.UseSelectedItem(ref tempIndex);
+                    return;
+            }
         }
     }
 }

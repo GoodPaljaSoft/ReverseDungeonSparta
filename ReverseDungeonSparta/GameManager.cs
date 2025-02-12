@@ -205,16 +205,15 @@ namespace ReverseDungeonSparta
         }
 
         // 소비 창에서 플레이어 스탯 보기
-        public static void UsableStatusView(Player player)
+        public  void UsableStatusView(Player player)
         {
             ViewManager3.PrintPlayerStatus(player);
         }
 
 
         // 선택한 소비 아이템 사용
-        public static void UseSelectedItem(ref int itemIndex)
+        public void UseSelectedItem(ref int itemIndex)
         {
-            Player player = GameManager.Instance.Player;
             UsableItem selectedItem = player.UsableItemInventory[itemIndex];
 
             if (selectedItem.Count > 0)
