@@ -256,27 +256,35 @@ namespace ReverseDungeonSparta
         }
 
 
-        //플레이어가 전투에서 승리했을 때 출력할 텍스트
-        public static void PlayerWinText(Player player, List<Monster> monsters, int floor)
+        public static int PlayerRestRoomInt(int nowFloor)
         {
             int restFloor = 0;
-            if(floor > 15)
+            if (nowFloor >= 15)
             {
                 restFloor = 20;
             }
-            else if (floor > 10)
+            else if (nowFloor >= 10)
             {
                 restFloor = 15;
             }
-            else if (floor > 5)
+            else if (nowFloor >= 5)
             {
                 restFloor = 10;
             }
-            else if (floor > 0)
+            else if (nowFloor >= 0)
             {
                 restFloor = 5;
             }
 
+            return restFloor;
+        }
+
+
+        //플레이어가 전투에서 승리했을 때 출력할 텍스트
+        public static void PlayerWinText(Player player, List<Monster> monsters, int floor)
+        {
+
+            int restFloor = PlayerRestRoomInt(floor);
 
             Console.Clear();
             PrintTitleTxt("전투 결과", floor);

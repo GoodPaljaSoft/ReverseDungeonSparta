@@ -325,7 +325,7 @@ public class BattleManager
         menuItems = new List<(string, Action, Action?)>
         {
             ("", GameManager.Instance.EnterBattleMenu, null),
-            ("", GameManager.Instance.GameMenu, AudioManager.PlayMenuBGM)
+            ("", PlayerGoRestRoom, AudioManager.PlayMenuBGM)
         };
 
         //승리
@@ -352,6 +352,14 @@ public class BattleManager
         AudioManager.PlayMoveMenuSE(0);
 
         //메뉴 출력 추가
+    }
+
+
+    //플레이어가 거점에 돌아갈 때 설정할 메서드
+    public void PlayerGoRestRoom()
+    {
+        GameManager.Instance.DungeonClearLevel = (dungeonMaxFloor - ViewManager3.PlayerRestRoomInt(dungeonMaxFloor - dungeonLevel));
+        GameManager.Instance.GameMenu();
     }
 
 
