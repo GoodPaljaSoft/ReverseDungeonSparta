@@ -23,7 +23,7 @@ namespace ReverseDungeonSparta
         public Player Player => player;
         public BattleManager BattleManagerInstance { get; set; }
 
-        private EquipItem main= new();
+        private EquipItem main = new();
         private EquipItem offering = new();
 
         public int selectedIndex = 0;
@@ -60,11 +60,11 @@ namespace ReverseDungeonSparta
             DataBase.IntroTextInit();
             ViewManager.ViewInit();
 
-            //애니메이션 텍스트 메서드 테스트
-            IntroScene();
-            EndingChoice();
-            Ending1();
-            Ending2();
+            ////애니메이션 텍스트 메서드 테스트
+            //IntroScene();
+            //EndingChoice();
+            ////Ending1();
+            //Ending2();
         }
 
 
@@ -231,7 +231,7 @@ namespace ReverseDungeonSparta
 
 
         // 소비 창에서 플레이어 스탯 보기
-        public  void UsableStatusView(Player player)
+        public void UsableStatusView(Player player)
         {
             ViewManager3.PrintPlayerStatus(player);
         }
@@ -388,7 +388,6 @@ namespace ReverseDungeonSparta
         {
 
             //ViewManager.PrintLongTextAnimation(DataBase.introText);
-
             player.Name = Console.ReadLine();
             DataBase.playerName = player.Name;
 
@@ -417,13 +416,13 @@ namespace ReverseDungeonSparta
             Console.Clear();
             ViewManager.PrintLongTextAnimation(DataBase.endingText[0]);
 
-
-
             List<(string, Action, Action)> choiceList = new List<(string, Action, Action)>
             {
-                
+                ("", Ending1, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", Ending2, () => AudioManager.PlayMoveMenuSE(0))
             };
 
+            ViewManager3.ScrollViewTxt(choiceList, ref selectedIndex, (0, 26), true);
             Console.ReadKey();
         }
 
