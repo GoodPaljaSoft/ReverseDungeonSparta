@@ -45,17 +45,14 @@ namespace ReverseDungeonSparta
         public GameManager()
         {
             BattleManagerInstance = new BattleManager(player, 20);
-            Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
+            Console.CursorVisible = false;                                        //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
             //인트로 데이터베이스 초기화
             DataBase.IntroTextInit();
 
             //애니메이션 텍스트 메서드 테스트
-            //IntroScene();
-
-            //아이템 장착 테스트
-            //player.equipItemList[0].IsEquiped = true;
+            IntroScene();
 
         }
         public void PlayerStatusMenu()
@@ -340,7 +337,11 @@ namespace ReverseDungeonSparta
 
         public void IntroScene()
         {
-            ViewManager.PrintLongTextAnimation(DataBase.introText);                
+            ViewManager.PrintLongTextAnimation(DataBase.introText);
+
+            
+            player.Name = Console.ReadLine();
+
         }
 
         public void StageClearCheck()
