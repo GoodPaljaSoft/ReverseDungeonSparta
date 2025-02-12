@@ -19,7 +19,7 @@ public class BattleManager
     int[] selectedMonsterIndex;
     int listCount = 0;              //battleOrderList의 Lengh를 업데이트 할 때 사용
     public int dungeonLevel = 0;
-    public int dungeonMaxFloor = 20;
+    public int dungeonMaxFloor = 20;    //던전의 최대 층 수
 
     //배틀 매니저 생성자
     public BattleManager(Player player, int floor)

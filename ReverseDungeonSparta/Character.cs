@@ -110,7 +110,7 @@ namespace ReverseDungeonSparta
 
 
         // 타겟을 매개변수로 받아 데미지를 계산하고 반환
-        public virtual void Attacking(Character target, List<Monster> monsters, out int damage, Skill skill)
+        public virtual void Attacking(List<Character> targets, List<Monster> monsters, out int damage, Skill skill)
         {
             //데미지 계산식
             double margin = TotalAttack * 0.1f;
@@ -118,21 +118,17 @@ namespace ReverseDungeonSparta
 
             damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
 
-            target.OnDamage(this, damage, skill);
-        }
-
-
-        // 데미지를 입는 메소드
-        public void OnDamage(Character target, int damage, Skill skill)
-        {
             SkillType skillType = SkillType.Physical;
 
             if (skill != null)
             {
                 skillType = skill.Type;
-                ViewManager.PrintText($"{target.Name}의 스킬 사용!");
-                string pullName = target.Name == this.Name ? "자신" : $"{this.Name}";
-                ViewManager.PrintText($"{target.Name}은 {this.Name}에게 {skill.Name}을(를) 사용했다!");
+                ViewManager.PrintText($"{this.Name}의 스킬 사용!");
+                foreach(Character onTarget in targets)
+                {
+                    string pullName = this.Name == onTarget.Name ? "자신" : $"{onTarget.Name}";
+                    ViewManager.PrintText($"{this.Name}은 {onTarget.Name}에게 {skill.Name}을(를) 사용했다!");
+                }
                 ViewManager.PrintText("");
                 ViewManager.PrintText($"     [{skill.Name}]");
                 ViewManager.PrintText($"     : {skill.Info}");
@@ -140,12 +136,24 @@ namespace ReverseDungeonSparta
             }
             else
             {
-                ViewManager.PrintText($"{target.Name}의 공격!");
-                ViewManager.PrintText($"{target.Name}은(는) {this.Name}에게 공격을 시도했다!");
+                ViewManager.PrintText($"{this.Name}의 공격!");
+                foreach (Character onTarget in targets)
+                {
+                    ViewManager.PrintText($"{this.Name}은(는) {onTarget.Name}에게 공격을 시도했다!");
+                }
             }
 
-            Util.CheckKeyInputEnter();
+            foreach (Character onTarget in targets)
+            {
+                onTarget.OnDamage(this, damage, skill);
+            }
+        }
 
+
+        // 데미지를 입는 메소드
+        public void OnDamage(Character target, int damage, Skill skill)
+        {
+            Util.CheckKeyInputEnter();
 
             if (skill != null && skill.ApplyType == ApplyType.Team)
             {
@@ -173,9 +181,6 @@ namespace ReverseDungeonSparta
 
 
             }
-
-
-
 
             //TotalEvasion의 수치 만큼의 확률로 회피
             if (ComputeManager.TryChance(TotalEvasion))
