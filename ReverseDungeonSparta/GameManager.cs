@@ -20,7 +20,7 @@ namespace ReverseDungeonSparta
 
         Player player = new Player();
         public Player Player => player;
-        public BattleManager BattleManagerInstance { get; set; }
+        BattleManager BattleManagerInstance { get; set; }
 
         private EquipItem main= new();
         private EquipItem offering = new();
@@ -128,40 +128,63 @@ namespace ReverseDungeonSparta
 
             return isExit;
         }
-      
+
         #endregion
 
 
         #region 소지품 확인 - 장비 합성 씬
         public void ItemUpgradeMenu()
         {
-            bool isBreak=false;
-            int itemIndex=0;
             Console.Clear();
-            ViewManager.DrawLine("소지품 확인 - 장비 합성","합성할 장비 2가지를 선택해 주세요");
+            ViewManager.DrawLine("소지품 확인 - 장비 합성", "합성할 장비 2가지를 선택해 주세요");
             Console.WriteLine("[아이템 조합]");
             Console.WriteLine("조합을 원하시는 아이템을 입력해주세요.");
             ViewManager.PrintText(0, 29, "[C]나가기");
-            List<EquipItem> ItemList = player.equipItemList;
-            List<(string, Action, Action?)> itemScrollView = ItemList
-                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x), (Action)(()=>UpgradeSelect(x)), (Action)null))
-                                            .ToList();
-            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
-            if (isBreak) { UpgradeDeSelect(); return; }         
-            Console.WriteLine($"첫번째 아이템{main.Name}이 선택되었습니다.");
-            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
-            if (isBreak) { UpgradeDeSelect(); return; }
-            Player.ItemUpgrade(main, offering, ItemList);           
+
+            while (true)
+            {
+                if (ViewEquippedSelectedList() == true) break;
+            }
+            UpgradeDeSelect();
         }
-        private void UpgradeDeSelect()
+        public bool ViewEquippedSelectedList()
         {
+            bool isBreak = false;
+            int itemIndex = 0;
+            player.SortEquippedItemList();
+            //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
+            List<(string, Action, Action?)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n", (Action)(() => UpgradeSelect(x)), (Action)null))
+                                            .ToList();
+
+            ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, out isBreak);
+
+            return isBreak;
+        }
+
+        public void UpgradeDeSelect()
+        {
+            main.IsSelected = false; 
+            offering.IsSelected = false;
             main = new EquipItem();
             offering = new EquipItem();
         }
         private void UpgradeSelect(EquipItem equipItem)
         {
-            if (main.Name == "") main = equipItem;
-            else offering = equipItem;
+            if (main.Name == "")
+            {
+                main = equipItem; 
+                main.IsSelected = true;
+                Console.WriteLine($"첫번째 아이템{main.Name}이 선택되었습니다.");
+            }
+            else
+            { 
+                offering = equipItem;
+                offering.IsSelected = true;
+                Player.ItemUpgrade(main, offering, player.equipItemList);
+                UpgradeDeSelect();
+                ItemUpgradeMenu();
+            }
         }
         #endregion
         
@@ -186,7 +209,7 @@ namespace ReverseDungeonSparta
             player.SortUseItemList();//플레이어 사용 아이템 정렬
             int itemIndex = 0;
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
-            List<(string, Action, Action)> usableItemList = player.UsableItemInventory
+            List<(string, Action, Action?)> usableItemList = player.UsableItemInventory
                                             .Select(x => (InventoryViewManager.SortUseItemList(x) + "\n", (Action)(() => UseSelectedItem(ref itemIndex)), (Action)null))
                                             .ToList();
 
