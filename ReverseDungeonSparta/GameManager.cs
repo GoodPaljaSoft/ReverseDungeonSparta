@@ -184,7 +184,6 @@ namespace ReverseDungeonSparta
                 offering.IsSelected = true;
                 Player.ItemUpgrade(main, offering, player.equipItemList);
                 UpgradeDeSelect();
-                ItemUpgradeMenu();
             }
         }
         #endregion

@@ -146,6 +146,7 @@ namespace ReverseDungeonSparta
                     default:
                         Console.Clear();
                         Console.WriteLine("더 이상 강화할 등급이 없습니다.");
+                        Thread.Sleep(1000);
                         GameManager.Instance.UpgradeDeSelect();
                         return;
                 }
