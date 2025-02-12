@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ReverseDungeonSparta
 {
@@ -21,7 +23,7 @@ namespace ReverseDungeonSparta
         public int selectedIndex = 0;
 
         //플레이어의 공략 진척도
-        private int dungeonClearLevel = 0;
+        private int dungeonClearLevel = 0;      //던전에 입장 시도를 할 경우 1 증가하여 반환
         public int DungeonClearLevel
         {
             get
@@ -44,8 +46,8 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
-            BattleManagerInstance = new BattleManager(player, 20);
-            Console.CursorVisible = false;                                        //깜빡이는 커서를 비활성화
+            BattleManagerInstance = new BattleManager(player, dungeonClearLevel);
+            Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
 
             //인트로 데이터베이스 초기화
@@ -74,52 +76,50 @@ namespace ReverseDungeonSparta
 
             menuItems = new List<(string, Action, Action)>
             {
-                ("", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", UseItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
-            };
-            Util.GetUserInput(menuItems, InventoryMenu, ref selectedIndex, (0, 26));
-        }
-        #endregion 
-        #region 소지품 확인 - 장비
-        public void EquipmentMenu()
-        {
-            //ViewManager.PrintList(player.equipItemList);
-            //  Console.WriteLine(player.equipItemList[0].ItemInfo.itemName);  //넣은 리스트를 아이템 출력할 때
-            InventoryViewManager.InventoryEquippedMenuTxt(player.equipItemList, ref selectedIndex, (0, 5));
-
-            menuItems = new List<(string, Action, Action)>
-            {
                 ("", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", ItemUpgradeMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0))
+                ("", UseItemMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
-            Util.GetUserInput(menuItems, EquipmentMenu, ref selectedIndex, (0, 26));
 
-            ViewManager3.ScrollViewTxt(menuItems, ref selectedIndex, (0, 5));
+            ViewManager3.ScrollViewTxt(menuItems, ref selectedIndex, (0, 26), true);
 
+            GameMenu();
         }
         #endregion 
         #region 소지품 확인 - 장비 장착
         public void EquipItemMenu()
         {
-            Console.Clear();
-            Console.WriteLine("소지품 확인  - 장비 장착");
-            // player.IsEquipItem(EquipItem item);  내일 다시 구현해야함. ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
-            menuItems = new List<(string, Action, Action)>
+            InventoryViewManager.InventoryEquippedItemTxt();
+
+            while (true)
             {
-                ("나가기", EquipmentMenu, () => AudioManager.PlayMoveMenuSE(0))
-            };
-            Util.GetUserInput(menuItems, EquipItemMenu, ref selectedIndex);
+                if (Test() == true) break;
+            }
+
+            InventoryMenu();
         }
+
+        public bool Test()
+        {
+            int itemIndex = 0;
+            player.SortItemList();
+            //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
+            List<(string, Action, Action)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.InventorySortList(x) + "\n", (Action)(() => player.IsEquipItem(ref itemIndex)), (Action)null))
+                                            .ToList();
+
+            bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
+
+            return isExit;
+        }
+
         #endregion
         #region 소지품 확인 - 장비 합성 씬
         public void ItemUpgradeMenu()
         {
             Console.Clear();
             Console.WriteLine("소지품 확인  - 장비합성");
-
-            //EquipItem.ItemUpgrade();
+            player.TryEquipItemUpgrade(player.equipItemList);
             menuItems = new List<(string, Action, Action)>
             {
                 ("나가기", EquipItemMenu, () => AudioManager.PlayMoveMenuSE(0))
@@ -127,7 +127,9 @@ namespace ReverseDungeonSparta
             Util.GetUserInput(menuItems, ItemUpgradeMenu, ref selectedIndex);
         }
         #endregion
-        // 소비 아이템 메뉴
+
+
+        // 소비 아이템 목록
         public static void UseItemMenu()
         {
                 Console.Clear();
@@ -233,7 +235,6 @@ namespace ReverseDungeonSparta
             }
         }
 
-
         private static void ShowRecoveryMessage()
         {
             Console.WriteLine("엔터 키를 눌러 계속 진행하세요...");
@@ -241,7 +242,8 @@ namespace ReverseDungeonSparta
             Console.Clear();
         }
 
-        // 선택한 소비 아이템 사용
+
+        // 소비 아이템 사용
         public static void UseSelectedItem(int itemIndex)
         {
             Player player = GameManager.Instance.Player;
@@ -282,6 +284,7 @@ namespace ReverseDungeonSparta
                 Console.WriteLine("이 아이템을 사용할 수 없습니다.");
             }
         }
+
 
         // 아이템 효과 적용
         public static (bool itemUsed, string recoveryMessage) ApplyItemEffect(UsableItem item)
@@ -325,9 +328,12 @@ namespace ReverseDungeonSparta
             return (itemUsed, recoveryMessage); // 아이템 사용 여부 반환
         }
 
+
+        
         public void EnterBattleMenu()
         {
-            BattleManagerInstance = new BattleManager(player, 20);
+            dungeonClearLevel++;
+            BattleManagerInstance = new BattleManager(player, dungeonClearLevel);
             AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.EnterTheBattle();
@@ -409,9 +415,5 @@ namespace ReverseDungeonSparta
                 clearCheck[i] = true;
             }
         }
-
-   
-
     }
-
 }
