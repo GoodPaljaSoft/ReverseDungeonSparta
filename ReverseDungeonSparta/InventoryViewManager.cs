@@ -15,8 +15,9 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인", 12);
-            ViewManager.PrintText(0, 27, "   장비 아이템");
-            ViewManager.PrintText("   소지 아이템");
+            ViewManager.PrintText(0, 26, "   장비 장착");
+            ViewManager.PrintText("   장비 합성");
+            ViewManager.PrintText("   아이템 사용");
             ViewManager.PrintText("[C]나가기");
         }
 
@@ -42,7 +43,14 @@ namespace ReverseDungeonSparta
 
 
         //인멘토리 메뉴에서 소지품 확인에 들어가면 출력할 메서드
+        public static void InventoryUseItemTxt()
+        {
 
+            Console.Clear();
+            PrintTitleTxt("소지품 확인 - 소비 아이템 사용", 12);
+            ViewManager.PrintText(0, 28, "   아이템 사용");
+            ViewManager.PrintText("[C]나가기");
+        }
 
 
         //인벤토리를 정렬할 때 사용할 메서드

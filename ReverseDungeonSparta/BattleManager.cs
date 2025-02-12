@@ -1,6 +1,7 @@
 ﻿using ReverseDungeonSparta;
 using System.Text;
 using System.Threading;
+using System.Transactions;
 
 
 public class BattleManager
@@ -17,13 +18,14 @@ public class BattleManager
     int selectedIndex = 0;          //화살표의 위치를 저장할 int변수
     int[] selectedMonsterIndex;
     int listCount = 0;              //battleOrderList의 Lengh를 업데이트 할 때 사용
+    public int escapeFloor = 0;
 
     //배틀 매니저 생성자
-    public BattleManager(Player player, int floor)
+    public BattleManager(Player player, ref int floor)
     {
         //***
         //추후 층 수를 기반으로 난이도 조절
-
+        escapeFloor = floor;
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
         int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
         int backRand = random.Next(3, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
@@ -42,6 +44,28 @@ public class BattleManager
         {
             monster.SkillList = Skill.AddMonsterSkill(monster, 3);
         }
+    }
+
+
+    public void PlayerEscapeBattle()
+    {
+        if (escapeFloor <= 5)
+        {
+            escapeFloor = 0;
+        }
+        else if (escapeFloor <= 10)
+        {
+            escapeFloor = 5;
+        }
+        else if (escapeFloor <= 15)
+        {
+            escapeFloor = 10;
+        }
+        else if (escapeFloor <= 20)
+        {
+            escapeFloor = 15;
+        }
+        GameManager.Instance.DungeonClearLevel = escapeFloor;
     }
 
 
