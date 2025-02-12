@@ -207,57 +207,58 @@ namespace ReverseDungeonSparta
         }
 
         //string 타입 List를 받아와 한 문장씩 출력해준다.
-        public static void PrintLongTextAnimation(List<string> textList)
-        {
-            string[] str;
-
-            //키 값들을 받아옴
-            ICollection<string> colorKeyword = colorWord.Keys;
-
-            for (int i = 0; i < textList.Count; i++)
-            {
-                foreach(string key in colorKeyword)
-                {
-                    if(!textList[i].Contains(key))
-                    {
-                        //Console.Write(textList[i]);
-                    }
-                    else
-                    {
-                        str = textList[i].Split('%');
-
-                        for (int j = 0; j < str.Length; j++)
-                        {
-                            if (colorWord.TryGetValue(str[j], out ConsoleColor textColor))
-                            {
-                                Console.ForegroundColor = textColor;
-                                Console.Write(str[j]);
-                                Console.ResetColor();
-                            }
-                            else
-                            {
-                                Console.Write(str[j]);
-                            }
-                        }
-
-                        break;
-                    }
-
-
-                }
-
-            }
-        }
-
-
+        
         //public static void PrintLongTextAnimation(List<string> textList)
         //{
-        //    foreach (var str in textList)
+        //    string[] str;
+
+        //    //키 값들을 받아옴
+        //    ICollection<string> colorKeyword = colorWord.Keys;
+
+        //    for (int i = 0; i < textList.Count; i++)
         //    {
-        //        Console.Write(str);
-        //        Thread.Sleep(1000);
+        //        foreach(string key in colorKeyword)
+        //        {
+        //            if(!textList[i].Contains(key))
+        //            {
+        //                //Console.Write(textList[i]);
+        //            }
+        //            else
+        //            {
+        //                str = textList[i].Split('%');
+
+        //                for (int j = 0; j < str.Length; j++)
+        //                {
+        //                    if (colorWord.TryGetValue(str[j], out ConsoleColor textColor))
+        //                    {
+        //                        Console.ForegroundColor = textColor;
+        //                        Console.Write(str[j]);
+        //                        Console.ResetColor();
+        //                    }
+        //                    else
+        //                    {
+        //                        Console.Write(str[j]);
+        //                    }
+        //                }
+
+        //                break;
+        //            }
+
+
+        //        }
+
         //    }
         //}
+
+
+        public static void PrintLongTextAnimation(List<string> textList)
+        {
+            foreach (var str in textList)
+            {
+                Console.Write(str);
+                Thread.Sleep(1000);
+            }
+        }
 
 
 
