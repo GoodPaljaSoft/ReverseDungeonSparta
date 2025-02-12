@@ -294,7 +294,18 @@ public class BattleManager
 
         int rewardEXP = new Random().Next(0, 5) + (dungeonLevel * (2 + (new Random().Next(0, 3))));
 
-        List<EquipItem> rewardItemList = Player.RandomRewardList(rewardCount);
+        int A = 0;
+        int B = 0;
+
+        for( int i = 0; i <  rewardCount; i++ )
+        {
+            int rand = new Random().Next(0, 2);
+            if (rand == 0) A++;
+            else B++;
+        }
+
+        List<EquipItem> rewardItemList = Player.RandomRewardList(A);
+        List<UsableItem> rewardUseItemList = Player.RandomRewardUseList(B);
 
         menuItems = new List<(string, Action, Action?)>
         {
@@ -320,9 +331,14 @@ public class BattleManager
             Console.WriteLine($"{item.Name}");
             player.equipItemList.Add(item);
         }
+        foreach (var item in rewardUseItemList)
+        {
+            Console.WriteLine($"{item.Name}");
+            player.UsableItemInventory.Add(item);
+        }
 
-        
-        if(player.MaxEXP <= player.NowEXP)ViewManager3.PlayerLevelUpTxt(player);
+
+        if (player.MaxEXP <= player.NowEXP)ViewManager3.PlayerLevelUpTxt(player);
 
         isDungeonEnd = true;   //던전 종료
         player.ResetAllBuff(); //버프 초기화
@@ -621,7 +637,7 @@ public class BattleManager
                     AudioManager.PlayMoveMenuSE(0);
                     selectedIndex = 0;
                     StartPlayerBattle();
-                    break;
+                    return;
 
                 case ConsoleKey.UpArrow: // 위 화살표를 눌렀을 때
                     if (selectedIndex > 0)

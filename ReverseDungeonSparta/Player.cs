@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPOI.SS.Formula.Functions;
+using System;
 using static ReverseDungeonSparta.EquipItem;
 
 namespace ReverseDungeonSparta
@@ -199,7 +200,10 @@ namespace ReverseDungeonSparta
                 return;
             }
         }
-        public static EquipItem RandomRewardItem()
+
+
+        //장비 아이템을 랜덤으로 반환하는 메서드
+        public static EquipItem RandomRewardEquipItem()
         {
             // 새로운 보상아이템정보를 리스트화 하고
             List<EquipItemInfo> rewardItemListInfo = new List<EquipItemInfo>();
@@ -211,16 +215,44 @@ namespace ReverseDungeonSparta
             {
                 rewardItemListInfo.Add(rewardItemInfo);
             }
+
             int rand = random.Next(0, rewardItemListInfo.Count);
 
             // 랜덤으로 equipItemInfo가 리스트에 들어가고,
-            EquipItemInfo equipItemInfo = rewardItemListInfo[rand];
+            EquipItemInfo useItemInfo = rewardItemListInfo[rand];
 
             // equipItemInfo가 있는 rewardItem 객체 생성
-            EquipItem rewardItem = new EquipItem(equipItemInfo);
+            EquipItem rewardItem = new EquipItem(useItemInfo);
 
             return rewardItem;
         }
+
+
+        //사용 아이템을 랜덤으로 반환하는 메서드
+        public static UsableItem RandomRewardUseItem()
+        {
+            // 새로운 보상아이템정보를 리스트화 하고
+            List<UsableItemInfo> rewardItemListInfo = new List<UsableItemInfo>();
+
+            Random random = new Random();
+
+            // 리스트안에 장비아이템정보를 입력
+            foreach (UsableItemInfo rewardItemInfo in UsableItemInfo.allUsableItem)
+            {
+                rewardItemListInfo.Add(rewardItemInfo);
+            }
+
+            int rand = random.Next(0, rewardItemListInfo.Count);
+
+            // 랜덤으로 equipItemInfo가 리스트에 들어가고,
+            UsableItemInfo equipItemInfo = rewardItemListInfo[rand];
+
+            // equipItemInfo가 있는 rewardItem 객체 생성
+            UsableItem rewardItem = new UsableItem(equipItemInfo);
+
+            return rewardItem;
+        }
+
 
         //플레이어의 보상 아이템을 List형식으로 변환해서 주는 메서드
         public static List<EquipItem> RandomRewardList(int count)
@@ -228,12 +260,24 @@ namespace ReverseDungeonSparta
             List<EquipItem> rewardItemList = new List<EquipItem>();
             for (int i = 0; i < count; i++)
             {
-                rewardItemList.Add(RandomRewardItem());
+                rewardItemList.Add(RandomRewardEquipItem());
             }
 
             return rewardItemList;
         }
 
+
+        //플레이어의 보상 아이템을 List형식으로 변환해서 주는 메서드
+        public static List<UsableItem> RandomRewardUseList(int count)
+        {
+            List<UsableItem> rewardItemList = new List<UsableItem>();
+            for (int i = 0; i < count; i++)
+            {
+                rewardItemList.Add(RandomRewardUseItem());
+            }
+
+            return rewardItemList;
+        }
         // 소비 아이템 추가
         public void AddItemToInventory(UsableItem item, int count)
         {
@@ -259,12 +303,12 @@ namespace ReverseDungeonSparta
         // 기본으로 주어지는 소비 아이템 추가
         private void AddInitialItems()
         {
-            UsableItem LowHpPotion = new UsableItem(UsableItem.allUsableItem[0]); // 하급 체력 회복 포션
-            UsableItem MidHpPotion = new UsableItem(UsableItem.allUsableItem[1]); // 중급 체력 회복 포션
-            UsableItem HighHpPotion = new UsableItem(UsableItem.allUsableItem[2]); // 상급 체력 회복 포션
-            UsableItem LowMpPotion = new UsableItem(UsableItem.allUsableItem[3]); // 하급 마나 회복 포션
-            UsableItem MidMpPotion = new UsableItem(UsableItem.allUsableItem[4]); // 중급 마나 회복 포션
-            UsableItem HighMpPotion = new UsableItem(UsableItem.allUsableItem[5]); // 상급 마나 회복 포션
+            UsableItem LowHpPotion = new UsableItem(UsableItemInfo.allUsableItem[0]); // 하급 체력 회복 포션
+            UsableItem MidHpPotion = new UsableItem(UsableItemInfo.allUsableItem[1]); // 중급 체력 회복 포션
+            UsableItem HighHpPotion = new UsableItem(UsableItemInfo.allUsableItem[2]); // 상급 체력 회복 포션
+            UsableItem LowMpPotion = new UsableItem(UsableItemInfo.allUsableItem[3]); // 하급 마나 회복 포션
+            UsableItem MidMpPotion = new UsableItem(UsableItemInfo.allUsableItem[4]); // 중급 마나 회복 포션
+            UsableItem HighMpPotion = new UsableItem(UsableItemInfo.allUsableItem[5]); // 상급 마나 회복 포션
 
             // 인벤토리에 추가 
             AddItemToInventory(LowHpPotion, 5);

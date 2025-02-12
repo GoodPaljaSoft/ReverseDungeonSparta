@@ -294,7 +294,7 @@ namespace ReverseDungeonSparta
                 ViewManager.PrintText($"공격력: {beforeATK} -> {this.TotalAttack}");
                 ViewManager.PrintText($"방어력: {beforeDEF} -> {this.TotalDefence}");
                 ViewManager.PrintText($"치명타: {beforeCritical}% -> {this.TotalCritical}%");
-                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {this.Evasion}%");
+                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {this.TotalEvasion}%");
                 ViewManager.PrintText($"");
             }
             else

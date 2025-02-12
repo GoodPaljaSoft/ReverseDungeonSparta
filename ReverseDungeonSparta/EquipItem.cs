@@ -79,6 +79,8 @@ namespace ReverseDungeonSparta
                 addMaxMp = _addMaxMp;  
             }
         }
+
+
         // 생성된 배열에 만들어진 아이템 목록
         public static EquipItemInfo[] allEquipItem =
         {
