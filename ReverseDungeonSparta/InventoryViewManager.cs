@@ -14,7 +14,7 @@ namespace ReverseDungeonSparta
         public static void EnterInventoryMenuTxt()
         {
             Console.Clear();
-            PrintTitleTxt("소지품 확인", 12);
+            PrintTitleTxt("소지품 확인");
             ViewManager.PrintText(0, 26, "   장비 장착");
             ViewManager.PrintText("   장비 합성");
             ViewManager.PrintText("   아이템 사용");
@@ -26,7 +26,7 @@ namespace ReverseDungeonSparta
         public static void InventoryEquippedItemMenuTxt()
         {
             Console.Clear();
-            PrintTitleTxt("소지품 확인 - 장비", 12);
+            PrintTitleTxt("소지품 확인 - 장비");
             ViewManager.PrintText(0, 27, "   장비 장착");
             ViewManager.PrintText("   장비 합성");
             ViewManager.PrintText("[C]나가기");
@@ -37,7 +37,7 @@ namespace ReverseDungeonSparta
         public static void InventoryEquippedItemTxt()
         {
             Console.Clear();
-            PrintTitleTxt("소지품 확인 - 장비", 12);
+            PrintTitleTxt("소지품 확인 - 장비");
             ViewManager.PrintText(0, 29, "[C]나가기");
         }
 
@@ -47,7 +47,7 @@ namespace ReverseDungeonSparta
         {
 
             Console.Clear();
-            PrintTitleTxt("소지품 확인 - 소비 아이템 사용", 12);
+            PrintTitleTxt("소지품 확인 - 소비 아이템 사용");
             ViewManager.PrintText(0, 28, "   아이템 사용");
             ViewManager.PrintText("[C]나가기");
         }
@@ -63,19 +63,19 @@ namespace ReverseDungeonSparta
             StringBuilder sb = new StringBuilder();
             bool isEquipped = equipItem.IsEquiped;
             sb.Append(isEquipped ? " [E] ".PadRight(5) : " [-] ".PadRight(5));
-            sb.Append(Util.SortPadRightItemList(equipItem.Name, 24));
-            sb.Append(Util.SortPadRightItemList($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
+            sb.Append(Util.SortPadRight(equipItem.Name, 24));
+            sb.Append(Util.SortPadRight($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
             for(int i = 0; i<optionArray.Length; i++)
             {
 
                 if (optionArray[i] != 0)
                 {
-                    sb.Append(Util.SortPadRightItemList($"| {TranslateString(nameArray[i])} +{optionArray[i]} ",13 ));
-                    sb.Append(Util.SortPadRightItemList($"|", 2));
+                    sb.Append(Util.SortPadRight($"| {TranslateString(nameArray[i])} +{optionArray[i]} ",13 ));
+                    sb.Append(Util.SortPadRight($"|", 2));
                     if (count == 0)
                     {
                         sb.Append($"{equipItem.Information}\n");
-                        sb.Append(Util.SortPadRightItemList($"", 41));
+                        sb.Append(Util.SortPadRight($"", 41));
                     }
                     count++;
                 } 
