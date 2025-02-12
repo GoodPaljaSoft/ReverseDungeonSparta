@@ -358,14 +358,14 @@ public class BattleManager
         ViewManager3.PlayerWinText(player, monsterList, dungeonMaxFloor - dungeonLevel);
 
 
+        player.NowEXP += rewardEXP;
         Console.WriteLine("");
         Console.WriteLine($"[흭득 보상]");
         Console.WriteLine($"");
-        Console.WriteLine($"-EXP  ({rewardEXP}) -> [{player.NowEXP}/{player.MaxEXP}]");//***
+        Console.WriteLine($"-EXP  ({rewardEXP}흭득!) -> [{player.NowEXP}/{player.MaxEXP}]");//***
         Console.WriteLine($"");
         Console.WriteLine($"[흭득 아이템]");
 
-        player.NowEXP += rewardEXP;
 
         foreach( var item in rewardItemList)
         {

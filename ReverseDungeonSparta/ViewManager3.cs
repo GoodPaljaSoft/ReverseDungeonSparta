@@ -59,12 +59,12 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText("");
             ViewManager.PrintText($"HP : {player.HP}/{player.TotalMaxHP}");
             ViewManager.PrintText(25, 6, $"공격력 : {player.TotalAttack}");
-            ViewManager.PrintText(50, 6, $"회피율 : {player.TotalEvasion}");
+            ViewManager.PrintText(50, 6, $"회피율 : {player.TotalEvasion}%");
             ViewManager.PrintText(75, 6, $"행운 : {player.TotalLuck}");
             ViewManager.PrintText(100, 6, $"속도 : {player.Speed}");
             ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.TotalMaxMP}");
             ViewManager.PrintText(25, 7, $"방어력 : {player.TotalDefence}");
-            ViewManager.PrintText(50, 7, $"치명타 : {player.TotalCritical}");
+            ViewManager.PrintText(50, 7, $"치명타 : {player.TotalCritical}%");
             ViewManager.PrintText(75, 7, $"지능 : {player.TotalIntelligence}");
             ViewManager.PrintText(100, 7, $"골드 : {player.Gold}");
             ViewManager.PrintText(0, 8, "");

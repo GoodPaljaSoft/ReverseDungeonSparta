@@ -150,8 +150,8 @@ namespace ReverseDungeonSparta
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 치명타 확률
                 double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
-                if (Critical * (value / 2) > 50) return 50;
-                else return (int)(Critical * (value / 2));
+                if (Critical + (value / 2) > 50) return 50;
+                else return (int)(Critical + (value / 2));
             }
             private set { }
         }//최종 치명타 확률
@@ -162,8 +162,8 @@ namespace ReverseDungeonSparta
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 회피 확률
                 double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
-                if (Evasion * (value / 2) > 50) return 50;
-                else return (int)(Evasion * (value / 2));
+                if (Evasion + (value / 2) > 50) return 50;
+                else return (int)(Evasion + (value / 2));
             }
             private set { }
         }//최종 회피율

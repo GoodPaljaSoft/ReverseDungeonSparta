@@ -30,14 +30,14 @@ namespace ReverseDungeonSparta
 
             SkillList = Skill.AddPlayerSkill(this, 1);
 
-            Luck = 100;
-            Defence = 5;
-            Attack = 300;
-            Intelligence = 5;
+            Luck = 5;
+            Defence = 10;
+            Attack = 30;
+            Intelligence = 10;
 
-            MaxHP = 300;
+            MaxHP = 100;
             HP = MaxHP;
-            MaxMP = 100;
+            MaxMP = 50;
             MP = MaxMP;
             MaxEXP = 10;
             Speed = 20;
@@ -346,7 +346,7 @@ namespace ReverseDungeonSparta
         public void PlayerLevelUp()
         {
             Level += 1;
-            Attack += 2;
+            Attack += 3;
             Defence += 2;
             MaxHP += 5;
             HP += 5;
