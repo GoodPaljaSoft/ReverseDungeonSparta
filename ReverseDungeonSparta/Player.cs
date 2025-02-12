@@ -7,6 +7,7 @@ namespace ReverseDungeonSparta
     {
         Warrior
     }
+
     public class Player : Character
     {
         public List<EquipItem> equipItemList = new List<EquipItem>(); //아이템 소유리스트;// 아이템목록 객체 만들기

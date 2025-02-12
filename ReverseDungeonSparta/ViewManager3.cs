@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ReverseDungeonSparta
 {
+
     public static class ViewManager3
     {
         static public int monsterPostionValueX = 50;

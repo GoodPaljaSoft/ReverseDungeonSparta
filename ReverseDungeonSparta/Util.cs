@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace ReverseDungeonSparta
 {
+
     static internal class Util
     {
         public static void PrintChoice<T>(T[] selection)

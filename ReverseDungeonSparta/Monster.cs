@@ -10,6 +10,7 @@ public class Monster : Character
     public bool IsDie { get; set; }
 
 
+
     public Monster(MonsterInfo monsterInfo)
     {
         Name = monsterInfo.name;

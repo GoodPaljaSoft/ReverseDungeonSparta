@@ -68,6 +68,7 @@ namespace ReverseDungeonSparta
                     }
                 }
 
+
                 return (int)(valueLuk + Luck);
             }
             private set { }
