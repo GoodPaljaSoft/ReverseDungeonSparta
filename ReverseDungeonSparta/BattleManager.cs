@@ -45,7 +45,7 @@ public class BattleManager
 
         foreach (Monster monster in monsterList)
         {
-            monster.SkillList = Skill.AddMonsterSkill(monster, 3);
+            monster.SkillList = Skill.AddMonsterSkill(monster, (dungeonMaxFloor - dungeonLevel)/3);
         }
     }
 

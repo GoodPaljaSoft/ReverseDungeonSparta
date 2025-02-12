@@ -352,7 +352,9 @@ namespace ReverseDungeonSparta
             player.NowEXP = 0;
             player.MaxEXP = (int)(player.MaxHP * 1.2);
 
-            player.PlayerLevelUp();
+            player.PlayerLevelUp(); 
+            
+
 
             Console.Clear();
             PrintTitleTxt("상태보기");
@@ -365,6 +367,23 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText($"체  력: [{beforeHP}/{beforeMaxHP}] -> [{player.HP}/{player.TotalMaxHP}]");
             ViewManager.PrintText($"공격력: {beforeAttak} -> {player.TotalAttack}");
             ViewManager.PrintText($"방어력: {beforeDefense} -> {player.TotalDefence}");
+            ViewManager.PrintText("");
+            ViewManager.PrintText("");
+            if (player.Level % 2 == 0)
+            {
+                List<Skill> playerSkill = Skill.AddPlayerSkill(player, 1);
+                player.SkillList.AddRange(playerSkill);
+                ViewManager.PrintText("새로운 스킬을 배웠습니다!");
+                foreach(Skill skill in playerSkill)
+                {
+                    ViewManager.PrintText($"스킬 이름: {skill.Name}");
+                    ViewManager.PrintText($"스킬 설명: {skill.Info}");
+                    ViewManager.PrintText("");
+                }
+            }
+
+
+
 
 
             Util.CheckKeyInputEnter();

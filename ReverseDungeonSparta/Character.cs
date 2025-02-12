@@ -250,16 +250,16 @@ namespace ReverseDungeonSparta
 
             Util.CheckKeyInputEnter();
 
-            List<int> criticalDamage = new List<int>();
+            List<int> criticalDamageList = new List<int>();
             foreach (Character onTarget in targets)
             {
-                onTarget.OnDamage1(this, ref damage, skill);
-                criticalDamage.Add(damage);
+                onTarget.OnDamage1(this, damage ,out int criticalDamage, skill);
+                criticalDamageList.Add(criticalDamage);
             }
 
-            for (int i = 0; i < criticalDamage.Count; i++)
+            for (int i = 0; i < criticalDamageList.Count; i++)
             {
-                targets[i].OnDamage2(this, criticalDamage[i], skill);
+                targets[i].OnDamage2(this, criticalDamageList[i], skill);
 
                 Monster monster = targets[i] as Monster;
 
@@ -271,8 +271,9 @@ namespace ReverseDungeonSparta
 
 
         // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드1
-        public void OnDamage1(Character target, ref int damage, Skill skill)
+        public void OnDamage1(Character target, int damage, out int criticalDamage, Skill skill)
         {
+            criticalDamage = 0;
             SkillType skillType = SkillType.Physical;
             if (skill != null) { skillType = skill.Type; }
 
@@ -303,7 +304,7 @@ namespace ReverseDungeonSparta
                 {
                     ViewManager.PrintText($"{this.Name}에게 치명적인 일격!!!");
                     Util.CheckKeyInputEnter();
-                    damage *= 2;
+                    criticalDamage = damage * 2;
                 }
             }
         }
