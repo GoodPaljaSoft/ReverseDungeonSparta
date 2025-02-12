@@ -290,6 +290,15 @@ public class BattleManager
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
+        if(dungeonLevel == 20)
+        {
+            GameManager.Instance.EndingChoice();
+
+            return;
+        }
+
+
+
         int rewardCount = 1 + (dungeonLevel / 4);
 
         int rewardEXP = new Random().Next(0, 5) + (dungeonLevel * (2 + (new Random().Next(0, 3))));
@@ -366,6 +375,8 @@ public class BattleManager
         Util.CheckKeyInputEnter();
         isDungeonEnd = true;
         player.ResetAllBuff();      //버프 초기화
+
+        GameManager.Instance.GameOver();
     }
 
 

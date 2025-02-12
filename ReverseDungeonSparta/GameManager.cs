@@ -416,6 +416,14 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             ViewManager.PrintLongTextAnimation(DataBase.endingText[0]);
+
+
+
+            List<(string, Action, Action)> choiceList = new List<(string, Action, Action)>
+            {
+                
+            };
+
             Console.ReadKey();
         }
 
