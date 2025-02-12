@@ -40,9 +40,9 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 3, $"{player.Name} (마왕)");
             ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
             ViewManager.PrintText("");
-            ViewManager.PrintText($"HP : {player.HP}/{player.MaxHP}");
+            ViewManager.PrintText($"HP : {player.HP}/{player.TotalMaxHP}");
             ViewManager.PrintText(14, 6, $"ATK : {player.TotalAttack}");
-            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.MaxMP}");
+            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.TotalMaxMP}");
             ViewManager.PrintText(14, 7, $"DEF : {player.TotalDefence}");
             ViewManager.PrintText(0, 8, "");
             ViewManager.DrawLine();
@@ -55,15 +55,15 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, 3, $"{player.Name} (마왕)");
             ViewManager.PrintText($"Lv. {player.Level} [{player.NowEXP}/{player.MaxEXP}]");
             ViewManager.PrintText("");
-            ViewManager.PrintText($"HP : {player.HP}/{player.MaxHP}");
+            ViewManager.PrintText($"HP : {player.HP}/{player.TotalMaxHP}");
             ViewManager.PrintText(25, 6, $"공격력 : {player.TotalAttack}");
             ViewManager.PrintText(50, 6, $"회피율 : {player.TotalEvasion}");
-            ViewManager.PrintText(75, 6, $"행운 : {player.Luck}");
+            ViewManager.PrintText(75, 6, $"행운 : {player.TotalLuck}");
             ViewManager.PrintText(100, 6, $"속도 : {player.Speed}");
-            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.MaxMP}");
+            ViewManager.PrintText(0, 7, $"MP : {player.MP}/{player.TotalMaxMP}");
             ViewManager.PrintText(25, 7, $"방어력 : {player.TotalDefence}");
             ViewManager.PrintText(50, 7, $"치명타 : {player.TotalCritical}");
-            ViewManager.PrintText(75, 7, $"지능 : {player.Intelligence}");
+            ViewManager.PrintText(75, 7, $"지능 : {player.TotalIntelligence}");
             ViewManager.PrintText(100, 7, $"골드 : {player.Gold}");
             ViewManager.PrintText(0, 8, "");
             ViewManager.DrawLine();
@@ -487,10 +487,7 @@ namespace ReverseDungeonSparta
                     case ConsoleKey.Enter:
                         if (menuList[selectedIndex].Item2 != null)
                         {
-                            int tempIndex = 0;
-                            tempIndex = selectedIndex;
-                            if (selectedIndex > 4) tempIndex = 4;
-                            itemIndex = tempIndex + startIndex;
+                            itemIndex = selectedIndex;
                             menuList[itemIndex].Item2();
                         }
                         return false;
