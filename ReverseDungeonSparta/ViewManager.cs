@@ -33,6 +33,7 @@ namespace ReverseDungeonSparta
             Console.WriteLine();
         }
 
+        //높이 지정하고 한 줄을 길게 그림
         public static void DrawLine(int y)
         {
             Console.SetCursorPosition(0, y);
@@ -43,23 +44,18 @@ namespace ReverseDungeonSparta
         // 한 줄을 길게 그리고 장면 이름을 출력하는 메소드
         public static void DrawLine(string sceneName)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-
-            Console.WriteLine($"\n {sceneName}");
-            DrawLine();
-
-            Console.ForegroundColor = ConsoleColor.White;
+            PrintText(1, 1, sceneName, ConsoleColor.Red);
+            DrawLine(2);
         }
 
         // DrawLine 3
         // 한 줄을 길게 그리고 장면 이름과 정보를 출력하는 메소드
         public static void DrawLine(string sceneName, string sceneInfo)
         {
-            PrintText(0, 0, $"\n {sceneName}", ConsoleColor.Red);
-
-            PrintText(10, 0, sceneInfo, ConsoleColor.Gray); //정보는 회색
-
-            DrawLine();
+            PrintText(1, 1, sceneName, ConsoleColor.Red);
+            int x = Console.GetCursorPosition().Left;
+            PrintText(x+10, 1, sceneInfo, ConsoleColor.Gray); //정보는 회색
+            DrawLine(2);
         }
 
 
