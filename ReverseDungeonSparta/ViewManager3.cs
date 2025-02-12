@@ -384,13 +384,17 @@ namespace ReverseDungeonSparta
 
 
         //플레이어가 아이템을 사용할 때 출력할 텍스트
-        public static void PlayerUseUseItemTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor, UsableItem item)
+        public static void PlayerUseUseItemTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor, UsableItem item, (int hp, int mp) beforeStatus)
         {
             Console.Clear();
             PrintTitleTxt("전투 발생", floor);
             PrintPlayerBattleStatus(player);
             MonsterListInfoTxt(monsters);
             ViewManager.PrintText(0, 11, $"{player.Name}은(는) 아이템 {item.Name}을(를) 사용했습니다!");
+            ViewManager.PrintText($"");
+            ViewManager.PrintText($"체력: {beforeStatus.hp} -> {player.HP}");
+            ViewManager.PrintText($"마나: {beforeStatus.mp} -> {player.MP}");
+            ViewManager.PrintText($"");
             ViewManager.PrintText($"");
             ViewManager.PrintText(0, 29,"-> 다음");
 
@@ -494,7 +498,7 @@ namespace ReverseDungeonSparta
         }
         public static bool ScrollViewTxt(List<(string, Action, Action)> menuList, ref int selectedIndex, (int, int) cursor, bool isEnter, ref int itemIndex)
         {
-            itemIndex = 0;
+            itemIndex++;
             int maxVisibleOption = 5;
             int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
             int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시

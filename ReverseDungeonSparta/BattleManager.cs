@@ -668,10 +668,16 @@ public class BattleManager
                     break;
 
                 case ConsoleKey.Enter:
+                    (int, int) playerStatus = (player.HP, player.MP);
+                    
+
                     int tempIndex = selectedIndex;
                     selectedIndex = 0;
                     if (menuList[tempIndex].Item3 != null) menuList[tempIndex].Item3();
+                    player.SortUseItemList();
+                    UsableItem item = player.UsableItemInventory[tempIndex];
                     GameManager.Instance.UseSelectedItem(ref tempIndex);
+                    ViewManager3.PlayerUseUseItemTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel, item, playerStatus);
                     return;
             }
         }
