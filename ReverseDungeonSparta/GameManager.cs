@@ -60,10 +60,6 @@ namespace ReverseDungeonSparta
             DataBase.IntroTextInit();
             ViewManager.ViewInit();
             ////애니메이션 텍스트 메서드 테스트
-            //IntroScene();
-            //EndingChoice();
-            ////Ending1();
-            //Ending2();
         }
 
 
@@ -396,6 +392,8 @@ namespace ReverseDungeonSparta
             player.Name = Console.ReadLine();
             DataBase.playerName = player.Name;
 
+            AudioManager.PlayAttackSlashSE(1000);//칼로 베는 소리 출력
+            AudioManager.PlayOnDamageSE(2000);//맞는 소리 출력
             DataBase.introText2 = ViewManager.ChangePlayerName(DataBase.introText2);
             DataBase.endingText[0] = ViewManager.ChangePlayerName(DataBase.endingText[0]);
             DataBase.endingText[1] = ViewManager.ChangePlayerName(DataBase.endingText[1]);
