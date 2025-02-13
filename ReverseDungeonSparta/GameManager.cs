@@ -52,7 +52,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
-            DungeonClearLevel = 18;
+            DungeonClearLevel = 0;
             BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정

@@ -28,19 +28,18 @@ namespace ReverseDungeonSparta
             Name = "스파르타";
             Level = 23;
 
-            SkillList = Skill.AddPlayerSkill(this, 15);
-            equipItemList = RandomRewardList(40);
+            SkillList = Skill.AddPlayerSkill(this, 1);
 
-            Luck = 97;
-            Defence = 41;
-            Attack = 500;
-            Intelligence = 87;
+            Luck = 5;
+            Defence = 3;
+            Attack = 20;
+            Intelligence = 10;
 
-            MaxHP = 500;
+            MaxHP = 100;
             HP = MaxHP;
-            MaxMP = 122;
+            MaxMP = 50;
             MP = MaxMP;
-            MaxEXP = 120;
+            MaxEXP = 10;
             Speed = 50;
 
             Critical = 5;
