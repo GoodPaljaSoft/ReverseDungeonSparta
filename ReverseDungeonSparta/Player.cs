@@ -25,22 +25,23 @@ namespace ReverseDungeonSparta
 
         public Player() //Player 생성자 
         {
-            Name = "플레이어";
-            Level = 1;
+            Name = "스파르타";
+            Level = 23;
 
-            SkillList = Skill.AddPlayerSkill(this, 1);
+            SkillList = Skill.AddPlayerSkill(this, 15);
+            equipItemList = RandomRewardList(40);
 
-            Luck = 5;
-            Defence = 10;
-            Attack = 30;
-            Intelligence = 10;
+            Luck = 97;
+            Defence = 41;
+            Attack = 500;
+            Intelligence = 87;
 
-            MaxHP = 100;
+            MaxHP = 500;
             HP = MaxHP;
-            MaxMP = 50;
+            MaxMP = 122;
             MP = MaxMP;
-            MaxEXP = 10;
-            Speed = 20;
+            MaxEXP = 120;
+            Speed = 50;
 
             Critical = 5;
             Evasion = 5;
@@ -315,7 +316,7 @@ namespace ReverseDungeonSparta
             UsableItem MidMpPotion = new UsableItem(UsableItemInfo.allUsableItem[4]); // 중급 마나 회복 포션
             UsableItem HighMpPotion = new UsableItem(UsableItemInfo.allUsableItem[5]); // 상급 마나 회복 포션
 
-            // 인벤토리에 추가 
+            //// 인벤토리에 추가 
             AddItemToInventory(LowHpPotion, 5);
             AddItemToInventory(MidHpPotion, 5);
             AddItemToInventory(HighHpPotion, 5);

@@ -621,7 +621,7 @@ public class BattleManager
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
         List<(string, Action, Action?)> UsableItemList = player.UsableItemInventory
-                                .Select(x => ($"{x.Name}                 \n    : {x.Information}\n", (Action)PlayerSelectMonster, (Action)null))
+                                .Select(x => ($"{x.Name}                                          \n    : {x.Information}                        \n", (Action)PlayerSelectMonster, (Action)null))
                                 .ToList();
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
@@ -651,7 +651,7 @@ public class BattleManager
                         str = ($"-> {menuList[i].Item1}");
                     else
                         str = ($"   {menuList[i].Item1}");
-                    Console.WriteLine(str);
+                    Console.WriteLine(str + "                              ");
                 }
             }
             else
@@ -665,7 +665,7 @@ public class BattleManager
                         str = ($"-> {menuList[i].Item1}");
                     else
                         str = ($"   {menuList[i].Item1}");
-                    Console.WriteLine(str);
+                    Console.WriteLine(str + "                              ");
                 }
                 // 아래로 숨겨진 선택지 개수 표시
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);

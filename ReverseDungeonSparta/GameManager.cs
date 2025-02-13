@@ -52,6 +52,7 @@ namespace ReverseDungeonSparta
 
         public GameManager()
         {
+            DungeonClearLevel = 18;
             BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
@@ -380,15 +381,14 @@ namespace ReverseDungeonSparta
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
             Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 24));
-
-
         }
 
 
         public void IntroScene()
         {
 
-            //ViewManager.PrintLongTextAnimation(DataBase.introText);
+            AudioManager.PlayAttackSlashSE(10000);//칼로 베는 소리 출력
+            ViewManager.PrintLongTextAnimation(DataBase.introText);
             player.Name = Console.ReadLine();
             DataBase.playerName = player.Name;
 
@@ -402,8 +402,6 @@ namespace ReverseDungeonSparta
             ViewManager.colorWord.Add(player.Name, ConsoleColor.Cyan);
             ViewManager.colorWord.Add($"[{player.Name}]", ConsoleColor.Cyan);
 
-
-
             ViewManager.PrintLongTextAnimation(DataBase.introText2);
 
             Console.ReadKey();
@@ -411,7 +409,10 @@ namespace ReverseDungeonSparta
 
         public void GameOver()
         {
-
+            Console.Clear();
+            ViewManager.PrintText(0, 1, $"{player.Name}이(가) 사망했습니다.");
+            ViewManager.PrintText("게임이 종료됩니다.");
+            Thread.Sleep(5000);
         }
 
         public void EndingChoice()

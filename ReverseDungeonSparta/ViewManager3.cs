@@ -358,7 +358,7 @@ namespace ReverseDungeonSparta
             int beforeMaxEXP = player.MaxEXP;
 
             player.NowEXP = 0;
-            player.MaxEXP = (int)(player.MaxHP * 1.2);
+            player.MaxEXP = (int)(player.MaxEXP * 1.2);
 
             player.PlayerLevelUp(); 
             
