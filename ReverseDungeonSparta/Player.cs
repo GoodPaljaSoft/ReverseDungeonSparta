@@ -26,7 +26,7 @@ namespace ReverseDungeonSparta
         public Player() //Player 생성자 
         {
             Name = "스파르타";
-            Level = 23;
+            Level = 1;
 
             SkillList = Skill.AddPlayerSkill(this, 1);
 
