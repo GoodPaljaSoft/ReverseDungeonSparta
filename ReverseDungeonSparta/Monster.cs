@@ -9,23 +9,22 @@ public class Monster : Character
     public int Level { get; set; }
     public bool IsDie { get; set; }
 
-
-    public Monster(MonsterInfo monsterInfo)
+    public Monster(MonsterInfo monsterInfo, int dungeonLevel)
     {
         Name = monsterInfo.name;
-        Level = random.Next(1, 5); //*** 레벨 추후에 난이도 조절에 조정 필요
+        Level = random.Next(dungeonLevel + 1, dungeonLevel + 4); //*** 레벨 추후에 난이도 조절에 조정 필요
         Type = monsterInfo.type;
         MaxHP = monsterInfo.hp + (2 * Level);
         Attack = monsterInfo.atk + (2 * Level);
-        Speed = monsterInfo.speed;
+        Speed = monsterInfo.speed + Level;
         HP = MaxHP;
-        MaxMP = 100;
+        MaxMP = monsterInfo.mp + (2 * Level);
         MP = MaxMP;
-        Luck = 5;
-        Defence = 5;
-        Intelligence = 5;
-        Critical = 5;
-        Evasion = 5;
+        Luck = monsterInfo.luck + (int)(1.5 * Level);
+        Defence = monsterInfo.def + (int)(2 * Level);
+        Intelligence = monsterInfo.intelligence;
+        Critical = 0;
+        Evasion = 0;
 
         IsDie = false;          //몬스터 죽음 상태 false 고정
         //SkillList = Skill.AddMonsterSkill(this, 3);//*** 스킬 갯수 추후에 난이도 조절에 조정 필요
@@ -35,42 +34,42 @@ public class Monster : Character
     public static MonsterInfo[] AllWarrior =
     {
         //이름, 체력, 공격력
-        new MonsterInfo("균형잡힌 전사",MonsterType.Warrior, 40, 2, 5),
-        new MonsterInfo("다혈질 전사",MonsterType.Warrior, 30, 4, 5),
-        new MonsterInfo("건장한 전사",MonsterType.Warrior, 45, 1, 5)
+        new MonsterInfo("균형잡힌 전사",MonsterType.Warrior, 20, 10, 8, 8, 5, 5, 3),
+        new MonsterInfo("건장한 전사",MonsterType.Warrior, 30, 4, 5, 10, 4, 3, 1),
+        new MonsterInfo("다혈질 전사",MonsterType.Warrior, 13, 20, 15, 4, 8, 8, 5)
     };
 
     //마법사 3가지 정의
     public static MonsterInfo[] AllMagician =
     {
-        new MonsterInfo("균형잡힌 마법사",MonsterType.Magician, 20, 4, 5),
-        new MonsterInfo("한방이 있는 마법사",MonsterType.Magician, 15, 8, 5),
-        new MonsterInfo("근성있는 마법사",MonsterType.Magician, 40, 2, 5)
+        new MonsterInfo("균형잡힌 마법사",MonsterType.Magician, 20, 30, 5, 3, 5, 5, 15),
+        new MonsterInfo("한방이 있는 마법사",MonsterType.Magician, 15, 40, 7, 1, 3, 8, 25),
+        new MonsterInfo("근성있는 마법사",MonsterType.Magician, 25, 20, 8, 5, 7, 5, 10)
     };
 
     //힐러 3가지 정의
     public static MonsterInfo[] AllHealer =
     {
-        new MonsterInfo("소심한 힐러",MonsterType.Healer, 30, 3, 5),
-        new MonsterInfo("화가 많은 힐러",MonsterType.Healer, 25, 4, 5),
-        new MonsterInfo("근성있는 힐러",MonsterType.Healer, 45, 2, 5)
+        new MonsterInfo("소심한 힐러",MonsterType.Healer, 20, 20, 3, 3, 5, 5, 10),
+        new MonsterInfo("화가 많은 힐러",MonsterType.Healer, 15, 35, 8, 1, 3, 8, 15),
+        new MonsterInfo("근성있는 힐러",MonsterType.Healer, 35, 15, 5, 4, 4, 3, 8)
     };
 
     //도적 3가지 정의
     public static MonsterInfo[] AllRogue =
     {
-        new MonsterInfo("보물상자를 찾는 도적",MonsterType.Rouge, 45, 2, 5),
-        new MonsterInfo("한방을 노리는 도적",MonsterType.Rouge, 25, 4, 5),
-        new MonsterInfo("시체를 뒤지던 도적",MonsterType.Rouge, 30, 1, 5)
+        new MonsterInfo("보물상자를 찾는 도적",MonsterType.Rouge, 15, 7, 17, 3, 8, 10, 3),
+        new MonsterInfo("한방을 노리는 도적",MonsterType.Rouge, 10, 15, 30, 7, 5, 20, 5),
+        new MonsterInfo("시체를 뒤지던 도적",MonsterType.Rouge, 20, 10, 14, 4, 10, 6, 5)
     };
 
 
     //궁수 3가지 정의
     public static MonsterInfo[] AllArcher =
     {
-        new MonsterInfo("인내심 있는 궁수",MonsterType.Acher, 30, 2, 5),
-        new MonsterInfo("현상금을 노리는 궁수",MonsterType.Acher, 20, 3, 5),
-        new MonsterInfo("날렵한 명사수",MonsterType.Acher, 10, 5, 5)
+        new MonsterInfo("인내심 있는 궁수",MonsterType.Acher, 13, 10, 20, 2, 10, 10, 1),
+        new MonsterInfo("현상금을 노리는 궁수",MonsterType.Acher, 10, 12, 30, 3, 4, 15, 3),
+        new MonsterInfo("날렵한 명사수",MonsterType.Acher, 15, 8, 10, 4, 14, 30, 1)
     };
 
 
@@ -154,19 +153,19 @@ public class Monster : Character
 
 
     //랜덤으로 반환된 몬스터를 몬스터리스트에 정리해서 반환
-    public static List<Monster> GetMonsterList(int frontCount, int backCount)
+    public static List<Monster> GetMonsterList(int frontCount, int backCount, int dungeonLevel)
     {
 
         List<Monster> monsterList = new List<Monster>();
 
         for (int i = 0; i < frontCount; i++)
         {
-            monsterList.Add(InstanceFrontMonster());
+            monsterList.Add(InstanceFrontMonster(dungeonLevel));
         }
 
         for (int i = 0; i < backCount; i++)
         {
-            monsterList.Add(InstanceBackMonster());
+            monsterList.Add(InstanceBackMonster(dungeonLevel));
         }
 
         return monsterList;
@@ -174,7 +173,7 @@ public class Monster : Character
 
 
     //랜덤으로 전열 몬스터 하나를 반환
-    public static Monster InstanceFrontMonster()
+    public static Monster InstanceFrontMonster(int dungeonLevel)
     {
         List<MonsterInfo> frontAllMonsterInfo = new List<MonsterInfo>();
 
@@ -191,12 +190,12 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = frontAllMonsterInfo[rand];
 
-        return new Monster(monsterInfo);
+        return new Monster(monsterInfo, dungeonLevel);
     }
 
 
     //랜덤으로 후열 몬스터 하나를 반환
-    public static Monster InstanceBackMonster()
+    public static Monster InstanceBackMonster(int dungeonLevel)
     {
         List<MonsterInfo> backAllMonsterInfo = new List<MonsterInfo>();
 
@@ -217,7 +216,7 @@ public class Monster : Character
 
         MonsterInfo monsterInfo = backAllMonsterInfo[rand];
 
-        return new Monster(monsterInfo);
+        return new Monster(monsterInfo, dungeonLevel);
     }
 
     //몬스터의 정보를 저장할 구조체
@@ -226,16 +225,24 @@ public class Monster : Character
         public string name;
         public MonsterType type;
         public int hp;
+        public int mp;
         public int atk;
+        public int def;
         public int speed;
+        public int luck;
+        public int intelligence;
 
-        public MonsterInfo(string _name, MonsterType _type, int _hp, int _atk, int _speed)
+        public MonsterInfo(string _name, MonsterType _type, int _hp, int _mp, int _atk, int _def, int _speed, int _luck, int _intelligence)
         {
             name = _name;
             hp = _hp;
+            mp = _mp;
             type = _type;
             atk = _atk;
+            def = _def;
             speed = _speed;
+            luck = _luck;
+            intelligence = _intelligence;
         }
     }
 
