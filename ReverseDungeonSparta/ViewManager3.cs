@@ -90,7 +90,7 @@ namespace ReverseDungeonSparta
             }
             ViewManager.PrintText("");
             Thread.Sleep(200);
-            ViewManager.PrintText("플레이어가 모험가 무리와 마주쳤습니다!");
+            ViewManager.PrintText($"{player.Name}이(가) 모험가 무리와 마주쳤습니다!");
             ViewManager.PrintText(0, 29, "-> 다음으로");
             AudioManager.PlayBattleBGM();
         }
