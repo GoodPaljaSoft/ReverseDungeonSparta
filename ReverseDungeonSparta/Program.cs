@@ -1,8 +1,9 @@
-﻿namespace ReverseDungeonSparta
+﻿using System.Runtime.InteropServices;
+
+namespace ReverseDungeonSparta
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             //시작하기 전 콘솔 창 설정
@@ -14,6 +15,7 @@
             ViewManager.width = Console.WindowWidth;
             ViewManager.height = Console.WindowHeight;
 
+            GameManager.Instance.IntroScene();
             // 게임 시작
             AudioManager.PlayMenuBGM();
             GameManager.Instance.TitleSMenu();

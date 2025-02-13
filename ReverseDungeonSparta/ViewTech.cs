@@ -6,7 +6,6 @@ using System.Text;
 
 namespace ReverseDungeonSparta
 {
-
     public static class ViewManager2
     {
         private static StringBuilder previousScreen = new StringBuilder();
@@ -118,6 +117,7 @@ namespace ReverseDungeonSparta
                         return;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         isBreak = true;
                         return;
                 }
@@ -209,6 +209,7 @@ namespace ReverseDungeonSparta
                         return;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         isBreak = true;
                         selectedIndex = 0;
                         return;

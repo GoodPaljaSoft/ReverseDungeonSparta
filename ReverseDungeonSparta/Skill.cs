@@ -22,7 +22,6 @@ namespace ReverseDungeonSparta
             ConsumptionMP = skillInfo.consumptionMP;
         }
 
-
         public string Name { get; set; }                //스킬 이름
         public double Value { get; set; }               //스킬 효과 배수 또는 값
         public int ConsumptionMP { get; set; }          //소모 마나
@@ -99,7 +98,12 @@ namespace ReverseDungeonSparta
         //플레이어의 스킬을 만들 때 사용할 메서드
         public static List<Skill> AddPlayerSkill(Player player, int num)
         {
-            List<Skill> skillList = AddSkillListInstance(PlayerSkill);
+            List<Skill> skillList = AddSkillListInstance(HealingSkill);
+            skillList.AddRange(AddSkillListInstance(PhysicalSkill));
+            skillList.AddRange(AddSkillListInstance(MagicSkill));
+            skillList.AddRange(AddSkillListInstance(HealingSkill));
+
+            skillList = Util.ShuffleList(skillList);
 
             if (player.SkillList != null)
             {
@@ -115,54 +119,41 @@ namespace ReverseDungeonSparta
             return skillList;
         }
 
-
-        //플레이어의 스킬을 저장해두는 스킬 정보 배열
-        public static SkillInfo[] PlayerSkill = new SkillInfo[]
-        {
-        new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("공격력 강화", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5,BuffType.AttackBuff, 1, "스킬 설명"),
-        new SkillInfo("방어력 강화", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "스킬 설명"),
-        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("힐링", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 1, "스킬 설명"),
-        new SkillInfo("퓨어 힐", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.HealingBuff, 1, "스킬 설명"),
-        new SkillInfo("지속 힐", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 3, BuffType.HealingBuff, 3, "스킬 설명")
-        };
-
-
         //물리 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] PhysicalSkill = new SkillInfo[]
         {
-        new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("회전회오리", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "스킬 설명")
+        new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "상대방을 강하게 때려 1.5배의 피해를 입힙니다."),
+        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "무기를 휘둘러 최대 2명에게 1배의 피해를 입힙니다."),
+        new SkillInfo("회전 베기", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "한 바퀴 회전하며 모든 적들에게 0.7배의 피해를 입힙니다.")
         };
 
 
         //마법 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] MagicSkill = new SkillInfo[]
         {
-        new SkillInfo("파이어볼", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Magic, 5, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("버스트샷", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Magic, 8, BuffType.None, 0, "스킬 설명"),
-        new SkillInfo("지진", 0.7d, ExtentEnum.Third, ApplyType.Enemy, SkillType.Magic, 10, BuffType.None, 0, "스킬 설명")
+        new SkillInfo("파이어 볼", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Magic, 8, BuffType.None, 0, "작은 불덩이를 쏘아 적에게 1.5배의 피해를 입힙니다."),
+        new SkillInfo("메테오", 2.0d, ExtentEnum.First, ApplyType.Enemy, SkillType.Magic, 15, BuffType.None, 0, "큰 불덩이를 쏘아 적에게 2배의 피해를 입힙니다."),
+        new SkillInfo("파이어 월", 0.7d, ExtentEnum.Third, ApplyType.Enemy, SkillType.Magic, 7, BuffType.None, 0, "불의 벽을 만들어 상대방에서 0.7배의 피해를 입힙니다."),
+        new SkillInfo("화염 분출", 1.2d, ExtentEnum.Second, ApplyType.Enemy, SkillType.Magic, 10, BuffType.None, 0, "바닥에서 화염을 분출시켜 적 2명에게 1.2배의 피해를 입힙니다."),
+        new SkillInfo("지옥불 폭발", 1.4d, ExtentEnum.FirstAndFourth, ApplyType.Enemy, SkillType.Magic, 12, BuffType.None, 0, "큰 폭발을 만들어 적 2명에게 1.4배의 피해를 입힙니다.")
         };
 
 
         //버프 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] BufferSkill = new SkillInfo[]
         {
-        new SkillInfo("공격력 강화", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5,BuffType.AttackBuff, 1, "스킬 설명"),
-        new SkillInfo("방어력 강화", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "스킬 설명"),
-        new SkillInfo("행운 강화", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 10, BuffType.LuckBuff, 3, "스킬 설명")
+        new SkillInfo("공격력 강화", 1.3d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8,BuffType.AttackBuff, 2, "정신을 집중해서 2턴 동안 공격력을 1.3배 올립니다."),
+        new SkillInfo("방어력 강화", 1.3d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "정신을 집중해서 2턴 동안 방어력을 1.3배 올립니다."),
+        new SkillInfo("행운 강화", 1.3d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.LuckBuff, 2, "정신을 집중해서 2턴 동안 행운을 1.3배 올립니다.")
         };
 
 
         //힐 스킬을 저장해두는 스킬 정보 배열
         public static SkillInfo[] HealingSkill = new SkillInfo[]
         {
-        new SkillInfo("힐링", 1.5d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 1, "스킬 설명"),
-        new SkillInfo("퓨어 힐", 1.0d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.HealingBuff, 1, "스킬 설명"),
-        new SkillInfo("지속 힐", 0.7d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 3, BuffType.HealingBuff, 3, "스킬 설명")
+        new SkillInfo("힐링", 35, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 1, "정신을 집중해서 체력을 35 회복합니다."),
+        new SkillInfo("퓨어 힐", 50, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.HealingBuff, 1, "정신을 집중해서 체력을 50 회복합니다."),
+        new SkillInfo("지속 힐", 15, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 3, "정신을 집중해서 3턴 동안 체력을 15씩 회복합니다.")
         };
     }
 

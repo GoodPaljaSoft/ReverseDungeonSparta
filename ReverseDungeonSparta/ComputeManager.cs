@@ -10,7 +10,6 @@ namespace ReverseDungeonSparta
     {
         public static bool TryChance(int probability)
         {
-
             Random random = new Random();
             return random.Next(100) < probability;
         }
