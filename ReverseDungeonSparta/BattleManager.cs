@@ -27,10 +27,11 @@ public class BattleManager
         //***
         //추후 층 수를 기반으로 난이도 조절
         dungeonLevel = floor;
+
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
-        int frontRand = random.Next(0, 1);       //1~2사이의 수 만큼 전열 랜덤 값 출력
-        int backRand = random.Next(3, 4);       //1~2사이의 수 만큼 후열 랜덤 값 출력
-        monsterList = Monster.GetMonsterList(frontRand, backRand);   //값으로 나온 만큼 몬스터 생성
+        int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
+        int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
+        monsterList = Monster.GetMonsterList(frontRand, backRand, dungeonLevel);   //값으로 나온 만큼 몬스터 생성
         this.player = player;
         oldPlayerHP = player.HP;
 
@@ -43,30 +44,64 @@ public class BattleManager
 
         foreach (Monster monster in monsterList)
         {
-            monster.SkillList = Skill.AddMonsterSkill(monster, 3);
+            monster.SkillList = Skill.AddMonsterSkill(monster, dungeonLevel/3);
         }
     }
 
 
+
+    //도망갈 경우 실행할 메서드
     public void PlayerEscapeBattle()
     {
-        if (dungeonLevel <= 5)
+        ViewManager3.PlayerEscapeDungeonTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
+
+        ViewManager.PrintText("");
+        ViewManager.PrintText("도망치는 중...");
+        ViewManager.PrintText("");
+        ViewManager.PrintText("");
+
+        int rand = new Random().Next(0, 2);
+
+        if(rand == 0)//도망 성공
         {
-            dungeonLevel = 0;
+            if (dungeonLevel <= 5)
+            {
+                dungeonLevel = 0;
+            }
+            else if (dungeonLevel <= 10)
+            {
+                dungeonLevel = 5;
+            }
+            else if (dungeonLevel <= 15)
+            {
+                dungeonLevel = 10;
+            }
+            else if (dungeonLevel <= 20)
+            {
+                dungeonLevel = 15;
+            }
+            AudioManager.StopBGM();
+            AudioManager.PlayWalkSE(200);
+            Thread.Sleep(3000);
+            ViewManager.PrintText($"{player.Name}은(는) 성공적으로 적을 따돌렸습니다!");
+            ViewManager.PrintText($"적에게 도망치는 도중 모든 사용 아이템을 잃어버렸습니다...");
+            player.UsableItemInventory = new List<UsableItem>();
+            ViewManager.PrintText(0, 29, "-> 다음");
+            Util.CheckKeyInputEnter();
+            GameManager.Instance.DungeonClearLevel = dungeonLevel;
+            AudioManager.PlayMenuBGM();
+            GameManager.Instance.GameMenu();
         }
-        else if (dungeonLevel <= 10)
+        else//실패
         {
-            dungeonLevel = 5;
+            AudioManager.StopBGM();
+            AudioManager.PlayWalkSE(200);
+            Thread.Sleep(3000);
+            ViewManager.PrintText($"{player.Name}은(는) 적에게 따라잡혔습니다!");
+            ViewManager.PrintText(0, 29, "-> 다음");
+            AudioManager.PlayBattleBGM();
+            Util.CheckKeyInputEnter();
         }
-        else if (dungeonLevel <= 15)
-        {
-            dungeonLevel = 10;
-        }
-        else if (dungeonLevel <= 20)
-        {
-            dungeonLevel = 15;
-        }
-        GameManager.Instance.DungeonClearLevel = dungeonLevel;
     }
 
 
@@ -140,12 +175,12 @@ public class BattleManager
             {
                 ("", PlayerSelectMonster, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", PlayerSelectSkillNum, () => AudioManager.PlayMoveMenuSE(0))
+                ("", PlayerUseItemSelect, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", PlayerEscapeBattle, () => AudioManager.PlayMoveMenuSE(0))
             };
-
+        
         //플레이어가 공격을 선택할 수 있는 입력칸
-        Util.GetUserInput(menuItems, StartPlayerBattle, ref selectedIndex, (0, 24));
+        Util.GetUserInput(menuItems, StartPlayerBattle, ref selectedIndex, (0, 25));
     }
 
 
@@ -155,8 +190,8 @@ public class BattleManager
         ViewManager3.SelectedSkillTxt(player, monsterList, battleOrderList, 20 - dungeonLevel);
 
         //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
-        List<(string, Action, Action?)> skillList = player.SkillList
-                                .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)null))
+        List<(string, Action, Action)> skillList = player.SkillList
+                                .Select(x => ($"{x.Name}                 \n    : {x.Info}\n", (Action)PlayerSelectMonster, (Action)(() => AudioManager.PlayMoveMenuSE(0))))
                                 .ToList();
 
         //플레이어가 스킬을 선택할 수 있는 입력칸
@@ -186,32 +221,15 @@ public class BattleManager
     //플레이어가 몬스터를 공격한 이후에 실행할 메서드
     public void PlayerAttackMonster(List<Monster> monsters)
     {
+        ViewManager3.PlayerAttackMonsterTxt(player, monsters, battleOrderList, dungeonMaxFloor - dungeonLevel);
         List<int> beforeMonstehpr = monsters.Select(x => x.HP).ToList();
-        string str = (playerSelectSkill == null ? "공격!" : $"{playerSelectSkill.Name}스킬 사용!");
 
-        ViewManager3.PlayerAttackMonsterTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
-        Console.WriteLine("");
-        Console.WriteLine("");
-        Console.WriteLine($"{player.Name} 의 {str}");
-        foreach (Monster monster in monsters)
+        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+        switch (keyInfo.Key)
         {
-            int beforeMonsterHP = monster.HP;
-            //player.Attacking(monster, monsterList, out int damage, playerSelectSkill);
-            RemoveOrderListCharacter(monster);
-            //Console.WriteLine($"Lv.{monster.Level} {monster.Name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+            case ConsoleKey.Enter: //플레이어가 승리했는지 확인
+                CheckPlayerWin(); break;
         }
-        Console.WriteLine("");
-        for (int i = 0; i < beforeMonstehpr.Count; i++)
-        {
-            Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name}");
-            Console.WriteLine($"HP {(beforeMonstehpr[i] == 0 ? "Dead" : beforeMonstehpr[i])} -> {(monsters[i].IsDie ? "Dead" : (monsters[i].HP))}");
-            Console.WriteLine("");
-        }
-        Console.WriteLine("");
-
-        List<Character> characters = monsters.Select(x => (Character)x).ToList();
-
-        player.Attacking(characters, playerSelectSkill);
     }
 
 
@@ -289,23 +307,58 @@ public class BattleManager
 
         int beforeplayerHP = player.HP;
 
-        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel, monster);
+        ViewManager3.MonsterAttackTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
+
+        ViewManager.PrintText(0, 11, $"{monster.Name}의 차례입니다!");
+        ViewManager.PrintText("");
+        Util.CheckKeyInputEnter();
+        monster.Attacking(player, monsterList, out int damage, out (Skill, Character) skill);
+
+        if (skill.Item1 != null && skill.Item2 != null)
+        {
+            Monster pullMonster = skill.Item2.GetMonster();
+            ViewManager.PrintText($"{monster.Name}의 스킬 사용!");
+            string pullName = monster.Name == skill.Item2.Name ? "자신" : $"{skill.Item2.Name}";
+            ViewManager.PrintText($"{monster.Name}은 {pullName}에게 {skill.Item1.Name}을(를) 사용했다!");
+            ViewManager.PrintText("");
+            ViewManager.PrintText($"     [{skill.Item1.Name}]");
+            ViewManager.PrintText($"     : {skill.Item1.Info}");
+            ViewManager.PrintText("");
+        }
+        else
+        {
+            ViewManager.PrintText($"{monster.Name}의 공격!");
+            ViewManager.PrintText($"{monster.Name}은(는) 플레이어에게 공격을 시도했다!");
+        }
+
 
         Util.CheckKeyInputEnter();
+        if(skill.Item1 != null && skill.Item1.ApplyType == ApplyType.Team)
+        {
+            int beforeHP = skill.Item2.HP;
+            int beforeATK = skill.Item2.TotalAttack;
+            int beforeDEF = skill.Item2.TotalDefence;
+            int beforeCritical = skill.Item2.TotalCritical;
+            int beforeEvasion = skill.Item2.Evasion;
+
+            ViewManager.PrintText($"{skill.Item2.Name}은(는) {skill.Item1.Name}에 의해 능력치가 상승했다!");
+            ViewManager.PrintText($"");
+            ViewManager.PrintText($"HP: " + "{beforeHP} -> {skill.Item2.HP}");
+            ViewManager.PrintText($"ATK: {beforeATK} -> {skill.Item2.TotalAttack}");
+            ViewManager.PrintText($"DEF: {beforeDEF} -> {skill.Item2.TotalDefence}");
+            ViewManager.PrintText($"치명타: {beforeCritical} -> {skill.Item2.TotalCritical}");
+            ViewManager.PrintText($"회  피{beforeEvasion} -> {skill.Item2.Evasion}");
+            ViewManager.PrintText($"");
+        }
+        else
+        {
+            //공격 실행
+
+        }
 
         monster.MonsterAttack(player, monsterList);
 
         //몬스터가 어떤 공격을 했는지에 따라 효과음 변환하여 출력***
-
-        while (true)
-        {
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            if (keyInfo.Key == ConsoleKey.Enter)
-            {
-                break;
-            }
-        }
-
         if (player.HP <= 0)
         {
             AudioManager.PlayPlayerDieSE(0);
@@ -313,44 +366,77 @@ public class BattleManager
         }
     }
 
-
     //플레이어가 승리했을 때 실행할 메서드
     public void PlayerWin()
     {
-        int rewardCount = 1 + (dungeonLevel / 4);
+        if(dungeonLevel == 19)
+        {
+            GameManager.Instance.EndingChoice();
 
-        List<EquipItem> rewardItemList = Player.RandomRewardList(rewardCount);
+            return;
+        }
+
+        int rewardCount = 1 + (dungeonLevel / 4);
+        int rewardEXP = new Random().Next(0, 5) + (dungeonLevel * (2 + (new Random().Next(0, 3))));
+        int A = 0;
+        int B = 0;
+
+        for( int i = 0; i <  rewardCount; i++ )
+        {
+            int rand = new Random().Next(0, 2);
+            if (rand == 0) A++;
+            else B++;
+        }
+
+        List<EquipItem> rewardItemList = Player.RandomRewardList(A);
+        List<UsableItem> rewardUseItemList = Player.RandomRewardUseList(B);
 
         menuItems = new List<(string, Action, Action?)>
         {
             ("", GameManager.Instance.EnterBattleMenu, null),
-            ("", GameManager.Instance.GameMenu, AudioManager.PlayMenuBGM)
+            ("", PlayerGoRestRoom, AudioManager.PlayMenuBGM)
         };
 
         //승리
         ViewManager3.PlayerWinText(player, monsterList, dungeonMaxFloor - dungeonLevel);
 
 
+        player.NowEXP += rewardEXP;
         Console.WriteLine("");
         Console.WriteLine($"[흭득 보상]");
         Console.WriteLine($"");
-        Console.WriteLine($"-EXP  {10}");//***
-        Console.WriteLine($"-Gold {500}");
+        Console.WriteLine($"-EXP  ({rewardEXP}흭득!) -> [{player.NowEXP}/{player.MaxEXP}]");//***
         Console.WriteLine($"");
+
         Console.WriteLine($"[흭득 아이템]");
+
         foreach( var item in rewardItemList)
         {
             Console.WriteLine($"{item.Name}");
             player.equipItemList.Add(item);
         }
+        foreach (var item in rewardUseItemList)
+        {
+            Console.WriteLine($"{item.Name}");
+            player.UsableItemInventory.Add(item);
+        }
 
+        if (player.MaxEXP <= player.NowEXP)ViewManager3.PlayerLevelUpTxt(player);
 
-        isDungeonEnd = true;    //던전 종료
+        isDungeonEnd = true;   //던전 종료
         player.ResetAllBuff(); //버프 초기화
         Util.GetUserInput(menuItems, PlayerWin, ref selectedIndex, (0, 27));
         AudioManager.PlayMoveMenuSE(0);
 
         //메뉴 출력 추가
+    }
+
+
+    //플레이어가 거점에 돌아갈 때 설정할 메서드
+    public void PlayerGoRestRoom()
+    {
+        GameManager.Instance.DungeonClearLevel = (dungeonMaxFloor - ViewManager3.PlayerRestRoomInt(dungeonMaxFloor - dungeonLevel));
+        GameManager.Instance.GameMenu();
     }
 
 
@@ -363,6 +449,8 @@ public class BattleManager
         Util.CheckKeyInputEnter();
         isDungeonEnd = true;
         player.ResetAllBuff();      //버프 초기화
+
+        GameManager.Instance.GameOver();
     }
 
 
@@ -376,7 +464,7 @@ public class BattleManager
 
         while (true)
         {
-            ViewManager.PrintText(0, 12, "");
+            ViewManager.PrintText(0, 11, "");
 
             // 현재 선택지 표시
             if (menuList.Count < maxVisibleOption)
@@ -479,7 +567,7 @@ public class BattleManager
             {
                 case ConsoleKey.C:
                     selectedMonsterIndex = null;
-                    //AudioManager.PlayMoveMenuSE(0);
+                    AudioManager.PlayMoveMenuSE(0);
                     playerSelectSkill = null;
                     StartPlayerBattle();
                     break;
@@ -562,6 +650,121 @@ public class BattleManager
                 }
             }
 
+        }
+    }
+
+
+    //플레이어가 소비 아이템 선택으로 들어갔을 때 출력할 택스트
+    public void PlayerUseItemSelect()
+    {
+        player.SortUseItemList();
+        ViewManager3.PlayerSelectUseItemTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel);
+
+
+        //플레이어가 가지고 있는 스킬의 수 만큼 menuItems 작성
+        List<(string, Action, Action?)> UsableItemList = player.UsableItemInventory
+                                .Select(x => ($"{x.Name}                                          \n    : {x.Information}                        \n", (Action)PlayerSelectMonster, (Action)null))
+                                .ToList();
+
+        //플레이어가 스킬을 선택할 수 있는 입력칸
+        PlayerInputUseItemNum(UsableItemList, ref selectedIndex);
+    }
+
+
+    //플레이어가 소비 아이템을 열었을 때 출력할 커서들
+    public void PlayerInputUseItemNum(List<(string, Action, Action?)> menuList, ref int selectedIndex)
+    {
+        int maxVisibleOption = 5;
+        int startIndex = Math.Min(menuList.Count - maxVisibleOption, Math.Max(0, selectedIndex - 2)); // 선택지가 중간에 오도록 5라서 2임
+        int endIndex = Math.Min(startIndex + maxVisibleOption, menuList.Count); // 5개까지만 표시
+
+
+        while (true)
+        {
+            ViewManager.PrintText(0, 11, "");
+
+            // 현재 선택지 표시
+            if (menuList.Count < maxVisibleOption)
+            {
+                for (int i = 0; i < menuList.Count; i++)
+                {
+                    string str = "";
+                    if (i == selectedIndex)
+                        str = ($"-> {menuList[i].Item1}");
+                    else
+                        str = ($"   {menuList[i].Item1}");
+                    Console.WriteLine(str + "                              ");
+                }
+            }
+            else
+            {
+                // 위로 숨겨진 선택지 개수
+                Console.WriteLine($"↑ ({startIndex}개)");
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    string str = "";
+                    if (i == selectedIndex)
+                        str = ($"-> {menuList[i].Item1}");
+                    else
+                        str = ($"   {menuList[i].Item1}");
+                    Console.WriteLine(str + "                              ");
+                }
+                // 아래로 숨겨진 선택지 개수 표시
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
+                Console.WriteLine($"↓ ({menuList.Count - endIndex}개)");
+            }
+
+            ConsoleKeyInfo keyInfo = Util.CheckKeyInput(selectedIndex, menuList.Count - 1);
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.C:
+                    AudioManager.PlayMoveMenuSE(0);
+                    selectedIndex = 0;
+                    StartPlayerBattle();
+                    return;
+
+                case ConsoleKey.UpArrow: // 위 화살표를 눌렀을 때
+                    if (selectedIndex > 0)
+                    {
+                        selectedIndex--;
+                        // 선택지가 3번째 줄 이상이면 이동만, 아니면 리스트 스크롤
+                        if (selectedIndex < startIndex)
+                        {
+                            startIndex--;
+                            endIndex--;
+                        }
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
+                    break;
+
+                case ConsoleKey.DownArrow: // 아래 화살표를 눌렀을 때
+                    if (selectedIndex < menuList.Count - 1)
+                    {
+                        selectedIndex++;
+                        // 선택지가 뒤에서 3번째 줄 이하이면 이동만, 아니면 리스트 스크롤
+                        if (selectedIndex >= endIndex)
+                        {
+                            startIndex++;
+                            endIndex++;
+                        }
+                        AudioManager.PlayMoveMenuSE(0);
+                    }
+                    break;
+
+                case ConsoleKey.Enter:
+                    (int, int) playerStatus = (player.HP, player.MP);
+                    
+
+                    int tempIndex = selectedIndex;
+                    selectedIndex = 0;
+                    if (menuList[tempIndex].Item3 != null) menuList[tempIndex].Item3();
+                    player.SortUseItemList();
+                    UsableItem item = player.UsableItemInventory[tempIndex];
+                    GameManager.Instance.UseSelectedItem(ref tempIndex);
+                    ViewManager3.PlayerUseUseItemTxt(player, monsterList, battleOrderList, dungeonMaxFloor - dungeonLevel, item, playerStatus);
+                    return;
+            }
         }
     }
 }
