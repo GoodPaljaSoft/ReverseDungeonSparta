@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using ReverseDungeonSparta;
+using ReverseDungeonSparta.Entiity;
 
 public class TurnManager
 {

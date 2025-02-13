@@ -1,20 +1,21 @@
 ﻿using ReverseDungeonSparta;
+using ReverseDungeonSparta.Entiity;
+using ReverseDungeonSparta.Manager;
 using System.Text;
 using System.Threading;
 using System.Transactions;
 
 
-public class BattleManager
+public class BattleStage
 {
-    List<Monster> monsterList = new List<Monster>();
+    List<Monster> monsterList;
     List<Character> battleOrderList;        //플레이어 턴이 돌아올 때까지의 순서를 저장할 리스트
     List<(string, Action, Action?)> menuItems;
     Skill playerSelectSkill;
     Player player;
-    Random random = new Random();
+    
     TurnManager turnManager;
-    bool isDungeonEnd = false;      //플레이어가 죽거나 모든 몬스터를 잡았는지 확인
-    int oldPlayerHP;                //던전 입장 전 플레이어의 HP를 저장할 변수
+    bool isDungeonEnd = false;      //플레이어가 죽거나 모든 몬스터를 잡았는지 확인                                 
     int selectedIndex = 0;          //화살표의 위치를 저장할 int변수
     int[] selectedMonsterIndex;
     int listCount = 0;              //battleOrderList의 Lengh를 업데이트 할 때 사용
@@ -23,18 +24,13 @@ public class BattleManager
 
 
     //배틀 매니저 생성자
-    public BattleManager(Player player, int floor)
+    public BattleStage(Player player, int floor)
     {
-        //***
-        //추후 층 수를 기반으로 난이도 조절
         dungeonLevel = floor;
 
         monsterList = new List<Monster>();     //몬스터 리스트 초기화
-        int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
-        int backRand = random.Next(1, 3);       //1~2사이의 수 만큼 후열 랜덤 값 출력
-        monsterList = Monster.GetMonsterList(frontRand, backRand, dungeonLevel);   //값으로 나온 만큼 몬스터 생성
+        monsterList = Monster.GetMonsterList(dungeonLevel);   //값으로 나온 만큼 몬스터 생성
         this.player = player;
-        oldPlayerHP = player.HP;
 
         List<Character> allCharacterList = new List<Character>();
 
@@ -585,12 +581,12 @@ public class BattleManager
                 {
                     case ConsoleKey.UpArrow:    //위 화살표를 눌렀을 때
                         AudioManager.PlayMoveMenuSE(0);
-                        selectedMonsterIndex = Util.DownExtent(selectedMonsterIndex);
+                        selectedMonsterIndex = DownExtent(selectedMonsterIndex);
                         break;
 
                     case ConsoleKey.DownArrow:  //아래 화살표를 눌렀을 때
                         AudioManager.PlayMoveMenuSE(0);
-                        selectedMonsterIndex = Util.UpExtent(selectedMonsterIndex);
+                        selectedMonsterIndex = UpExtent(selectedMonsterIndex);
                         break;
 
                     case ConsoleKey.C:
@@ -607,10 +603,36 @@ public class BattleManager
                         break;
                 }
             }
-
         }
     }
 
+    //스킬 범위를 한 칸 밀어내는 메서드
+    private int[] UpExtent(int[] extentArray)
+    {
+        int[] result = extentArray;
+        int lastNum = extentArray.Last();
+
+        if (lastNum < 3)
+        {
+            result = extentArray.Select(x => x + 1).ToArray();
+        }
+
+        return result;
+    }
+
+    //스킬 범위를 한 칸 당기는 메서드
+    public static int[] DownExtent(int[] extentArray)
+    {
+        int[] result = extentArray;
+        int firstNum = extentArray.First();
+
+        if (firstNum > 0)
+        {
+            result = extentArray.Select(x => x - 1).ToArray();
+        }
+
+        return result;
+    }
 
     //플레이어가 소비 아이템 선택으로 들어갔을 때 출력할 택스트
     public void PlayerUseItemSelect()

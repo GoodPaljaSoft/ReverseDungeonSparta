@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.Formula.Functions;
+using ReverseDungeonSparta.Entiity;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Manager
 {
 
     public static class ViewManager3
@@ -84,7 +85,7 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText("");
             for (int i = 0; i < 14; i++)
             {
-                if(i == 1) AudioManager.StopBGM();
+                if (i == 1) AudioManager.StopBGM();
                 ViewManager.PrintText("▼");
                 Thread.Sleep(160);
             }
@@ -124,7 +125,7 @@ namespace ReverseDungeonSparta
             foreach (Character character in battleOrderList)
             {
                 Monster monster = character as Monster;
-                if ((monster != null && monster.IsDie == false) ||
+                if (monster != null && monster.IsDie == false ||
                     character is Player)
                 {
                     battleOrderListText.Append($"{character.Name} > ");
@@ -159,7 +160,7 @@ namespace ReverseDungeonSparta
         {
             string str = "";
             //번호/레벨/이름/HP(Dead)
-            str = ($"Lv.{monster.Level} {monster.Name}");
+            str = $"Lv.{monster.Level} {monster.Name}";
             return str;
         }
 
@@ -170,12 +171,12 @@ namespace ReverseDungeonSparta
 
             //죽은 몬스터가 있다면 사망 처리
             if (monster.IsDie)
-                str = (str + "Dead");
+                str = str + "Dead";
             else
-                str = (str + "HP:" + $"{monster.HP}/{monster.MaxHP}".PadRight(9) +
+                str = str + "HP:" + $"{monster.HP}/{monster.MaxHP}".PadRight(9) +
                     "MP:" + $"{monster.MP}/{monster.MaxMP}".PadRight(9) +
                     "ATK:" + $"{monster.Attack}".PadRight(4) +
-                    "DEF:" + $"{monster.Defence}".PadRight(4));
+                    "DEF:" + $"{monster.Defence}".PadRight(4);
             return str;
         }
 
@@ -360,15 +361,15 @@ namespace ReverseDungeonSparta
             player.NowEXP = 0;
             player.MaxEXP = (int)(player.MaxEXP * 1.2);
 
-            player.PlayerLevelUp(); 
-            
+            player.PlayerLevelUp();
+
 
 
             Console.Clear();
             PrintTitleTxt("상태보기");
             PrintPlayerStatus(player);
             ViewManager.PrintText(0, 29, "-> 다음");
-            ViewManager.PrintText(0, 10,"축하합니다!!!");
+            ViewManager.PrintText(0, 10, "축하합니다!!!");
             ViewManager.PrintText("레벨이 상승했습니다");
             ViewManager.PrintText("");
             ViewManager.PrintText($"경험치: [{beforeEXP}/{beforeMaxEXP}] -> [{player.NowEXP}/{player.MaxEXP}]");
@@ -382,7 +383,7 @@ namespace ReverseDungeonSparta
                 List<Skill> playerSkill = Skill.AddPlayerSkill(player, 1);
                 player.SkillList.AddRange(playerSkill);
                 ViewManager.PrintText("새로운 스킬을 배웠습니다!");
-                foreach(Skill skill in playerSkill)
+                foreach (Skill skill in playerSkill)
                 {
                     ViewManager.PrintText($"스킬 이름: {skill.Name}");
                     ViewManager.PrintText($"스킬 설명: {skill.Info}");
@@ -397,7 +398,7 @@ namespace ReverseDungeonSparta
             Util.CheckKeyInputEnter();
         }
 
-        
+
         //플레이어가 소비 아이템을 선택할 때 출력할 텍스트
         public static void PlayerSelectUseItemTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
@@ -409,7 +410,7 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText("[C]취소");
         }
 
-        
+
         //플레이어가 도망가기를 시도할 때 출력할 텍스트
         public static void PlayerEscapeDungeonTxt(Player player, List<Monster> monsters, List<Character> battleOrderList, int floor)
         {
@@ -434,7 +435,7 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText($"마나: {beforeStatus.mp} -> {player.MP}");
             ViewManager.PrintText($"");
             ViewManager.PrintText($"");
-            ViewManager.PrintText(0, 29,"-> 다음");
+            ViewManager.PrintText(0, 29, "-> 다음");
 
             Util.CheckKeyInputEnter();
         }
@@ -457,9 +458,9 @@ namespace ReverseDungeonSparta
                     {
                         string str = "";
                         if (i == selectedIndex)
-                            str = ($"-> {menuList[i].Item1}");
+                            str = $"-> {menuList[i].Item1}";
                         else
-                            str = ($"   {menuList[i].Item1}");
+                            str = $"   {menuList[i].Item1}";
                         Console.WriteLine(str);
                     }
                 }
@@ -471,9 +472,9 @@ namespace ReverseDungeonSparta
                     {
                         string str = "";
                         if (i == selectedIndex)
-                            str = ($"-> {menuList[i].Item1}");
+                            str = $"-> {menuList[i].Item1}";
                         else
-                            str = ($"   {menuList[i].Item1}");
+                            str = $"   {menuList[i].Item1}";
                         Console.WriteLine(str);
                     }
                     // 아래로 숨겨진 선택지 개수 표시
@@ -553,9 +554,9 @@ namespace ReverseDungeonSparta
                     {
                         string str = "";
                         if (i == selectedIndex)
-                            str = ($"-> {menuList[i].Item1}");
+                            str = $"-> {menuList[i].Item1}";
                         else
-                            str = ($"   {menuList[i].Item1}");
+                            str = $"   {menuList[i].Item1}";
                         Console.WriteLine(str);
                     }
                 }
@@ -567,9 +568,9 @@ namespace ReverseDungeonSparta
                     {
                         string str = "";
                         if (i == selectedIndex)
-                            str = ($"-> {menuList[i].Item1}");
+                            str = $"-> {menuList[i].Item1}";
                         else
-                            str = ($"   {menuList[i].Item1}");
+                            str = $"   {menuList[i].Item1}";
                         Console.WriteLine(str);
                     }
                     // 아래로 숨겨진 선택지 개수 표시
@@ -646,9 +647,9 @@ namespace ReverseDungeonSparta
                     {
                         string str = "";
                         if (i == selectedIndex)
-                            str = ($"-> {menuList[i].Item1}");
+                            str = $"-> {menuList[i].Item1}";
                         else
-                            str = ($"   {menuList[i].Item1}");
+                            str = $"   {menuList[i].Item1}";
                         Console.WriteLine(str);
                     }
                 }
@@ -660,9 +661,9 @@ namespace ReverseDungeonSparta
                     {
                         string str = "";
                         if (i == selectedIndex)
-                            str = ($"-> {menuList[i].Item1}");
+                            str = $"-> {menuList[i].Item1}";
                         else
-                            str = ($"   {menuList[i].Item1}");
+                            str = $"   {menuList[i].Item1}";
                         Console.WriteLine(str);
                     }
                     // 아래로 숨겨진 선택지 개수 표시

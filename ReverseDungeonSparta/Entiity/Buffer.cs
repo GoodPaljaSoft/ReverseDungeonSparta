@@ -1,13 +1,6 @@
-﻿using NPOI.Util;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ReverseDungeonSparta.Manager;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Entiity
 {
     public class Buffer
     {
@@ -58,7 +51,6 @@ namespace ReverseDungeonSparta
             }
         }
 
-
         //턴이 시작됐을 때 사용할 버프 메소드. 버프의 카운터가 0이라면 버프 종료
         public void TurnStartBuff()
         {
@@ -98,15 +90,13 @@ namespace ReverseDungeonSparta
             }
         }
 
-
         //버프를 추가하는 메소드
-        public void AddBuff(Character useCharacter,Skill skill)
+        public void AddBuff(Character useCharacter, Skill skill)
         {
             BuffType buffType = skill.BufferType;
             double value = skill.Value;
             int turnCount = skill.BufferTurn;
             Character character = (Character)this;
-
 
             //스킬을 사용한 캐릭터가 버프가 올라가는 본인일 경우 턴 카운터를 하나 올려서 적용함.
             if (useCharacter == (Character)this)
@@ -118,26 +108,29 @@ namespace ReverseDungeonSparta
             {
                 AttackBuff.Add((value, turnCount));
             }
+
             else if (buffType == BuffType.DefenceBuff)
             {
                 DefenceBuff.Add((value, turnCount));
             }
+
             else if (buffType == BuffType.HealingBuff)
             {
                 HealingBuff.Add(((int)value, turnCount));
                 character.CheckHealingList(true);
                 AudioManager.PlayHealingSE(200);
             }
+
             else if (buffType == BuffType.LuckBuff)
             {
                 LuckBuff.Add(((int)value, turnCount));
             }
+
             else if (buffType == BuffType.Intelligence)
             {
                 IntelligenceBuff.Add(((int)value, turnCount));
             }
         }
-
 
         //전투가 끝난 후 모든 버프를 해제하는 메서드
         public void ResetAllBuff()
@@ -147,7 +140,6 @@ namespace ReverseDungeonSparta
             LuckBuff = new List<(int, int)>();
             HealingBuff = new List<(int, int)>();
         }
-
 
         //버프의 수치만큼 값을 적용시키는 메서드
         public void ApplyBuffValue(ref double attack, ref double defence, ref double critical, ref double evasion, ref double HP)
@@ -185,7 +177,6 @@ namespace ReverseDungeonSparta
             }
         }
     }
-
 
     public enum BuffType
     {

@@ -1,8 +1,10 @@
 ﻿using NPOI.SS.Formula.Functions;
+using ReverseDungeonSparta.Manager;
 using System;
-using static ReverseDungeonSparta.EquipItem;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+using static ReverseDungeonSparta.Entiity.EquipItem;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Entiity
 {
     public enum JobType // 캐릭터 enum을 통해 직업 선택
     {
@@ -17,8 +19,6 @@ namespace ReverseDungeonSparta
         public JobType Job { get; set; }
         public int Level { get; set; }
         public int Gold { get; set; }
-        public int AdditionalAttack { get; set; }   // 장비 공격력
-        public int AdditionalDefence { get; set; }  // 장비 방어력
         public int MaxEXP { get; set; }
         public int NowEXP { get; set; }
 
@@ -45,9 +45,6 @@ namespace ReverseDungeonSparta
             Critical = 5;
             Evasion = 5;
 
-            //int additionalAttack = AdditionalAttack; //필요없다면 지우기
-            //int additionalDefence = AdditionalDefence;
-
             // 기본으로 주어지는 소비 아이템 추가
             AddInitialItems();
 
@@ -57,85 +54,44 @@ namespace ReverseDungeonSparta
                     break;
             }
         }
-        //테스트 코드
-        public void InitEquipItems()
+
+        public void EquipEquipItem(int itemIndex) //아이템 장착 로직 구현
         {
-            // EquipItem.allEquipItem 배열을 반복하여 equipItemList에 추가
-            foreach (var info in EquipItem.allEquipItem)
+            EquipItem item = equipItemList[itemIndex];
+
+            if (!item.IsEquiped) //아이템 장착되지 않았다면
             {
-                EquipItem equipItem = new EquipItem(info); // EquipItem 객체 생성
-                equipItemList.Add(equipItem); // 생성된 아이템을 리스트에 추가
-            }
-        }
-
-        public void EquipEquipItem(ref int itemIndex) //아이템 장착 로직 구현
-        {
-            if (itemIndex >= 0 && itemIndex < equipItemList.Count)
-            {
-                EquipItem item = equipItemList[itemIndex]; //테스트를 위한 equipItemList //실제isOwnedItemList
-                bool isEquipped = item.IsEquiped;
-
-
-
-                if (isEquipped == false) //아이템 장착되지 않았다면
+                foreach (var equippedItem in isEquippedList)
                 {
-                    bool isTypeEquipped = false; //같은 타입의 아이템을 장착했는지 확인하기 위함
-                    foreach (var equippedItem in isEquippedList)
-                    {
-                        if (equippedItem.Type == item.Type)
-                        {
-                            isTypeEquipped = true;  //이미 장착되어있으므로 패스
-                            break;
-                        }
-                    }
-
-
-                    if (!isTypeEquipped) //같은 타입의 아이템이 없으므로
-                    {
-                        item.IsEquiped = true;
-                        isEquippedList.Add(item);
-                        //int prevMaxHP = TotalMaxHP; //원래 있던 최대 체력을 MaxHP로
-                        HP = TotalMaxHP;
-                        //int prevMaxMP = MaxMP; //원래 있던 최대 마나을 MaxMP로
-                        MP = TotalMaxMP;
-                    }
-                    else
+                    if (equippedItem.Type == item.Type)
                     {
                         Console.WriteLine($"이미 {item.Type} 타입의 아이템이 장착되어 있습니다.");
+                        return;
                     }
                 }
-                else
-                {
-                    foreach (var equippedItem in isEquippedList) //장착해제
-                    {
-                        if (equippedItem == item) // 장착된 아이템을 찾으면
-                        {
-                            isEquippedList.Remove(equippedItem); // 장착아이템리스트에서 제거
-                            item.IsEquiped = false; // 장착 상태를 false로 변경
-                                                    // 장착해제시 체력 마나 
-
-                            //int prevMaxHP = TotalMaxHP; //원래 있던 최대 체력을 MaxHP로
-                            HP = TotalMaxHP;
-                            //int prevMaxMP = MaxMP; //원래 있던 최대 마나을 MaxMP로
-                            MP = TotalMaxMP;
-
-                            break;
-                        }
-                    }
-                }
+                item.IsEquiped = true;
+                isEquippedList.Add(item); 
             }
-            else
+
+            else //장착해제
             {
-                Console.WriteLine("소유한 아이템이 아닙니다.");
+                item.IsEquiped = false;  // 장착 상태를 false로 변경
+                isEquippedList.Remove(item); // 장착아이템리스트에서 제거
             }
-
+            HP = TotalMaxHP;
+            MP = TotalMaxMP;
+            //int prevMaxHP = TotalMaxHP; //원래 있던 최대 체력을 MaxHP로
+            //int prevMaxMP = MaxMP; //원래 있던 최대 마나을 MaxMP로
         }
+
         public static void ItemUpgrade(EquipItem main, EquipItem offering, List<EquipItem> equipItemList)
         {
             //조합하고자 선택한 두 아이템의 타입이 동일한가, 등급이 동일한가?
             if (main.Type == offering.Type && main.Grade == offering.Grade && main.Name != "" && main != offering)
             {
                 float upgradePercent = 0.0f; //업그레이드 퍼센트 변수 생성
+                Random random = new Random();
+                double randomValue = random.NextDouble();
                 switch (main.Grade) //item1의 매개변수를 받아서 타입별 아이템 강화확률을 설정
                 {
                     case EquipItemGrade.Normal:
@@ -151,27 +107,21 @@ namespace ReverseDungeonSparta
                         GameManager.Instance.UpgradeDeSelect();
                         return;
                 }
-                //업그레이드 확률을 랜덤으로 설정
-                Random random = new Random();
-                // 업그레이드퍼센트를 0 ~ 100퍼센트로 만들기 위한 NextDoulbe메서드 사용
-                double randomValue = random.NextDouble();
 
-                // 업그레이드 등급확률이 랜덤확률값보다 높을 떄 조합이 성공되도록
-                if (randomValue <= upgradePercent)
+                if (randomValue <= upgradePercent)// 업그레이드 등급확률이 랜덤확률값보다 높을 떄 조합이 성공되도록
                 {
-                    int itemCount = allEquipItem.Length;
-
+                    int itemCount = DataBase.EQUIPITEMINFO.Length;
                     int randomMax = itemCount / 3;
                     int randomIndex = random.Next(1, randomMax + 1);
                     EquipItem upgradeItem;
                     if (main.Grade == EquipItemGrade.Normal)
                     {
-                        upgradeItem = new EquipItem(allEquipItem[randomIndex * 3 - 2]);
+                        upgradeItem = new EquipItem(DataBase.EQUIPITEMINFO[randomIndex * 3 - 2]);
                         //allEquipItem의 인덱스 중에서 %3하면 1인걸 찾아와야 함
                     }
                     else
                     {
-                        upgradeItem = new EquipItem(allEquipItem[randomIndex * 3 - 1]);
+                        upgradeItem = new EquipItem(DataBase.EQUIPITEMINFO[randomIndex * 3 - 1]);
                         //allEquipItem의 인덱스 중에서 %3하면 2인걸 찾아와야 함
                     }
 
@@ -216,7 +166,7 @@ namespace ReverseDungeonSparta
             Random random = new Random();
 
             // 리스트안에 장비아이템정보를 입력
-            foreach (EquipItemInfo rewardItemInfo in allEquipItem)
+            foreach (EquipItemInfo rewardItemInfo in DataBase.EQUIPITEMINFO)
             {
                 rewardItemListInfo.Add(rewardItemInfo);
             }
@@ -232,7 +182,6 @@ namespace ReverseDungeonSparta
             return rewardItem;
         }
 
-
         //사용 아이템을 랜덤으로 반환하는 메서드
         public static UsableItem RandomRewardUseItem()
         {
@@ -242,7 +191,7 @@ namespace ReverseDungeonSparta
             Random random = new Random();
 
             // 리스트안에 장비아이템정보를 입력
-            foreach (UsableItemInfo rewardItemInfo in UsableItemInfo.allUsableItem)
+            foreach (UsableItemInfo rewardItemInfo in DataBase.USABLEITEMINFO)
             {
                 rewardItemListInfo.Add(rewardItemInfo);
             }
@@ -284,10 +233,10 @@ namespace ReverseDungeonSparta
             return rewardItemList;
         }
         // 소비 아이템 추가
-        public void AddItemToInventory(UsableItem item, int count)
+        public void AddItemToInventory(UsableItemInfo iteminfo, int count)
         {
             // 이미 해당 아이템이 존재하는 경우, 수량을 증가시킴
-            var existingItem = UsableItemInventory.FirstOrDefault(i => i.Name == item.Name);
+            var existingItem = UsableItemInventory.FirstOrDefault(i => i.Name == iteminfo.name);
             if (existingItem != null)
             {
                 existingItem.Count += count;
@@ -295,8 +244,7 @@ namespace ReverseDungeonSparta
             else
             {
                 // 새로운 아이템인 경우, 인벤토리에 추가
-                item.Count = count;
-                UsableItemInventory.Add(item);
+                UsableItemInventory.Add(new UsableItem(iteminfo, count));
             }
         }
         /*
@@ -308,20 +256,10 @@ namespace ReverseDungeonSparta
         // 기본으로 주어지는 소비 아이템 추가
         private void AddInitialItems()
         {
-            UsableItem LowHpPotion = new UsableItem(UsableItemInfo.allUsableItem[0]); // 하급 체력 회복 포션
-            UsableItem MidHpPotion = new UsableItem(UsableItemInfo.allUsableItem[1]); // 중급 체력 회복 포션
-            UsableItem HighHpPotion = new UsableItem(UsableItemInfo.allUsableItem[2]); // 상급 체력 회복 포션
-            UsableItem LowMpPotion = new UsableItem(UsableItemInfo.allUsableItem[3]); // 하급 마나 회복 포션
-            UsableItem MidMpPotion = new UsableItem(UsableItemInfo.allUsableItem[4]); // 중급 마나 회복 포션
-            UsableItem HighMpPotion = new UsableItem(UsableItemInfo.allUsableItem[5]); // 상급 마나 회복 포션
-
-            //// 인벤토리에 추가 
-            AddItemToInventory(LowHpPotion, 5);
-            AddItemToInventory(MidHpPotion, 5);
-            AddItemToInventory(HighHpPotion, 5);
-            AddItemToInventory(LowMpPotion, 5);
-            AddItemToInventory(MidMpPotion, 5);
-            AddItemToInventory(HighMpPotion, 5);
+            for (int i = 0; i < DataBase.USABLEITEMINFO.Length; i++)
+            {
+                AddItemToInventory(DataBase.USABLEITEMINFO[i], 5);
+            }
         }
 
 

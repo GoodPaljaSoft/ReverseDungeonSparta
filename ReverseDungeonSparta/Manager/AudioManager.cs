@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using NAudio.Wave;
 using NPOI.OpenXmlFormats.Wordprocessing;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Manager
 {
-    internal static class AudioManager
+    public sealed class AudioManager : Manager<AudioManager>
     {
         static IWavePlayer bgmPlayer;
         static AudioFileReader bgmReader;
@@ -218,7 +218,7 @@ namespace ReverseDungeonSparta
             isBGM_Player = false;
             while (true)
             {
-                if(isPlayerDie == true)
+                if (isPlayerDie == true)
                 {
                     StopPlayerAndReader(bgmPlayer, bgmReader);
                     isPlayerDie = false;

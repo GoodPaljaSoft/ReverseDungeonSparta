@@ -2,9 +2,10 @@
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using ReverseDungeonSparta.Entiity;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Manager
 {
 
 
@@ -206,7 +207,7 @@ namespace ReverseDungeonSparta
 
 
 
-  
+
         public static void PrintLongTextAnimation(string text)
         {
             string[] str = null;
@@ -218,7 +219,7 @@ namespace ReverseDungeonSparta
             foreach (string key in colorKeyword)
             {
                 //만약 있다면 %을 기준으로 텍스트를 나눠준다
-                if(text.Contains(key))
+                if (text.Contains(key))
                 {
                     str = text.Split('%');
                 }
@@ -247,7 +248,7 @@ namespace ReverseDungeonSparta
 
         public static void PrintLongTextAnimation(List<string> textList)
         {
-            foreach(string str in textList)
+            foreach (string str in textList)
             {
                 PrintLongTextAnimation(str);
                 Thread.Sleep(1000);

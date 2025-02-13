@@ -1,8 +1,9 @@
 ﻿using System.Numerics;
 using System.Threading;
+using ReverseDungeonSparta.Manager;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Entiity
 {
     public class Character : Buffer
     {
@@ -69,7 +70,7 @@ namespace ReverseDungeonSparta
                 }
 
 
-                return (int)(valueLuk + Luck);
+                return valueLuk + Luck;
             }
             private set { }
         }//최종 지능
@@ -150,8 +151,8 @@ namespace ReverseDungeonSparta
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 치명타 확률
                 double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
-                if (Critical + (value / 2) > 50) return 50;
-                else return (int)(Critical + (value / 2));
+                if (Critical + value / 2 > 50) return 50;
+                else return (int)(Critical + value / 2);
             }
             private set { }
         }//최종 치명타 확률
@@ -162,8 +163,8 @@ namespace ReverseDungeonSparta
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 회피 확률
                 double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
-                if (Evasion + (value / 2) > 50) return 50;
-                else return (int)(Evasion + (value / 2));
+                if (Evasion + value / 2 > 50) return 50;
+                else return (int)(Evasion + value / 2);
             }
             private set { }
         }//최종 회피율
@@ -212,9 +213,7 @@ namespace ReverseDungeonSparta
             margin = Math.Ceiling(margin);
             int damage = 0;
 
-
             damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
-
 
             if (skill != null && skill.Type == SkillType.Magic)
             {
@@ -227,40 +226,36 @@ namespace ReverseDungeonSparta
                 AudioManager.PlayAttackClubSE(400);
             }
 
-
             SkillType skillType = SkillType.Physical;
-
 
             ViewManager.PrintText("");
 
             if (skill != null)
             {
                 skillType = skill.Type;
-                ViewManager.PrintText($"{this.Name}의 스킬 사용!");
+                ViewManager.PrintText($"{Name}의 스킬 사용!");
                 MP -= skill.ConsumptionMP;
                 foreach (Character onTarget in targets)
                 {
-                    string pullName = this.Name == onTarget.Name ? "자신" : $"{onTarget.Name}";
-                    ViewManager.PrintText($"{this.Name}은(는) {onTarget.Name}에게 {skill.Name}을(를) 사용했다!");
+                    string pullName = Name == onTarget.Name ? "자신" : $"{onTarget.Name}";
+                    ViewManager.PrintText($"{Name}은(는) {onTarget.Name}에게 {skill.Name}을(를) 사용했다!");
                 }
             }
             else
             {
-                ViewManager.PrintText($"{this.Name}의 공격!");
+                ViewManager.PrintText($"{Name}의 공격!");
                 foreach (Character onTarget in targets)
                 {
-                    ViewManager.PrintText($"{this.Name}은(는) {onTarget.Name}에게 공격을 시도했다!");
+                    ViewManager.PrintText($"{Name}은(는) {onTarget.Name}에게 공격을 시도했다!");
                 }
             }
-
-
 
             Util.CheckKeyInputEnter();
 
             List<int> criticalDamageList = new List<int>();
             foreach (Character onTarget in targets)
             {
-                onTarget.OnDamage1(this, damage ,out int criticalDamage, skill);
+                onTarget.OnDamage1(this, damage, out int criticalDamage, skill);
                 criticalDamageList.Add(criticalDamage);
             }
 
@@ -276,7 +271,6 @@ namespace ReverseDungeonSparta
             GameManager.Instance.BattleManagerInstance.CheckPlayerWin();
         }
 
-
         // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드1
         public void OnDamage1(Character target, int damage, out int criticalDamage, Skill skill)
         {
@@ -286,23 +280,23 @@ namespace ReverseDungeonSparta
 
             if (skill != null && skill.ApplyType == ApplyType.Team)
             {
-                int beforeHP = this.HP;
-                int beforeMP = this.MP;
-                int beforeATK = this.TotalAttack;
-                int beforeDEF = this.TotalDefence;
-                int beforeCritical = this.TotalCritical;
-                int beforeEvasion = this.Evasion;
+                int beforeHP = HP;
+                int beforeMP = MP;
+                int beforeATK = TotalAttack;
+                int beforeDEF = TotalDefence;
+                int beforeCritical = TotalCritical;
+                int beforeEvasion = Evasion;
 
                 AddBuff(target, skill);
                 AudioManager.PlayHealingSE(200);
-                ViewManager.PrintText($"{this.Name}의 스테이터스 변화");
+                ViewManager.PrintText($"{Name}의 스테이터스 변화");
                 ViewManager.PrintText($"");
-                ViewManager.PrintText($"체  력: {beforeHP} -> {this.HP}");
-                ViewManager.PrintText($"마  나: {beforeMP} -> {this.MP}");
-                ViewManager.PrintText($"공격력: {beforeATK} -> {this.TotalAttack}");
-                ViewManager.PrintText($"방어력: {beforeDEF} -> {this.TotalDefence}");
-                ViewManager.PrintText($"치명타: {beforeCritical}% -> {this.TotalCritical}%");
-                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {this.TotalEvasion}%");
+                ViewManager.PrintText($"체  력: {beforeHP} -> {HP}");
+                ViewManager.PrintText($"마  나: {beforeMP} -> {MP}");
+                ViewManager.PrintText($"공격력: {beforeATK} -> {TotalAttack}");
+                ViewManager.PrintText($"방어력: {beforeDEF} -> {TotalDefence}");
+                ViewManager.PrintText($"치명타: {beforeCritical}% -> {TotalCritical}%");
+                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {TotalEvasion}%");
                 ViewManager.PrintText($"");
             }
             else
@@ -310,7 +304,7 @@ namespace ReverseDungeonSparta
                 //치명타가 발생한 경우
                 if (ComputeManager.TryChance(target.TotalCritical))
                 {
-                    ViewManager.PrintText($"{this.Name}에게 치명적인 일격!!!");
+                    ViewManager.PrintText($"{Name}에게 치명적인 일격!!!");
                     AudioManager.PlayAttackSlashSE(400);
                     Util.CheckKeyInputEnter();
                     criticalDamage = damage * 2;
@@ -321,7 +315,6 @@ namespace ReverseDungeonSparta
                 }
             }
         }
-
 
         // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드2
         public void OnDamage2(Character target, int damage, Skill skill)
@@ -344,8 +337,8 @@ namespace ReverseDungeonSparta
 
             if (this is Monster && HP == 0)
             {
-                ViewManager.PrintText($"{this.Name}에게 아무 일도 일어나지 않았다.");
-                ViewManager.PrintText($"{this.Name}은(는) 이미 쓰러져있었다.");
+                ViewManager.PrintText($"{Name}에게 아무 일도 일어나지 않았다.");
+                ViewManager.PrintText($"{Name}은(는) 이미 쓰러져있었다.");
             }
             else if (applyType == ApplyType.Enemy)
             {
@@ -374,7 +367,7 @@ namespace ReverseDungeonSparta
 
                     if (HP == 0)
                     {
-                        ViewManager.PrintText($"{this.Name}은(는) 쓰러졌습니다.");
+                        ViewManager.PrintText($"{Name}은(는) 쓰러졌습니다.");
                     }
                 }
 
@@ -383,14 +376,12 @@ namespace ReverseDungeonSparta
             ViewManager.PrintText(0, cursorY, "");
         }
 
-
         //캐릭터클래스를 플레이어로 바꿔주는 메서드
         public Player GetPlayer()
         {
             if (this is Player) return (Player)this;
             return null;
         }
-
 
         //캐릭터클래스를 몬스터로 바꿔주는 메서드
         public Monster GetMonster()
@@ -399,18 +390,17 @@ namespace ReverseDungeonSparta
             return null;
         }
 
-
         //턴 시작 시 선언되어 회복 리스트의 요소가 있는지 확인하고 힐을 실행하는 메서드
         public void CheckHealingList(bool useNow)
         {
-            if(HealingBuff.Count > 0)
+            if (HealingBuff.Count > 0)
             {
                 foreach (var heal in HealingBuff)
                 {
                     int beforeHP = HP;
 
                     HP += heal.Item1;
-                    if(useNow == false)
+                    if (useNow == false)
                     {
                         Console.WriteLine($"{Name}은(는) {heal.Item1}의 체력을 회복했다!");
                         Console.WriteLine($"체력 : {beforeHP}/{TotalMaxHP} -> {HP}/{TotalMaxHP}");

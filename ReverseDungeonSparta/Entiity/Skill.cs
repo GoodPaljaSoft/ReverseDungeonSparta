@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Monster;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Entiity
 {
     public class Skill
     {
@@ -77,18 +77,18 @@ namespace ReverseDungeonSparta
                 monster.Type == MonsterType.Rouge ||
                 monster.Type == MonsterType.Acher)
             {
-                skillList = AddSkillListInstance(PhysicalSkill);
+                skillList = AddSkillListInstance(DataBase.PHYSICALSKILLINFO);
             }
             else if (monster.Type == MonsterType.Magician)
             {
-                skillList = AddSkillListInstance(MagicSkill);
+                skillList = AddSkillListInstance(DataBase.MAGICALSKILLINFO);
             }
             else if (monster.Type == MonsterType.Healer)
             {
-                skillList = AddSkillListInstance(HealingSkill);
+                skillList = AddSkillListInstance(DataBase.HEALINGSKILLINFO);
             }
 
-            if(num > skillList.Count) { num = skillList.Count; }
+            if (num > skillList.Count) { num = skillList.Count; }
 
             skillList = skillList.Take(num).ToList();
 
@@ -99,10 +99,10 @@ namespace ReverseDungeonSparta
         //플레이어의 스킬을 만들 때 사용할 메서드
         public static List<Skill> AddPlayerSkill(Player player, int num)
         {
-            List<Skill> skillList = AddSkillListInstance(HealingSkill);
-            skillList.AddRange(AddSkillListInstance(PhysicalSkill));
-            skillList.AddRange(AddSkillListInstance(MagicSkill));
-            skillList.AddRange(AddSkillListInstance(HealingSkill));
+            List<Skill> skillList = AddSkillListInstance(DataBase.HEALINGSKILLINFO);
+            skillList.AddRange(AddSkillListInstance(DataBase.PHYSICALSKILLINFO));
+            skillList.AddRange(AddSkillListInstance(DataBase.MAGICALSKILLINFO));
+            skillList.AddRange(AddSkillListInstance(DataBase.HEALINGSKILLINFO));
 
             skillList = Util.ShuffleList(skillList);
 
@@ -120,42 +120,7 @@ namespace ReverseDungeonSparta
             return skillList;
         }
 
-        //물리 스킬을 저장해두는 스킬 정보 배열
-        public static SkillInfo[] PhysicalSkill = new SkillInfo[]
-        {
-        new SkillInfo("강타", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Physical, 5, BuffType.None, 0, "상대방을 강하게 때려 1.5배의 피해를 입힙니다."),
-        new SkillInfo("휘두르기", 1.0d, ExtentEnum.FirstAndThird, ApplyType.Enemy, SkillType.Physical, 8, BuffType.None, 0, "무기를 휘둘러 최대 2명에게 1배의 피해를 입힙니다."),
-        new SkillInfo("회전 베기", 0.7d, ExtentEnum.Fourth, ApplyType.Enemy, SkillType.Physical, 10, BuffType.None, 0, "한 바퀴 회전하며 모든 적들에게 0.7배의 피해를 입힙니다.")
-        };
 
-
-        //마법 스킬을 저장해두는 스킬 정보 배열
-        public static SkillInfo[] MagicSkill = new SkillInfo[]
-        {
-        new SkillInfo("파이어 볼", 1.5d, ExtentEnum.First, ApplyType.Enemy, SkillType.Magic, 8, BuffType.None, 0, "작은 불덩이를 쏘아 적에게 1.5배의 피해를 입힙니다."),
-        new SkillInfo("메테오", 2.0d, ExtentEnum.First, ApplyType.Enemy, SkillType.Magic, 15, BuffType.None, 0, "큰 불덩이를 쏘아 적에게 2배의 피해를 입힙니다."),
-        new SkillInfo("파이어 월", 0.7d, ExtentEnum.Third, ApplyType.Enemy, SkillType.Magic, 7, BuffType.None, 0, "불의 벽을 만들어 상대방에서 0.7배의 피해를 입힙니다."),
-        new SkillInfo("화염 분출", 1.2d, ExtentEnum.Second, ApplyType.Enemy, SkillType.Magic, 10, BuffType.None, 0, "바닥에서 화염을 분출시켜 적 2명에게 1.2배의 피해를 입힙니다."),
-        new SkillInfo("지옥불 폭발", 1.4d, ExtentEnum.FirstAndFourth, ApplyType.Enemy, SkillType.Magic, 12, BuffType.None, 0, "큰 폭발을 만들어 적 2명에게 1.4배의 피해를 입힙니다.")
-        };
-
-
-        //버프 스킬을 저장해두는 스킬 정보 배열
-        public static SkillInfo[] BufferSkill = new SkillInfo[]
-        {
-        new SkillInfo("공격력 강화", 1.3d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8,BuffType.AttackBuff, 2, "정신을 집중해서 2턴 동안 공격력을 1.3배 올립니다."),
-        new SkillInfo("방어력 강화", 1.3d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.DefenceBuff, 2, "정신을 집중해서 2턴 동안 방어력을 1.3배 올립니다."),
-        new SkillInfo("행운 강화", 1.3d, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.LuckBuff, 2, "정신을 집중해서 2턴 동안 행운을 1.3배 올립니다.")
-        };
-
-
-        //힐 스킬을 저장해두는 스킬 정보 배열
-        public static SkillInfo[] HealingSkill = new SkillInfo[]
-        {
-        new SkillInfo("힐링", 35, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 1, "정신을 집중해서 체력을 35 회복합니다."),
-        new SkillInfo("퓨어 힐", 50, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 8, BuffType.HealingBuff, 1, "정신을 집중해서 체력을 50 회복합니다."),
-        new SkillInfo("지속 힐", 15, ExtentEnum.First, ApplyType.Team, SkillType.Buffer, 5, BuffType.HealingBuff, 3, "정신을 집중해서 3턴 동안 체력을 15씩 회복합니다.")
-        };
     }
 
     //스킬 범위를 enum으로 저장
@@ -175,10 +140,10 @@ namespace ReverseDungeonSparta
     {
         Physical,
         Magic,
-        Buffer
+        Buff
     };
 
-    
+
     //스킬의 적용 상대를 저장
     public enum ApplyType : byte
     {
@@ -200,18 +165,18 @@ namespace ReverseDungeonSparta
         public SkillType type;
         public BuffType buffType;
 
-        public SkillInfo(string _name, double _value, ExtentEnum _extent, ApplyType _applyType,SkillType _type, 
-                        int _consumptionMP, BuffType _buffType,int _bufferTurn, string _info)
+        public SkillInfo(string _name, double _value, ExtentEnum _extent, ApplyType _applyType, SkillType _type,
+                        int _consumptionMP, BuffType _buffType, int _bufferTurn, string _info)
         {
-            this.name = _name;
-            this.value = _value;
-            this.extent = _extent;
-            this.applyType = _applyType;
-            this.type = _type;
-            this.consumptionMP = _consumptionMP;
-            this.buffType = _buffType;
-            this.bufferTurn = _bufferTurn;
-            this.info = _info;
+            name = _name;
+            value = _value;
+            extent = _extent;
+            applyType = _applyType;
+            type = _type;
+            consumptionMP = _consumptionMP;
+            buffType = _buffType;
+            bufferTurn = _bufferTurn;
+            info = _info;
         }
     }
 

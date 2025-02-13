@@ -1,4 +1,5 @@
 ﻿using ReverseDungeonSparta;
+using ReverseDungeonSparta.Entiity;
 using System;
 using System.Security.Cryptography.X509Certificates;
 
@@ -132,7 +133,7 @@ public class Monster : Character
             //해당 캐릭터의 데미지에서 지능에 기반하여 타격
             //상대방의 방어력을 무시하고 타격
         }
-        else if(skill.Type == SkillType.Buffer)
+        else if(skill.Type == SkillType.Buff)
         {
             //해당 캐릭터의 지능에 영향을 받아 계산함.
             //적용 대상을 상대방에서 아군으로 바꾸는 로직 필요
@@ -150,17 +151,19 @@ public class Monster : Character
 
 
     //랜덤으로 반환된 몬스터를 몬스터리스트에 정리해서 반환
-    public static List<Monster> GetMonsterList(int frontCount, int backCount, int dungeonLevel)
+    public static List<Monster> GetMonsterList(int dungeonLevel)
     {
-
+        Random random = new Random();
+        int frontRand = random.Next(1, 3);       //1~2사이의 수 만큼 전열 랜덤 값 출력
+        int backRand = random.Next(1, 3);
         List<Monster> monsterList = new List<Monster>();
 
-        for (int i = 0; i < frontCount; i++)
+        for (int i = 0; i < frontRand; i++)
         {
             monsterList.Add(InstanceFrontMonster(dungeonLevel));
         }
 
-        for (int i = 0; i < backCount; i++)
+        for (int i = 0; i < backRand; i++)
         {
             monsterList.Add(InstanceBackMonster(dungeonLevel));
         }

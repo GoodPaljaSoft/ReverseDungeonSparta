@@ -4,10 +4,11 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using static ReverseDungeonSparta.ViewManager;
-using static ReverseDungeonSparta.ViewManager3;
+using ReverseDungeonSparta.Entiity;
+using static ReverseDungeonSparta.Manager.ViewManager;
+using static ReverseDungeonSparta.Manager.ViewManager3;
 
-namespace ReverseDungeonSparta
+namespace ReverseDungeonSparta.Manager
 {
     public static class InventoryViewManager
     {
@@ -16,10 +17,10 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인");
-            ViewManager.PrintText(0, 26, "   장비 장착");
-            ViewManager.PrintText("   장비 합성");
-            ViewManager.PrintText("   아이템 사용");
-            ViewManager.PrintText("[C]나가기");
+            PrintText(0, 26, "   장비 장착");
+            PrintText("   장비 합성");
+            PrintText("   아이템 사용");
+            PrintText("[C]나가기");
         }
 
 
@@ -28,9 +29,9 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인 - 장비");
-            ViewManager.PrintText(0, 27, "   장비 장착");
-            ViewManager.PrintText("   장비 합성");
-            ViewManager.PrintText("[C]나가기");
+            PrintText(0, 27, "   장비 장착");
+            PrintText("   장비 합성");
+            PrintText("[C]나가기");
         }
 
 
@@ -39,7 +40,7 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인 - 장비");
-            ViewManager.PrintText(0, 29, "[C]나가기");
+            PrintText(0, 29, "[C]나가기");
         }
 
 
@@ -48,11 +49,11 @@ namespace ReverseDungeonSparta
         {
             Console.Clear();
             PrintTitleTxt("소지품 확인 - 소비 아이템 사용");
-            ViewManager3.PrintPlayerStatus(player);
-            ViewManager.PrintText(0, 26, "[Enter]아이템 사용");
-            ViewManager.PrintText("");
-            ViewManager.PrintText("");
-            ViewManager.PrintText("[C]나가기");
+            PrintPlayerStatus(player);
+            PrintText(0, 26, "[Enter]아이템 사용");
+            PrintText("");
+            PrintText("");
+            PrintText("[C]나가기");
         }
 
 
@@ -66,22 +67,22 @@ namespace ReverseDungeonSparta
             bool isEquipped = equipItem.IsEquiped;
             StringBuilder sb = new StringBuilder();
             sb.Append(isEquipped ? " [E] ".PadRight(5) : " [-] ".PadRight(5));
-            sb.Append(Util.SortPadRight(equipItem.Name, 24));
-            sb.Append(Util.SortPadRight($"| {TranslateString(equipItem.Type.ToString())} ", 8 ));
-            for(int i = 0; i<optionArray.Length; i++)
+            sb.Append(equipItem.Name.SortPadRight(24));
+            sb.Append($"| {TranslateString(equipItem.Type.ToString())} ".SortPadRight(8));
+            for (int i = 0; i < optionArray.Length; i++)
             {
 
                 if (optionArray[i] != 0)
                 {
-                    sb.Append(Util.SortPadRight($"| {TranslateString(nameArray[i])} +{optionArray[i]} ",13 ));
-                    sb.Append(Util.SortPadRight($"|", 2));
+                    sb.Append($"| {TranslateString(nameArray[i])} +{optionArray[i]} ".SortPadRight(13));
+                    sb.Append($"|".SortPadRight(2));
                     if (count == 0)
                     {
                         sb.Append($"{equipItem.Information}\n");
-                        sb.Append(Util.SortPadRight($"", 41));
+                        sb.Append($"".SortPadRight(41));
                     }
                     count++;
-                } 
+                }
             }
             return sb.ToString();
         }
@@ -93,19 +94,19 @@ namespace ReverseDungeonSparta
             bool isSelected = equipItem.IsSelected;
             StringBuilder sb = new StringBuilder();
             sb.Append(isSelected ? " [V] ".PadRight(5) : " [-] ".PadRight(5));
-            sb.Append(Util.SortPadRight(equipItem.Name, 24));
-            sb.Append(Util.SortPadRight($"| {TranslateString(equipItem.Type.ToString())} ", 8));
+            sb.Append(equipItem.Name.SortPadRight(24));
+            sb.Append($"| {TranslateString(equipItem.Type.ToString())} ".SortPadRight(8));
             for (int i = 0; i < optionArray.Length; i++)
             {
 
                 if (optionArray[i] != 0)
                 {
-                    sb.Append(Util.SortPadRight($"| {TranslateString(nameArray[i])} +{optionArray[i]} ", 13));
-                    sb.Append(Util.SortPadRight($"|", 2));
+                    sb.Append($"| {TranslateString(nameArray[i])} +{optionArray[i]} ".SortPadRight(13));
+                    sb.Append($"|".SortPadRight(2));
                     if (count == 0)
                     {
                         sb.Append($"{equipItem.Information}\n");
-                        sb.Append(Util.SortPadRight($"", 41));
+                        sb.Append($"".SortPadRight(41));
                     }
                     count++;
                 }
@@ -162,6 +163,6 @@ namespace ReverseDungeonSparta
             return sb.ToString();
         }
     }
-    
+
 
 }
