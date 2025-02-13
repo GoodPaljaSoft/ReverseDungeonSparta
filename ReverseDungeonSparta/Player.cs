@@ -28,7 +28,7 @@ namespace ReverseDungeonSparta
             Name = "스파르타";
             Level = 1;
 
-            SkillList = Skill.AddPlayerSkill(this, 1);
+            SkillList = Skill.AddPlayerSkill(this, 10);
 
             Luck = 5;
             Defence = 3;
@@ -40,7 +40,7 @@ namespace ReverseDungeonSparta
             MaxMP = 50;
             MP = MaxMP;
             MaxEXP = 10;
-            Speed = 50;
+            Speed = 10;
 
             Critical = 5;
             Evasion = 5;
