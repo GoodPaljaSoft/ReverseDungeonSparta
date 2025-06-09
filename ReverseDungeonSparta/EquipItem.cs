@@ -1,6 +1,4 @@
-﻿
-
-namespace ReverseDungeonSparta
+﻿namespace ReverseDungeonSparta
 {
     public enum EquipItemGrade
     {

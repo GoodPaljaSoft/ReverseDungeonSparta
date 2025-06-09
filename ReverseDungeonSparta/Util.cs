@@ -1,7 +1,4 @@
-﻿using System.Numerics;
-using System.Runtime.InteropServices;
-
-namespace ReverseDungeonSparta
+﻿namespace ReverseDungeonSparta
 {
 
     static internal class Util

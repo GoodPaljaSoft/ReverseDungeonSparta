@@ -1,5 +1,4 @@
-﻿using System;
-using static ReverseDungeonSparta.EquipItem;
+﻿using static ReverseDungeonSparta.EquipItem;
 
 namespace ReverseDungeonSparta
 {

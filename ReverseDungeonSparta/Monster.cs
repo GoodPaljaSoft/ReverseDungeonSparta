@@ -1,6 +1,4 @@
 ﻿using ReverseDungeonSparta;
-using System;
-using System.Security.Cryptography.X509Certificates;
 
 public class Monster : Character
 {
@@ -28,7 +26,8 @@ public class Monster : Character
         Critical = 5;
         Evasion = 5;
 
-        IsDie = false;          //몬스터 죽음 상태 false 고정
+        IsDie = false;          
+        //몬스터 죽음 상태 false 고정
         //SkillList = Skill.AddMonsterSkill(this, 3);//*** 스킬 갯수 추후에 난이도 조절에 조정 필요
     }
 

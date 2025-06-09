@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace ReverseDungeonSparta
+﻿namespace ReverseDungeonSparta
 {
 
     class GameManager
@@ -62,9 +50,6 @@ namespace ReverseDungeonSparta
 
             //애니메이션 텍스트 메서드 테스트
             IntroScene();
-            EndingChoice();
-            Ending1();
-            Ending2();
         }
 
 
@@ -72,7 +57,6 @@ namespace ReverseDungeonSparta
         {
             ViewManager3.PlayerStatusTxt(player, ref selectedIndex);
             GameMenu();
-
         }
 
 

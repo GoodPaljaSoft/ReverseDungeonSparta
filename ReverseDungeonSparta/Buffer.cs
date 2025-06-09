@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReverseDungeonSparta
+﻿namespace ReverseDungeonSparta
 {
     public class Buffer
     {
         //double은 배수 수치, int는 유지되는 턴을 가진다.
-        public List<(double, int)> AttackBuff { get; set; } = new List<(double, int)>();
-        public List<(double, int)> DefenceBuff { get; set; } = new List<(double, int)>();
-        public List<(int, int)> LuckBuff { get; set; } = new List<(int, int)>();
-        public List<(double, int)> HealingBuff { get; set; } = new List<(double, int)>();
-        public List<(int, int)> IntelligenceBuff { get; set; } = new List<(int, int)>();
+        public List<(double, int)>  AttackBuff          { get; set; } = new();
+        public List<(double, int)>  DefenceBuff         { get; set; } = new();
+        public List<(int, int)>     LuckBuff            { get; set; } = new();
+        public List<(double, int)>  HealingBuff         { get; set; } = new();
+        public List<(int, int)>     IntelligenceBuff    { get; set; } = new();
 
 
         //턴을 끝낸 후 사용할 버프 메소드. 버프의 카운터를 1개씩 내림

@@ -1,14 +1,7 @@
-﻿
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+﻿using System.Text;
 
 namespace ReverseDungeonSparta
 {
-
-
-
     static class ViewManager
     {
         //colorWord: 컬러 출력을 하고 싶은 단어를 키워드로 저장한 딕셔너리 (값은 컬러)

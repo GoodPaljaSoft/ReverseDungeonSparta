@@ -1,12 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+﻿using System.Text;
 
 namespace ReverseDungeonSparta
 {
-
     public static class ViewManager2
     {
         private static StringBuilder previousScreen = new StringBuilder();

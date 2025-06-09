@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static ReverseDungeonSparta.ViewManager;
+﻿using System.Text;
 using static ReverseDungeonSparta.ViewManager3;
 
 namespace ReverseDungeonSparta

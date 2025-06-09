@@ -1,8 +1,4 @@
-﻿using System.Numerics;
-using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace ReverseDungeonSparta
+﻿namespace ReverseDungeonSparta
 {
     public class Character : Buffer
     {
@@ -67,8 +63,6 @@ namespace ReverseDungeonSparta
                         valueLuk += equipItem.AddLuck;
                     }
                 }
-
-
                 return (int)(valueLuk + Luck);
             }
             private set { }

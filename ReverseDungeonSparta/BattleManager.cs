@@ -1,7 +1,4 @@
 ﻿using ReverseDungeonSparta;
-using System.Text;
-using System.Threading;
-using System.Transactions;
 
 
 public class BattleManager
