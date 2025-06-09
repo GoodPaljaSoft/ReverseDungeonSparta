@@ -82,12 +82,9 @@
 
                 if (HealingBuff.Count > 0)
                 {
-                    //본인 차례가 됐을 때 힐링 관련 버프가 남아있다면 해당 수치만큼 회복
                     Character character = this as Character;
-                    foreach (var x in HealingBuff)
-                    {
-                        character.HP += (int)x.Item1;
-                    }
+                    AudioManager.PlayHealingSE(200);
+                    character.CheckHealingList(false);
                 }
             }
         }
@@ -118,7 +115,9 @@
             }
             else if (buffType == BuffType.HealingBuff)
             {
-                HealingBuff.Add((value, turnCount));
+                HealingBuff.Add(((int)value, turnCount));
+                character.CheckHealingList(true);
+                AudioManager.PlayHealingSE(200);
             }
             else if (buffType == BuffType.LuckBuff)
             {
@@ -137,7 +136,7 @@
             AttackBuff = new List<(double, int)>();
             DefenceBuff = new List<(double, int)>();
             LuckBuff = new List<(int, int)>();
-            HealingBuff = new List<(double, int)>();
+            HealingBuff = new List<(int, int)>();
         }
 
 

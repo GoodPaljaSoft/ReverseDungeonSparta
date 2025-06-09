@@ -113,6 +113,7 @@ namespace ReverseDungeonSparta
                         return;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         isBreak = true;
                         return;
                 }
@@ -204,6 +205,7 @@ namespace ReverseDungeonSparta
                         return;
 
                     case ConsoleKey.C:
+                        AudioManager.PlayMoveMenuSE(0);
                         isBreak = true;
                         selectedIndex = 0;
                         return;

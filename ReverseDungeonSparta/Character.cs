@@ -144,8 +144,8 @@
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 치명타 확률
                 double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
-                if (Critical * (value / 2) > 50) return 50;
-                else return (int)(Critical * (value / 2));
+                if (Critical + (value / 2) > 50) return 50;
+                else return (int)(Critical + (value / 2));
             }
             private set { }
         }//최종 치명타 확률
@@ -156,8 +156,8 @@
                 //기본 값은 Luck 수치, 모든 Luck 관련 버프를 더한 후 나온 Luck / 2가 최종 회피 확률
                 double value = TotalLuck;
                 if (LuckBuff.Count > 0) value += LuckBuff.Select(x => x.Item1).Sum();
-                if (Evasion * (value / 2) > 50) return 50;
-                else return (int)(Evasion * (value / 2));
+                if (Evasion + (value / 2) > 50) return 50;
+                else return (int)(Evasion + (value / 2));
             }
             private set { }
         }//최종 회피율
@@ -168,7 +168,6 @@
             set
             {
                 _hp = value;
-
                 if (_hp <= 0)
                 {
                     _hp = 0;
@@ -200,11 +199,28 @@
         //해당 클래스의 객체가 타겟을 때렸을 때 사용하는 메서드
         public virtual void Attacking(List<Character> targets, Skill skill)
         {
+            ViewManager.PrintText(0, 12, "");
+
             //데미지 계산식
             double margin = TotalAttack * 0.1f;
             margin = Math.Ceiling(margin);
+            int damage = 0;
 
-            int damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
+
+            damage = new Random().Next(TotalAttack - (int)margin, TotalAttack + (int)margin);
+
+
+            if (skill != null && skill.Type == SkillType.Magic)
+            {
+                margin = TotalIntelligence * 0.1f;
+                damage = new Random().Next(TotalIntelligence - (int)margin, TotalIntelligence + (int)margin);
+                AudioManager.PlaypathAttackFireSE(400);
+            }
+            else
+            {
+                AudioManager.PlayAttackClubSE(400);
+            }
+
 
             SkillType skillType = SkillType.Physical;
 
@@ -231,18 +247,20 @@
                 }
             }
 
+
+
             Util.CheckKeyInputEnter();
 
-            List<int> criticalDamage = new List<int>();
+            List<int> criticalDamageList = new List<int>();
             foreach (Character onTarget in targets)
             {
-                onTarget.OnDamage1(this, ref damage, skill);
-                criticalDamage.Add(damage);
+                onTarget.OnDamage1(this, damage ,out int criticalDamage, skill);
+                criticalDamageList.Add(criticalDamage);
             }
 
-            for (int i = 0; i < criticalDamage.Count; i++)
+            for (int i = 0; i < criticalDamageList.Count; i++)
             {
-                targets[i].OnDamage2(this, criticalDamage[i], skill);
+                targets[i].OnDamage2(this, criticalDamageList[i], skill);
 
                 Monster monster = targets[i] as Monster;
 
@@ -253,9 +271,10 @@
         }
 
 
-        // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드
-        public void OnDamage1(Character target, ref int damage, Skill skill)
+        // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드1
+        public void OnDamage1(Character target, int damage, out int criticalDamage, Skill skill)
         {
+            criticalDamage = 0;
             SkillType skillType = SkillType.Physical;
             if (skill != null) { skillType = skill.Type; }
 
@@ -269,6 +288,7 @@
                 int beforeEvasion = this.Evasion;
 
                 AddBuff(target, skill);
+                AudioManager.PlayHealingSE(200);
                 ViewManager.PrintText($"{this.Name}의 스테이터스 변화");
                 ViewManager.PrintText($"");
                 ViewManager.PrintText($"체  력: {beforeHP} -> {this.HP}");
@@ -276,7 +296,7 @@
                 ViewManager.PrintText($"공격력: {beforeATK} -> {this.TotalAttack}");
                 ViewManager.PrintText($"방어력: {beforeDEF} -> {this.TotalDefence}");
                 ViewManager.PrintText($"치명타: {beforeCritical}% -> {this.TotalCritical}%");
-                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {this.Evasion}%");
+                ViewManager.PrintText($"회  피: {beforeEvasion}% -> {this.TotalEvasion}%");
                 ViewManager.PrintText($"");
             }
             else
@@ -285,13 +305,19 @@
                 if (ComputeManager.TryChance(target.TotalCritical))
                 {
                     ViewManager.PrintText($"{this.Name}에게 치명적인 일격!!!");
-                    damage *= 2;
+                    AudioManager.PlayAttackSlashSE(400);
                     Util.CheckKeyInputEnter();
+                    criticalDamage = damage * 2;
+                }
+                else
+                {
+                    criticalDamage = damage;
                 }
             }
         }
 
 
+        // 해당 클래스를 가지고 있는 객체가 데미지를 입는 메소드2
         public void OnDamage2(Character target, int damage, Skill skill)
         {
             ViewManager.PrintText("");
@@ -330,6 +356,7 @@
                 {
                     ViewManager.PrintText("회피 성공!");
                     ViewManager.PrintText($"{Name}은(는) {target.Name}의 공격을 피했습니다!");
+                    AudioManager.PlayAttackArrowSE(400);
                 }
                 else
                 {
@@ -337,6 +364,7 @@
                     HP -= damage;
 
                     ViewManager.PrintText($"{target.Name}에게 총 {damage} 데미지를 입었습니다! ({beforeHP} -> {(HP == 0 ? "Dead" : HP)})");
+                    AudioManager.PlayOnDamageSE(400);
 
                     if (HP == 0)
                     {
@@ -345,9 +373,10 @@
                 }
 
             }
-            ViewManager.PrintText(0, cursorY, "");
             Util.CheckKeyInputEnter();
+            ViewManager.PrintText(0, cursorY, "");
         }
+
 
         //캐릭터클래스를 플레이어로 바꿔주는 메서드
         public Player GetPlayer()
@@ -362,6 +391,26 @@
         {
             if (this is Monster) return (Monster)this;
             return null;
+        }
+
+
+        //턴 시작 시 선언되어 회복 리스트의 요소가 있는지 확인하고 힐을 실행하는 메서드
+        public void CheckHealingList(bool useNow)
+        {
+            if(HealingBuff.Count > 0)
+            {
+                foreach (var heal in HealingBuff)
+                {
+                    int beforeHP = HP;
+
+                    HP += heal.Item1;
+                    if(useNow == false)
+                    {
+                        Console.WriteLine($"{Name}은(는) {heal.Item1}의 체력을 회복했다!");
+                        Console.WriteLine($"체력 : {beforeHP}/{TotalMaxHP} -> {HP}/{TotalMaxHP}");
+                    }
+                }
+            }
         }
     }
 

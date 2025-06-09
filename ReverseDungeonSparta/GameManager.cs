@@ -11,7 +11,7 @@
         public Player Player => player;
         public BattleManager BattleManagerInstance { get; set; }
 
-        private EquipItem main= new();
+        private EquipItem main = new();
         private EquipItem offering = new();
 
         public int selectedIndex = 0;
@@ -40,6 +40,7 @@
 
         public GameManager()
         {
+            DungeonClearLevel = 0;
             BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
             Console.CursorVisible = false;          //깜빡이는 커서를 비활성화
             Console.SetWindowSize(ViewManager.width, ViewManager.height);         //콘솔창 크기 지정
@@ -107,8 +108,10 @@
             int itemIndex = 0;
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
-            List<(string, Action, Action?)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n", (Action)(() => player.EquipEquipItem(ref itemIndex)), (Action)null))
+            List<(string, Action, Action)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.SortEquippedItemList(x) + "\n",
+                                            (Action)(() => player.EquipEquipItem(ref itemIndex)),
+                                            (Action)(() => AudioManager.PlayItemEquippedSE(0))))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(itemScrollView, ref selectedIndex, (0, 5), true, ref itemIndex);
@@ -120,6 +123,9 @@
 
 
         #region 소지품 확인 - 장비 합성 씬
+
+
+        //장비 합성 메뉴
         public void ItemUpgradeMenu()
         {
             Console.Clear();
@@ -140,8 +146,10 @@
             int itemIndex = 0;
             player.SortEquippedItemList();
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
-            List<(string, Action, Action?)> itemScrollView = player.equipItemList
-                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n", (Action)(() => UpgradeSelect(x)), (Action)null))
+            List<(string, Action, Action)> itemScrollView = player.equipItemList
+                                            .Select(x => (InventoryViewManager.InventoryUpgradeSortList(x) + "\n",
+                                            (Action)(() => UpgradeSelect(x)),
+                                            (Action)(() => AudioManager.PlayItemUpgradeSE(0))))
                                             .ToList();
             Console.Clear();
             ViewManager.DrawLine("소지품 확인 - 장비 합성", "합성할 장비 2가지를 선택해 주세요");
@@ -160,6 +168,8 @@
             main = new EquipItem();
             offering = new EquipItem();
         }
+
+
         private void UpgradeSelect(EquipItem equipItem)
         {
             if (main.Name == "")
@@ -200,7 +210,9 @@
             int itemIndex = 0;
             //1번째 액션에 플레이어가 아이템을 player.equipItemList Action 구현하면 됨
             List<(string, Action, Action)> usableItemList = player.UsableItemInventory
-                                            .Select(x => (InventoryViewManager.SortUseItemList(x) + "\n", (Action)(() => UseSelectedItem(ref itemIndex)), (Action)null))
+                                            .Select(x => (InventoryViewManager.SortUseItemList(x) + "\n",
+                                            (Action)(() => UseSelectedItem(ref itemIndex)),
+                                            (Action)(()=>AudioManager.PlayerUseUseItemSE(0))))
                                             .ToList();
 
             bool isExit = ViewManager3.ScrollViewTxt(usableItemList, ref selectedIndex, (0, 10), true, ref itemIndex);
@@ -208,24 +220,17 @@
             return isExit;
         }
 
+
         // 소비 창에서 플레이어 스탯 보기
-        public static void UsableStatusView(Player player)
+        public void UsableStatusView(Player player)
         {
             ViewManager3.PrintPlayerStatus(player);
         }
 
-        private static void ShowRecoveryMessage()
-        {
-            Console.WriteLine("엔터 키를 눌러 계속 진행하세요...");
-            Console.ReadLine();
-            Console.Clear();
-        }
-
 
         // 선택한 소비 아이템 사용
-        public static void UseSelectedItem(ref int itemIndex)
+        public void UseSelectedItem(ref int itemIndex)
         {
-            Player player = GameManager.Instance.Player;
             UsableItem selectedItem = player.UsableItemInventory[itemIndex];
 
             if (selectedItem.Count > 0)
@@ -234,6 +239,7 @@
 
                 if (itemUsed)
                 {
+                    AudioManager.PlayerUseUseItemSE(200);
                     selectedItem.Count--; // 사용하면 보유 수 차감
                     Console.WriteLine("");
                     Console.WriteLine($"[{selectedItem.Name}] 아이템을 사용했습니다!");
@@ -313,7 +319,6 @@
         {
             DungeonClearLevel++;
             BattleManagerInstance = new BattleManager(player, DungeonClearLevel);
-            AudioManager.PlayBattleBGM();
             AudioManager.PlayMoveMenuSE(0);
             BattleManagerInstance.EnterTheBattle();
         }
@@ -326,9 +331,9 @@
 
             menuItems = new List<(string, Action, Action?)>
             {
-                ("", GameMenu, null),
-                ("", GameMenu, null),
-                ("", GameMenu, null)
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
             };
 
             Util.GetUserInput(menuItems, TitleSMenu, ref selectedIndex, (100, 23));
@@ -338,8 +343,7 @@
         //메인 메뉴에 입장할 때 실행할 메서드
         public void GameMenu() // 시작화면 구현
         {
-
-
+            player.HP = player.TotalMaxHP;
             //고정으로 출력할 텍스트를 위쪽에 미리 그려둡니다.
             ViewManager.MainMenuTxt();
             ViewManager.PrintCurrentFloors(20 - DungeonClearLevel);
@@ -356,7 +360,6 @@
                 ("", InventoryMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", EnterBattleMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
-                ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0)),
                 ("", GameMenu, () => AudioManager.PlayMoveMenuSE(0))
                 //("아이템 메뉴", [아이테 메뉴에 진입하는 메소드 이름], [출력할 오디오 메소드])
                 //("조합", sum, null)
@@ -366,20 +369,20 @@
             //1. 만들어준 List<(String, Action)> 목록
             //2. 해당 유틸을 실행하는 본인 메서드
             //3. 클래스 필드에서 선언한 int 변수를 ref형태로 넣습니다.
-            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 23));
-
-
+            Util.GetUserInput(menuItems, GameMenu, ref selectedIndex, (3, 24));
         }
 
 
         public void IntroScene()
         {
 
-            //ViewManager.PrintLongTextAnimation(DataBase.introText);
-
+            AudioManager.PlayAttackSlashSE(10000);//칼로 베는 소리 출력
+            ViewManager.PrintLongTextAnimation(DataBase.introText);
             player.Name = Console.ReadLine();
             DataBase.playerName = player.Name;
 
+            AudioManager.PlayAttackSlashSE(1000);//칼로 베는 소리 출력
+            AudioManager.PlayOnDamageSE(2000);//맞는 소리 출력
             DataBase.introText2 = ViewManager.ChangePlayerName(DataBase.introText2);
             DataBase.endingText[0] = ViewManager.ChangePlayerName(DataBase.endingText[0]);
             DataBase.endingText[1] = ViewManager.ChangePlayerName(DataBase.endingText[1]);
@@ -388,8 +391,6 @@
             ViewManager.colorWord.Add(player.Name, ConsoleColor.Cyan);
             ViewManager.colorWord.Add($"[{player.Name}]", ConsoleColor.Cyan);
 
-
-
             ViewManager.PrintLongTextAnimation(DataBase.introText2);
 
             Console.ReadKey();
@@ -397,13 +398,24 @@
 
         public void GameOver()
         {
-
+            Console.Clear();
+            ViewManager.PrintText(0, 1, $"{player.Name}이(가) 사망했습니다.");
+            ViewManager.PrintText("게임이 종료됩니다.");
+            Thread.Sleep(5000);
         }
 
         public void EndingChoice()
         {
             Console.Clear();
             ViewManager.PrintLongTextAnimation(DataBase.endingText[0]);
+
+            List<(string, Action, Action)> choiceList = new List<(string, Action, Action)>
+            {
+                ("", Ending1, () => AudioManager.PlayMoveMenuSE(0)),
+                ("", Ending2, () => AudioManager.PlayMoveMenuSE(0))
+            };
+
+            ViewManager3.ScrollViewTxt(choiceList, ref selectedIndex, (0, 26), true);
             Console.ReadKey();
         }
 
